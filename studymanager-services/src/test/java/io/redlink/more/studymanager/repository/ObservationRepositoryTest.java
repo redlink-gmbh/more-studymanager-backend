@@ -29,6 +29,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -143,22 +144,37 @@ class ObservationRepositoryTest {
                 .as("List all Observations")
                 .hasSize(4);
 
-        assertThat(observationRepository.listObservationsForGroup(studyId, studyGroupId))
+        assertThat(observationRepository.listObservationsForGroup(studyId, studyGroupId, null))
                 .as("Include group-specific observations and globals") //NOTE: and in no observation group
-                .hasSize(2)
-                .extracting(Observation::getObservationId)
-                .containsOnly(observationResponse.getObservationId(), observationResponse2.getObservationId());
+                .hasSize(4); //still all
 
-        assertThat(observationRepository.listObservationsForGroup(studyId, -1))
+        assertThat(observationRepository.listObservationsForGroup(studyId, studyGroupId, Collections.emptySet()))
+                .as("Include group-specific observations and globals with no observation group") //NOTE: and in no observation group
+                .hasSize(2) //still all
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse.getObservationId(), observationResponse2.getObservationId());
+
+        assertThat(observationRepository.listObservationsForGroup(studyId, -1, null))
                 .as("Non-existing Group should only retrieve 'global' observations")
+                .hasSize(3)
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse2.getObservationId(), observationResponse3a.getObservationId(), observationResponse3b.getObservationId());
+
+        assertThat(observationRepository.listObservationsForGroup(studyId, -1, Collections.emptySet()))
+                .as("Non-existing Group should only retrieve 'global' observations  with no observation group")
                 .hasSize(1)
                 .extracting(Observation::getObservationId)
                 .containsExactly(observationResponse2.getObservationId());
 
-        assertThat(observationRepository.listObservationsForGroup(studyId, null))
-                .as("<null>-Group should only retrieve 'global' observations")
+        assertThat(observationRepository.listObservationsForGroup(studyId, null, null))
+                .as("<null>-existing Group should only retrieve 'global' observations")
+                .hasSize(3)
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse2.getObservationId(), observationResponse3a.getObservationId(), observationResponse3b.getObservationId());
+
+        assertThat(observationRepository.listObservationsForGroup(studyId, null, Collections.emptySet()))
+                .as("<null>-Group should only retrieve 'global' observations with no obvervation group")
                 .hasSize(1)
-                .as("Check for the global observation")
                 .extracting(Observation::getObservationId)
                 .containsExactly(observationResponse2.getObservationId());
 
@@ -170,7 +186,6 @@ class ObservationRepositoryTest {
                 .extracting(Observation::getObservationId)
                 .containsExactly(observationResponse2.getObservationId(), observationResponse3a.getObservationId());
 
-
         //list Observations for study-group '-1' and no observation-group of observation-group 'observationGroupId1' ->
         // This is true for all expect 'obs1'
         assertThat(observationRepository.listObservationsForGroup(studyId, -1, Set.of(observationGroupId1, observationGroupId2)))
@@ -178,6 +193,36 @@ class ObservationRepositoryTest {
                 .hasSize(3)
                 .extracting(Observation::getObservationId)
                 .containsExactly(observationResponse2.getObservationId(), observationResponse3a.getObservationId(), observationResponse3b.getObservationId());
+
+        assertThat(observationRepository.listObservationsWithStudyGroup(studyId, studyGroupId))
+                .as("Observations with parsed Study-Group")
+                .hasSize(1) //still all
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse.getObservationId());
+        assertThat(observationRepository.listObservationsWithStudyGroup(studyId, null))
+                .as("Observations with no Study-Group")
+                .hasSize(3)
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse2.getObservationId(), observationResponse3a.getObservationId(), observationResponse3b.getObservationId());
+        assertThat(observationRepository.listObservationsWithStudyGroup(studyId, -1))
+                .as("Observations with none existing Study-Group")
+                .hasSize(0);
+
+        assertThat(observationRepository.listObservationsWithObservationGroup(studyId, observationGroupId1))
+                .as("Observations with parsed Observation-Group")
+                .hasSize(1)
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse3a.getObservationId());
+        assertThat(observationRepository.listObservationsWithObservationGroup(studyId, null))
+                .as("Observations with no Observation-Group")
+                .hasSize(2)
+                .extracting(Observation::getObservationId)
+                .containsExactly(observationResponse.getObservationId(), observationResponse2.getObservationId());
+        assertThat(observationRepository.listObservationsWithObservationGroup(studyId, -1))
+                .as("Observations with none existing Observation-Group")
+                .hasSize(0);
+
+
 
         //test relative events
         observation.setSchedule(new RelativeEvent()
@@ -197,7 +242,7 @@ class ObservationRepositoryTest {
         observationRepository.deleteObservation(studyId, observationResponse.getObservationId());
         assertThat((observationRepository.listObservations(studyId)))
                 .hasSize(3);
-        assertThat((observationRepository.listObservationsForGroup(studyId, studyGroupId)))
+        assertThat((observationRepository.listObservationsForGroup(studyId, studyGroupId, Collections.emptySet())))
                 .hasSize(2) //now that we deleted observationGroupId1 -> observationResponse3a is also in no group
                 .extracting(Observation::getObservationId)
                 .containsExactly(observationResponse2.getObservationId(), observationResponse3a.getObservationId());

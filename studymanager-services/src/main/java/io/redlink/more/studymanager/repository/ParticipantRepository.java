@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import io.redlink.more.studymanager.model.gateway.RoutingInfo;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,8 +27,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import static io.redlink.more.studymanager.repository.RepositoryUtils.getValidNullableIntegerValue;
-import static io.redlink.more.studymanager.repository.RepositoryUtils.intReader;
+import static io.redlink.more.studymanager.repository.RepositoryUtils.*;
 
 @Component
 public class ParticipantRepository {
@@ -57,6 +57,26 @@ public class ParticipantRepository {
             "    LEFT JOIN participant_observation_groups pog ON p.study_id = pog.study_id AND p.participant_id = pog.participant_id " +
             "WHERE p.study_id = ? " +
             "GROUP BY p.study_id, p.participant_id, r.token";
+    /*
+     * NOTE: parsing NULL as observation_group_ids will deactivate the filter. parsing [] will only list participants
+     * with no observation group. Otherwise, Participants with any of the parsed observation groups will be returned
+     */
+    private static final String LIST_PARTICIPANTS_BY_STUDY_AND_GROUPS =
+            """
+                    SELECT
+                        p.participant_id, p.study_id, p.alias, p.status, p.created, p.start, p.modified,\s
+                        r.token as token, sg.study_group_id, sg.title as study_group_title,\s
+                        ARRAY_AGG(pog.observation_group_id) FILTER (WHERE pog.observation_group_id IS NOT NULL) AS observation_group_ids\s
+                    FROM participants p\s
+                        LEFT JOIN registration_tokens r ON p.study_id = r.study_id AND p.participant_id = r.participant_id\s
+                        LEFT OUTER JOIN study_groups sg ON ( p.study_id = sg.study_id AND p.study_group_id = sg.study_group_id )\s
+                        LEFT JOIN participant_observation_groups pog ON p.study_id = pog.study_id AND p.participant_id = pog.participant_id\s
+                    WHERE p.study_id = :study_id\s
+                    AND (p.study_group_id = :study_group_id OR :study_group_id::INT IS NULL)\s
+                    GROUP BY p.study_id, p.participant_id, sg.study_group_id, sg.title, r.token\s
+                    HAVING (:observation_group_ids::INT[] IS NULL)\s
+                        OR COUNT(pog.observation_group_id) = 0\s
+                        OR COUNT(CASE WHEN pog.observation_group_id = ANY(:observation_group_ids) THEN 1 END) > 0;""";
     private static final String DELETE_PARTICIPANT =
             "DELETE FROM participants " +
             "WHERE study_id=? AND participant_id=?";
@@ -89,6 +109,17 @@ public class ParticipantRepository {
             "  AND (p.start + ((COALESCE(sg.duration, s.duration)->>'value')::int || ' ' || (COALESCE(sg.duration, s.duration)->>'unit'))::interval) < NOW()" +
             "GROUP BY p.study_id, p.participant_id";
 
+    private static final String GET_ROUTING_INFO = """
+            SELECT pt.study_id as study_id, pt.participant_id as participant_id, study_group_id,
+                s.status IN ('active', 'preview') as study_active,
+                pt.status = 'active' as participant_active,
+                (SELECT ARRAY_AGG(pog.observation_group_id)
+                          FROM participant_observation_groups pog
+                          WHERE pog.study_id = pt.study_id AND pog.participant_id = pt.participant_id) AS observation_group_ids
+            FROM participants pt
+                INNER JOIN studies s on (s.study_id = pt.study_id)
+            WHERE pt.study_id = ? AND pt.participant_id = ?
+            """;
     /*
      * SQL Statements for managing participant_observation_groups mapping for participants
      */
@@ -132,6 +163,16 @@ public class ParticipantRepository {
 
     public List<Participant> listParticipants(Long studyId) {
         return template.query(LIST_PARTICIPANTS_BY_STUDY, getParticipantRowMapper(), studyId);
+    }
+
+    public List<Participant> listParticipants(Long studyId, Integer studyGroupId, Set<Integer> observationGroupIds) {
+        return namedTemplate.query(
+                LIST_PARTICIPANTS_BY_STUDY_AND_GROUPS,
+                new MapSqlParameterSource()
+                        .addValue("study_id", studyId)
+                        .addValue("study_group_id", studyGroupId)
+                        .addValue("observation_group_ids", observationGroupIds == null ? null : observationGroupIds.toArray(new Integer[0])),
+                getParticipantRowMapper());
     }
 
     public List<Participant> listParticipantsForClosing() {
@@ -226,7 +267,7 @@ public class ParticipantRepository {
                 .setStudyId(rs.getLong("study_id"))
                 .setParticipantId(rs.getInt("participant_id"))
                 .setAlias(rs.getString("alias"))
-                .setStudyGroupId(getValidNullableIntegerValue(rs, "study_group_id"))
+                .setStudyGroupId(readNullableInteger(rs, "study_group_id"))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"))
                 .setModified(RepositoryUtils.readInstant(rs, "modified"))
                 .setStatus(RepositoryUtils.readParticipantStatus(rs, "status"))
@@ -242,6 +283,23 @@ public class ParticipantRepository {
             params.addValue("observation_group_ids", observationGroupIds.toArray(new Integer[0]));
             namedTemplate.update(SET_PARTICIPANT_OBSERVATION_GROUP_IDS, params);
         }
+    }
+    public Optional<RoutingInfo> getRoutingInfo(Long studyId, Integer participantId) {
+        try (var stream = template.queryForStream(GET_ROUTING_INFO, getRoutingInfoMapper(), studyId, participantId)) {
+            return stream.findFirst();
+        }
+    }
+    private static RowMapper<RoutingInfo> getRoutingInfoMapper() {
+        return ((row, rowNum) ->
+                new RoutingInfo(
+                        row.getLong("study_id"),
+                        row.getInt("participant_id"),
+                        RepositoryUtils.readNullableInteger(row, "study_group_id"),
+                        RepositoryUtils.readSet(row, "observation_group_ids", Integer.class),
+                        row.getBoolean("study_active"),
+                        row.getBoolean("participant_active")
+                )
+        );
     }
 
 }

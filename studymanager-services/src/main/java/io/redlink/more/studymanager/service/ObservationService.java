@@ -78,9 +78,18 @@ public class ObservationService {
         return repository.listObservations(studyId);
     }
 
+    /**
+     * Lists observations for the parsed parameter
+     * @param studyId the study to list observations
+     * @param studyGroupId the study group or <code>null</code> to list observations regardless of study group assignment.
+     *                     Tip: parse a negative number to list observation that are not assigend to any studyGroup
+     * @param observationGroupIds
+     * @return
+     */
     public List<Observation> listObservationsForGroup(Long studyId, Integer studyGroupId, Collection<Integer> observationGroupIds) {
         return repository.listObservationsForGroup(studyId, studyGroupId, observationGroupIds);
     }
+
 
     public Observation updateObservation(Observation observation) {
         studyStateService.assertStudyNotInState(observation.getStudyId(), Study.Status.CLOSED);

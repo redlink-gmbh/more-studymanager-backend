@@ -167,6 +167,33 @@ class InterventionRepositoryTest {
                         intervention3a.getInterventionId(), intervention3b.getInterventionId(),
                         intervention4a.getInterventionId(), intervention4b.getInterventionId());
 
+        assertThat(interventionRepository.listInterventionsWithStudyGroup(studyId, studyGroupId))
+                .hasSize(3)
+                .extracting(Intervention::getInterventionId)
+                .containsExactly(
+                        interventionResponse.getInterventionId(), intervention4a.getInterventionId(),intervention4b.getInterventionId());
+        assertThat(interventionRepository.listInterventionsWithStudyGroup(studyId, null))
+                .hasSize(3)
+                .extracting(Intervention::getInterventionId)
+                .containsExactly(
+                        intervention2.getInterventionId(), intervention3a.getInterventionId(),intervention3b.getInterventionId());
+        assertThat(interventionRepository.listInterventionsWithStudyGroup(studyId, -1))
+                .hasSize(0);
+
+        assertThat(interventionRepository.listInterventionsWithObservationGroup(studyId, observationGroupId1))
+                .hasSize(2)
+                .extracting(Intervention::getInterventionId)
+                .containsExactly(
+                        intervention3a.getInterventionId(), intervention4a.getInterventionId());
+        assertThat(interventionRepository.listInterventionsWithObservationGroup(studyId, null))
+                .hasSize(2)
+                .extracting(Intervention::getInterventionId)
+                .containsExactly(
+                        interventionResponse.getInterventionId(), intervention2.getInterventionId());
+        assertThat(interventionRepository.listInterventionsWithObservationGroup(studyId, -1))
+                .hasSize(0);
+
+
         interventionRepository.deleteByIds(interventionResponse.getStudyId(), interventionResponse.getInterventionId());
 
         interventionResponse = interventionRepository.getByIds(intervention2.getStudyId(), intervention2.getInterventionId());

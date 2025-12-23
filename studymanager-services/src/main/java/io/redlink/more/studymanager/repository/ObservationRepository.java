@@ -29,7 +29,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import static io.redlink.more.studymanager.repository.RepositoryUtils.getValidNullableIntegerValue;
+import static io.redlink.more.studymanager.repository.RepositoryUtils.readNullableInteger;
 
 @Component
 public class ObservationRepository {
@@ -41,7 +41,22 @@ public class ObservationRepository {
     private static final String GET_OBSERVATION_BY_IDS = "SELECT * FROM observations WHERE study_id = ? AND observation_id = ?";
     private static final String DELETE_BY_IDS = "DELETE FROM observations WHERE study_id = ? AND observation_id = ?";
     private static final String LIST_OBSERVATIONS = "SELECT * FROM observations WHERE study_id = :study_id";
-    private static final String LIST_OBSERVATIONS_FOR_GROUP = "SELECT * FROM observations WHERE study_id = :study_id AND (study_group_id IS NULL OR study_group_id = :study_group_id) AND (observation_group_id IS NULL OR observation_group_id = ANY(:observation_group_ids::INT[]))";
+    private static final String LIST_OBSERVATIONS_WITH_STUDY_GROUP = """
+        SELECT * 
+        FROM observations 
+        WHERE study_id = :study_id 
+            AND (study_group_id IS NULL AND :study_group_id::INT IS NULL) OR study_group_id = :study_group_id""";
+    private static final String LIST_OBSERVATIONS_WITH_OBSERVATION_GROUP = """
+        SELECT * 
+        FROM observations 
+        WHERE study_id = :study_id 
+            AND (observation_group_id IS NULL AND :observation_group_id::INT IS NULL) OR observation_group_id = :observation_group_id""";
+    private static final String LIST_OBSERVATIONS_FOR_GROUP = """
+        SELECT * 
+        FROM observations 
+        WHERE study_id = :study_id 
+            AND (study_group_id IS NULL OR study_group_id = :study_group_id) 
+            AND (observation_group_id IS NULL OR :observation_group_ids::INT[] IS NULL OR observation_group_id = ANY(:observation_group_ids::INT[]))""";
     private static final String UPDATE_OBSERVATION = "UPDATE observations SET title=:title, purpose=:purpose, participant_info=:participant_info, study_group_id=:study_group_id, properties=:properties::jsonb, schedule=:schedule::jsonb, observation_group_id=:observation_group_id, modified=now(), hidden=:hidden, no_schedule=:no_schedule WHERE study_id=:study_id AND observation_id=:observation_id";
     private static final String DELETE_ALL = "DELETE FROM observations";
     private static final String SET_OBSERVATION_PROPERTIES_FOR_PARTICIPANT = "INSERT INTO participant_observation_properties(study_id,participant_id,observation_id,properties) VALUES (:study_id,:participant_id,:observation_id,:properties::jsonb) ON CONFLICT (study_id, participant_id, observation_id) DO UPDATE SET properties = EXCLUDED.properties";
@@ -120,21 +135,29 @@ public class ObservationRepository {
         );
     }
 
-    /**
-     * Lists all Observation based for the parsed study, study group and as per default no assigned observation group
-     * @param studyId the study
-     * @param studyGroupId the study group or NULL of none
-     * @return the Observations
-     */
-    public List<Observation> listObservationsForGroup(Long studyId, Integer studyGroupId) {
-        return  listObservationsForGroup(studyId, studyGroupId, List.of());
+    public List<Observation> listObservationsWithStudyGroup(Long studyId, Integer studyGroupId) {
+        return namedTemplate.query(
+                LIST_OBSERVATIONS_WITH_STUDY_GROUP,
+                new MapSqlParameterSource("study_id", studyId)
+                        .addValue("study_group_id", studyGroupId),
+                getObservationRowMapper());
+    }
+
+    public List<Observation> listObservationsWithObservationGroup(Long studyId, Integer observationGroupId) {
+        return namedTemplate.query(
+                LIST_OBSERVATIONS_WITH_OBSERVATION_GROUP,
+                new MapSqlParameterSource("study_id", studyId)
+                        .addValue("observation_group_id", observationGroupId),
+                getObservationRowMapper());
     }
 
     /**
-     * Lists all Observation based for the parsed study, study group and observation groups
+     * Lists all relevant Observations for the parsed study and observation groups. This will include observations with
+     * no study or observation group as those are relevant for all participants of a study
      * @param studyId the study
-     * @param studyGroupId the study group or NULL of none
-     * @param observationGroupIds the observation groups or an empty collection if none
+     * @param studyGroupId the study group or NULL of none. Tip: parse a negative number to retrieve only global observations
+     * @param observationGroupIds the observation groups; <code>null</code> for ony observation groups;
+     *                            an empty collection for only observations with no observation group (global)
      * @return the Observations
      */
     public List<Observation> listObservationsForGroup(Long studyId, Integer studyGroupId, Collection<Integer> observationGroupIds) {
@@ -142,7 +165,9 @@ public class ObservationRepository {
                 LIST_OBSERVATIONS_FOR_GROUP,
                 new MapSqlParameterSource("study_id", studyId)
                         .addValue("study_group_id", studyGroupId)
-                        .addValue("observation_group_ids", observationGroupIds == null ? new Integer[0] : observationGroupIds.toArray(new Integer[0])),
+                        //NOTE: NULL is wildcard. Empty means no observation groups
+                        .addValue("observation_group_ids", observationGroupIds != null ?
+                                observationGroupIds.toArray(new Integer[0]) : null),
                 getObservationRowMapper()
         );
     }
@@ -215,13 +240,13 @@ public class ObservationRepository {
                 .setPurpose(rs.getString("purpose"))
                 .setParticipantInfo(rs.getString("participant_info"))
                 .setType(rs.getString("type"))
-                .setStudyGroupId(getValidNullableIntegerValue(rs, "study_group_id"))
+                .setStudyGroupId(readNullableInteger(rs, "study_group_id"))
                 .setProperties(MapperUtils.readValue(rs.getString("properties"), ObservationProperties.class))
                 .setSchedule(MapperUtils.readValue(rs.getString("schedule"), ScheduleEvent.class))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"))
                 .setModified(RepositoryUtils.readInstant(rs, "modified"))
                 .setHidden(rs.getBoolean("hidden"))
                 .setNoSchedule(rs.getBoolean("no_schedule"))
-                .setObservationGroupId(RepositoryUtils.getValidNullableIntegerValue(rs,"observation_group_id"));
+                .setObservationGroupId(RepositoryUtils.readNullableInteger(rs,"observation_group_id"));
     }
 }

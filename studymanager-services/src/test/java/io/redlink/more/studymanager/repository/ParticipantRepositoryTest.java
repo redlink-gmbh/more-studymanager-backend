@@ -112,29 +112,80 @@ class ParticipantRepositoryTest {
     @DisplayName("Participants are deleted and listed correctly")
     void testListAndDelete() {
         Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        Integer studyGroupId = studyGroupRepository.insert(new StudyGroup().setStudyId(studyId).setTitle("Study Group 1")).getStudyGroupId();
+        Integer observationGroupId1 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 1").setPurpose("test")).getObservationGroupId();
+        Integer observationGroupId2 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 2").setPurpose("test")).getObservationGroupId();
+        Integer observationGroupId3 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 3").setPurpose("test")).getObservationGroupId();
 
-        Participant s1 = participantRepository.insert(new Participant()
+        Participant p1 = participantRepository.insert(new Participant()
                 .setStudyId(studyId)
+                .setObservationGroupIds(Set.of(observationGroupId1, observationGroupId2))
                 .setRegistrationToken("TEST123"));
-        Participant s2 = participantRepository.insert(new Participant()
+        Participant p2 = participantRepository.insert(new Participant()
                 .setStudyId(studyId)
+                .setStudyGroupId(studyGroupId)
+                .setObservationGroupIds(Set.of(observationGroupId1, observationGroupId3))
                 .setRegistrationToken("TEST456"));
-        Participant s3 = participantRepository.insert(new Participant()
+        Participant p3 = participantRepository.insert(new Participant()
                 .setStudyId(studyId)
+                .setStudyGroupId(studyGroupId)
+                .setObservationGroupIds(Set.of(observationGroupId3))
                 .setRegistrationToken("TEST789"));
 
         assertThat(participantRepository.listParticipants(studyId))
                 .hasSize(3);
-        participantRepository.deleteParticipant(studyId, s1.getParticipantId());
+
+        Participant p4 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setRegistrationToken("TEST012"));
+
+        Participant p5 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setStudyGroupId(studyGroupId)
+                .setRegistrationToken("TEST345"));
+
+        Participant p6 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setStudyGroupId(studyGroupId)
+                .setRegistrationToken("TEST678")
+                .setObservationGroupIds(Set.of(observationGroupId1)));
+
+        var participantsSg1Og23 = participantRepository.listParticipants(studyId, studyGroupId, Set.of(observationGroupId2, observationGroupId3));
+        assertThat(participantsSg1Og23).hasSize(3);
+        assertThat(participantsSg1Og23).extracting(Participant::getParticipantId).containsExactlyInAnyOrder(p2.getParticipantId(), p3.getParticipantId(), p5.getParticipantId());
+        var participantsOg23 = participantRepository.listParticipants(studyId, null, Set.of(observationGroupId2, observationGroupId3));
+        assertThat(participantsOg23).hasSize(5); //any study group
+        assertThat(participantsOg23).extracting(Participant::getParticipantId).containsExactlyInAnyOrder(p1.getParticipantId(), p2.getParticipantId(), p3.getParticipantId(), p4.getParticipantId(), p5.getParticipantId());
+        //parsing NULL as observationGroups means no filter
+        var participantsNullParams = participantRepository.listParticipants(studyId, null, null);
+        assertThat(participantsNullParams).hasSize(6); //returns all
+
+        var participantsNullStudyGroupNoObservationGroup = participantRepository.listParticipants(studyId, null, Set.of());
+        assertThat(participantsNullStudyGroupNoObservationGroup).hasSize(2); //returns all
+        assertThat(participantsNullStudyGroupNoObservationGroup).extracting(Participant::getParticipantId).containsExactlyInAnyOrder(p4.getParticipantId(), p5.getParticipantId());
+
+        var participantsSg1 = participantRepository.listParticipants(studyId, studyGroupId, null);
+        assertThat(participantsSg1).hasSize(4); //returns all
+        assertThat(participantsSg1).extracting(Participant::getParticipantId).containsExactlyInAnyOrder(p2.getParticipantId(), p3.getParticipantId(), p5.getParticipantId(),p6.getParticipantId());
+
+        var participantsSg1NoObservationGroup = participantRepository.listParticipants(studyId, studyGroupId, Set.of());
+        assertThat(participantsSg1NoObservationGroup).hasSize(1); //returns all
+        assertThat(participantsSg1NoObservationGroup).extracting(Participant::getParticipantId).containsExactlyInAnyOrder(p5.getParticipantId());
+
+
+        participantRepository.deleteParticipant(studyId, p1.getParticipantId());
         assertThat(participantRepository.listParticipants(studyId))
-                .hasSize(2);
-        participantRepository.deleteParticipant(studyId, s2.getParticipantId());
+                .hasSize(5);
+        participantRepository.deleteParticipant(studyId, p2.getParticipantId());
         assertThat(participantRepository.listParticipants(studyId))
-                .hasSize(1);
-        participantRepository.deleteParticipant(studyId, s2.getParticipantId());
+                .hasSize(4);
+        participantRepository.deleteParticipant(studyId, p2.getParticipantId());
         assertThat(participantRepository.listParticipants(studyId))
-                .hasSize(1);
-        participantRepository.deleteParticipant(studyId, s3.getParticipantId());
+                .hasSize(4);
+        participantRepository.deleteParticipant(studyId, p3.getParticipantId());
+        participantRepository.deleteParticipant(studyId, p4.getParticipantId());
+        participantRepository.deleteParticipant(studyId, p5.getParticipantId());
+        participantRepository.deleteParticipant(studyId, p6.getParticipantId());
         assertThat(participantRepository.listParticipants(studyId))
                 .isEmpty();
     }
@@ -164,7 +215,7 @@ class ParticipantRepositoryTest {
         Integer observationGroup1 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 1").setPurpose("Purpose 1")).getObservationGroupId();
         Integer observationGroup2 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 2").setPurpose("Purpose 2")).getObservationGroupId();
 
-        Participant participant = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("TEST123").setObservationGroupIds(Set.of(observationGroup1,observationGroup2)));
+        Participant participant = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("TEST123").setObservationGroupIds(Set.of(observationGroup1, observationGroup2)));
         assertThat(participant.getStatus()).isEqualTo(Participant.Status.NEW);
 
         participant = participantRepository.getByIds(studyId, participant.getParticipantId());
@@ -203,4 +254,70 @@ class ParticipantRepositoryTest {
         var participants = participantRepository.listParticipantsForClosing();
     }
 
+
+    @Test
+    @DisplayName("Tests if RoutingInfo is correctly read")
+    void testRoutingInfo() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        Integer studyGroupId = studyGroupRepository.insert(new StudyGroup().setStudyId(studyId).setTitle("Study Group 1")).getStudyGroupId();
+        Integer observationGroupId1 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 1").setPurpose("test")).getObservationGroupId();
+        Integer observationGroupId2 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 2").setPurpose("test")).getObservationGroupId();
+
+        Participant s1 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setStudyGroupId(studyGroupId)
+                .setObservationGroupIds(Set.of(observationGroupId1, observationGroupId2))
+                .setRegistrationToken("RegToken1"));
+
+        Participant s2 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setObservationGroupIds(Set.of(observationGroupId1))
+                .setRegistrationToken("RegToken2"));
+
+        Participant s3 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setStudyGroupId(studyGroupId)
+                .setRegistrationToken("RegToken3"));
+
+        Participant s4 = participantRepository.insert(new Participant()
+                .setStudyId(studyId)
+                .setRegistrationToken("RegToken4"));
+
+        var routingInfo1 = participantRepository.getRoutingInfo(studyId, s1.getParticipantId());
+        assertThat(routingInfo1.isPresent()).isTrue();
+        assertThat(routingInfo1.get().participantId()).isEqualTo(s1.getParticipantId());
+        assertThat(routingInfo1.get().studyGroupId()).isEqualTo(studyGroupId);
+        assertThat(routingInfo1.get().observationGroupIds()).containsExactlyInAnyOrder(observationGroupId1, observationGroupId2);
+        assertThat(routingInfo1.get().participantActive()).isFalse();
+        assertThat(routingInfo1.get().studyActive()).isFalse();
+
+        var routingInfo2 = participantRepository.getRoutingInfo(studyId, s2.getParticipantId());
+        assertThat(routingInfo2.isPresent()).isTrue();
+        assertThat(routingInfo2.get().participantId()).isEqualTo(s2.getParticipantId());
+        assertThat(routingInfo2.get().studyGroupId()).isNull();
+        assertThat(routingInfo2.get().observationGroupIds()).containsExactlyInAnyOrder(observationGroupId1);
+        assertThat(routingInfo2.get().participantActive()).isFalse();
+        assertThat(routingInfo2.get().studyActive()).isFalse();
+
+        participantRepository.setStatusByIds(studyId, s3.getParticipantId(), Participant.Status.ACTIVE);
+
+        var routingInfo3 = participantRepository.getRoutingInfo(studyId, s3.getParticipantId());
+        assertThat(routingInfo3.isPresent()).isTrue();
+        assertThat(routingInfo3.get().participantId()).isEqualTo(s3.getParticipantId());
+        assertThat(routingInfo3.get().studyGroupId()).isEqualTo(studyGroupId);
+        assertThat(routingInfo3.get().observationGroupIds()).isEmpty();
+        assertThat(routingInfo3.get().participantActive()).isTrue();
+        assertThat(routingInfo3.get().studyActive()).isFalse();
+
+        participantRepository.setStatusByIds(studyId, s4.getParticipantId(), Participant.Status.ACTIVE);
+        studyRepository.setStateById(studyId, Study.Status.ACTIVE);
+
+        var routingInfo4 = participantRepository.getRoutingInfo(studyId, s4.getParticipantId());
+        assertThat(routingInfo4.isPresent()).isTrue();
+        assertThat(routingInfo4.get().participantId()).isEqualTo(s4.getParticipantId());
+        assertThat(routingInfo4.get().studyGroupId()).isNull();
+        assertThat(routingInfo4.get().observationGroupIds()).isEmpty();
+        assertThat(routingInfo4.get().participantActive()).isTrue();
+        assertThat(routingInfo4.get().studyActive()).isTrue();
+    }
 }

@@ -12,6 +12,7 @@ import io.redlink.more.studymanager.core.properties.ActionProperties;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.model.Action;
+import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.model.Intervention;
 import io.redlink.more.studymanager.model.Trigger;
@@ -28,7 +29,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static io.redlink.more.studymanager.repository.RepositoryUtils.getValidNullableIntegerValue;
+import static io.redlink.more.studymanager.repository.RepositoryUtils.readNullableInteger;
 
 @Component
 public class InterventionRepository {
@@ -37,7 +38,22 @@ public class InterventionRepository {
     private static final String IMPORT_INTERVENTION = "INSERT INTO interventions(study_id,intervention_id,title,purpose,study_group_id,schedule,observation_group_id) VALUES (:study_id,:intervention_id,:title,:purpose,:study_group_id,:schedule::jsonb,:observation_group_id) RETURNING *";
     private static final String GET_INTERVENTION_BY_IDS = "SELECT * FROM interventions WHERE study_id = ? AND intervention_id = ?";
     private static final String LIST_INTERVENTIONS = "SELECT * FROM interventions WHERE study_id = ?";
-    private static final String LIST_INTERVENTIONS_FOR_GROUP = "SELECT * FROM interventions WHERE study_id = :study_id AND (study_group_id IS NULL OR study_group_id = :study_group_id) AND (observation_group_id IS NULL OR observation_group_id = ANY(:observation_group_ids::INT[]))";
+    private static final String LIST_INTERVENTIONS_WITH_STUDY_GROUP = """
+        SELECT * 
+        FROM interventions 
+        WHERE study_id = :study_id 
+            AND (study_group_id IS NULL AND :study_group_id::INT IS NULL) OR study_group_id = :study_group_id""";
+    private static final String LIST_INTERVENTIONS_WITH_OBSERVATION_GROUP = """
+        SELECT * 
+        FROM interventions 
+        WHERE study_id = :study_id 
+            AND (observation_group_id IS NULL AND :observation_group_id::INT IS NULL) OR observation_group_id = :observation_group_id""";
+    private static final String LIST_INTERVENTIONS_FOR_GROUP = """
+    SELECT * 
+    FROM interventions 
+    WHERE study_id = :study_id 
+        AND (study_group_id IS NULL OR study_group_id = :study_group_id) 
+        AND (observation_group_id IS NULL OR :observation_group_ids::INT[] IS NULL OR observation_group_id = ANY(:observation_group_ids::INT[]))""";
     private static final String DELETE_INTERVENTION_BY_IDS = "DELETE FROM interventions WHERE study_id = ? AND intervention_id = ?";
     private static final String DELETE_ALL = "DELETE FROM interventions";
     private static final String UPDATE_INTERVENTION = "UPDATE interventions SET title=:title, study_group_id=:study_group_id, purpose=:purpose, schedule=:schedule::jsonb, observation_group_id=:observation_group_id WHERE study_id=:study_id AND intervention_id=:intervention_id";
@@ -88,14 +104,27 @@ public class InterventionRepository {
         return template.query(LIST_INTERVENTIONS, getInterventionRowMapper(), studyId);
     }
 
-    public List<Intervention> listInterventionsForGroup(Long studyId, Integer groupId){
-        return listInterventionsForGroup(studyId, groupId, Collections.emptyList());
+    public List<Intervention> listInterventionsWithStudyGroup(Long studyId, Integer studyGroupId) {
+        return namedTemplate.query(
+                LIST_INTERVENTIONS_WITH_STUDY_GROUP,
+                new MapSqlParameterSource("study_id", studyId)
+                        .addValue("study_group_id", studyGroupId),
+                getInterventionRowMapper());
     }
+
+    public List<Intervention> listInterventionsWithObservationGroup(Long studyId, Integer observationGroupId) {
+        return namedTemplate.query(
+                LIST_INTERVENTIONS_WITH_OBSERVATION_GROUP,
+                new MapSqlParameterSource("study_id", studyId)
+                        .addValue("observation_group_id", observationGroupId),
+                getInterventionRowMapper());
+    }
+
     public List<Intervention> listInterventionsForGroup(Long studyId, Integer groupId, Collection<Integer> observationGroupIds) {
         return namedTemplate.query(LIST_INTERVENTIONS_FOR_GROUP,
                 new MapSqlParameterSource("study_id", studyId)
                         .addValue("study_group_id", groupId)
-                        .addValue("observation_group_ids", observationGroupIds == null ? new Integer[0] : observationGroupIds.toArray(new Integer[0])),
+                        .addValue("observation_group_ids", observationGroupIds != null ? observationGroupIds.toArray(new Integer[0]) : null),
                 getInterventionRowMapper()
         );
     }
@@ -241,9 +270,9 @@ public class InterventionRepository {
                 .setTitle(rs.getString("title"))
                 .setPurpose(rs.getString("purpose"))
                 .setSchedule(MapperUtils.readValue(rs.getString("schedule"), Event.class))
-                .setStudyGroupId(getValidNullableIntegerValue(rs, "study_group_id"))
+                .setStudyGroupId(readNullableInteger(rs, "study_group_id"))
                 .setCreated(RepositoryUtils.readInstant(rs,"created"))
                 .setModified(RepositoryUtils.readInstant(rs,"modified"))
-                .setObservationGroupId(getValidNullableIntegerValue(rs, "observation_group_id"));
+                .setObservationGroupId(readNullableInteger(rs, "observation_group_id"));
         }
 }

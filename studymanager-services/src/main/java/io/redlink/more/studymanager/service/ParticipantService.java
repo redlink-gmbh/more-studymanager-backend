@@ -8,11 +8,17 @@
  */
 package io.redlink.more.studymanager.service;
 
+import io.redlink.more.studymanager.model.Intervention;
+import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.generator.RandomTokenGenerator;
+import io.redlink.more.studymanager.repository.InterventionRepository;
+import io.redlink.more.studymanager.repository.ObservationRepository;
 import io.redlink.more.studymanager.repository.ParticipantRepository;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -23,13 +29,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class ParticipantService {
 
     private final StudyStateService studyStateService;
+    private final ObservationRepository observationRepository;
+    private final InterventionRepository interventionRepository;
     private final ParticipantRepository participantRepository;
     private final ElasticService elasticService;
 
     public ParticipantService(
-            StudyStateService studyStateService, ParticipantRepository repository, ElasticService elasticService) {
-        this.studyStateService = studyStateService;
+            ParticipantRepository repository,
+            StudyStateService studyStateService,
+            ObservationRepository observationRepository,
+            InterventionRepository interventionRepository,
+            ElasticService elasticService
+    ) {
         this.participantRepository = repository;
+        this.studyStateService = studyStateService;
+        this.observationRepository = observationRepository;
+        this.interventionRepository = interventionRepository;
         this.elasticService = elasticService;
     }
 
@@ -81,5 +96,58 @@ public class ParticipantService {
                 .contains(status)) {
             participantRepository.cleanupParticipant(studyId, participantId);
         }
+    }
+
+    /**
+     * Lists observations for the referenced participant
+     * @param studyId the study to list observations
+     * @param participantId the participant id
+     * @return the list of observations or an empty list if none or the participant was not found
+     */
+    @Transactional(readOnly = true)
+    public List<Observation> listObservations(Long studyId, Integer participantId) {
+        return listObservations(getParticipant(studyId, participantId));
+    }
+
+    /**
+     * Lists observations for the parsed participant
+     * @param participant the participant
+     * @return the list of observations or an empty list if <code>null</code> is parsed as participant
+     */
+    public List<Observation> listObservations(Participant participant) {
+        if(participant == null) {
+            return Collections.emptyList();
+        }
+        return observationRepository.listObservationsForGroup(
+                participant.getStudyId(),
+                participant.getStudyGroupId(),
+                participant.getObservationGroupIds()
+        );
+    }
+    /**
+     * Lists interventions for the referenced participant
+     * @param studyId the study to list observations
+     * @param participantId the participant id
+     * @return the list of interventions or an empty list if none or the participant was not found
+     */
+    @Transactional(readOnly = true)
+    public List<Intervention> listIntervations(Long studyId, Integer participantId) {
+        return listInterventions(getParticipant(studyId, participantId));
+    }
+
+    /**
+     * Lists interventions for the parsed participant
+     * @param participant the participant
+     * @return the list of interventions or an empty list if <code>null</code> is parsed as participant
+     */
+    public List<Intervention> listInterventions(Participant participant) {
+        if(participant == null) {
+            return Collections.emptyList();
+        }
+        return interventionRepository.listInterventionsForGroup(
+                participant.getStudyId(),
+                participant.getStudyGroupId(),
+                participant.getObservationGroupIds()
+        );
     }
 }

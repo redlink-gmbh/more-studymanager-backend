@@ -101,7 +101,7 @@ public class CalendarService {
         if (participant != null) {
             effectiveObservationGroups = participant.getObservationGroupIds();
         } else {
-            effectiveObservationGroups = observationGroupIds == null ? Collections.emptyList() : observationGroupIds;
+            effectiveObservationGroups = observationGroupIds;
         }
 
         final List<Observation> observations = observationService.listObservationsForGroup(study.getStudyId(), effectiveStudyGroups, effectiveObservationGroups);
