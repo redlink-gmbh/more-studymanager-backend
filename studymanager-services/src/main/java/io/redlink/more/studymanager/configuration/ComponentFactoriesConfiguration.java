@@ -47,16 +47,6 @@ public class ComponentFactoriesConfiguration implements BeanFactoryAware {
         this.beanFactory = beanFactory;
     }
 
-    @Bean
-    public Map<String, TriggerFactory> triggerFactoryMap() {
-        Set<Class<? extends TriggerFactory>> triggerFactories = reflections.getSubTypesOf(TriggerFactory.class);
-        return triggerFactories.stream().map(this::instantiate)
-                .collect(Collectors.toMap(
-                (trigger) -> trigger.getId(),
-                (trigger) -> trigger
-        ));
-    }
-
     @PostConstruct
     public void onPostConstruct() {
         ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
@@ -70,15 +60,22 @@ public class ComponentFactoriesConfiguration implements BeanFactoryAware {
                 }
         );
 
-        /*
         Set<Class<? extends TriggerFactory>> triggerFactories = reflections.getSubTypesOf(TriggerFactory.class);
-        triggerFactories.stream().map(this::instantiate).forEach(m ->
-                configurableBeanFactory.registerSingleton(m.getId(), m)
-        );*/
+        triggerFactories.stream()
+                .map(this::instantiate)
+                .forEach(m -> {
+                    logger.trace("Registering trigger factory: {}[class:{}, properties:{}]", m.getId(),m.getClass().getName(), m.getProperties());
+                    configurableBeanFactory.registerSingleton(m.getId(), m);
+                }
+        );
 
         Set<Class<? extends ActionFactory>> actionFactories = reflections.getSubTypesOf(ActionFactory.class);
-        actionFactories.stream().map(this::instantiate).forEach(m ->
-                configurableBeanFactory.registerSingleton(m.getId(), m)
+        actionFactories.stream()
+                .map(this::instantiate)
+                .forEach(m -> {
+                    logger.trace("Registering action factory: {}[class:{}, properties:{}]", m.getId(),m.getClass().getName(), m.getProperties());
+                    configurableBeanFactory.registerSingleton(m.getId(), m);
+                }
         );
     }
 
