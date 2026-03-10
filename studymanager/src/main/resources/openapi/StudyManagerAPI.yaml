@@ -1213,6 +1213,187 @@ paths:
         '400':
           description: bad request
 
+# --- START GOALS
+
+  /studies/{studyId}/goals/config:
+    put:
+      tags:
+        - goals
+      description: Updates the goal configuration for the study
+      operationId: setGoalConfig
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudyGoalConfig'
+      responses:
+        '200':
+          description: Study goal configuration updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyGoalConfig'
+        '400':
+          description: The parsed study goal configuration was invalid
+
+  /studies/{studyId}/goals/config/categories/topic:
+    post:
+      tags:
+        - goals
+      description: Adds a new topic for goals
+      operationId: createGoalTopic
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalTopic'
+      responses:
+        '200':
+          description: Study goal topic created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalTopic'
+        '400':
+          description: The parsed Study goal topic was invalid
+
+  /studies/{studyId}/goals/config/categories/topic/{key}:
+    parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - name: key
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      tags:
+        - goals
+      description: Updates a topic for goals
+      operationId: updateGoalTopic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalTopic'
+      responses:
+        '200':
+          description: The updates study goal topic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalTopic'
+        '400':
+          description: The parsed Study goal topic was invalid
+    delete:
+      tags:
+        - goals
+      description: deletes the topic goals with the referenced key
+      operationId: deleteGoalTopic
+      responses:
+        '204':
+          description: action deleted successfully
+        '400':
+          description: bad request
+
+
+  /studies/{studyId}/goals/templates:
+    post:
+      tags:
+        - goals
+      description: Add GoalTemplate
+      operationId: addGoalTemplate
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalTemplate'
+
+      responses:
+        '200':
+          description: GoalTemplate added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalTemplate'
+
+        '400':
+          description: Could not add goal template
+    get:
+      tags:
+        - goals
+      description: List goal templates
+      operationId: listGoalTemplates
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: operation successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalTemplate'
+        '404':
+          description: not found
+
+  /studies/{studyId}/goals/templates/{templateId}:
+    put:
+      tags:
+        - goals
+      description: update goal template
+      operationId: updateGoalTemplate
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+        - $ref: '#/components/parameters/GoalTemplateId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalTemplate'
+      responses:
+        '200':
+          description: goal template successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalTemplate'
+
+        '400':
+          description: could not update goal template
+        '404':
+          description: not found
+    delete:
+      tags:
+        - goals
+      description: Delete goal template
+      operationId: deleteGoalTemplate
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+        - $ref: '#/components/parameters/GoalTemplateId'
+      responses:
+        '204':
+          description: Successfully deleted goal template
+        '404':
+          description: not found
+        '500':
+          description: Error
+
+
+# ---- END GOALS -----
+
+
   /studies/{studyId}/export/study:
     parameters:
       - $ref: '#/components/parameters/StudyId'
@@ -2194,6 +2375,126 @@ components:
           format: date-time
           readOnly: true
 
+    GoalTemplate:
+      type: object
+      properties:
+        studyId:
+          $ref: '#/components/schemas/StudyId'
+        templateId:
+          $ref: '#/components/schemas/Id'
+        studyGroupId:
+          $ref: '#/components/schemas/IdReference'
+        observationGroupIds:
+          type: array
+          description: The set of observation group Ids the goal template is part of
+          items:
+            $ref: '#/components/schemas/IdReference'
+          uniqueItems: true
+        title:
+          type: string
+        participantTitle:
+          type: string
+        participantInfo:
+          type: string
+        type:
+          type: string
+        categories:
+          type: object
+          properties:
+            kind:
+              type: string
+              format: enum
+              enum:
+                - outcome
+                - behavioral
+            topics:
+              description: references to one or more keys of topics defined in the study goal configuration
+              type: array
+              items:
+                type: string
+          required:
+            - kind
+            - topics
+        adherenceChecks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdherenceCheckScheduleEnum'
+        properties:
+          type: object
+          additionalProperties: true
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+        modified:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - studyId
+        - type
+        - title
+        - participantTitle
+        - participantInfo
+        - categories
+
+    StudyGoalConfig:
+      type: object
+      properties:
+        consents:
+          type: object
+          properties:
+            commitment:
+              type: string
+            achievability:
+              type: string
+            understandable:
+              type: string
+          required:
+            - commitment
+            - achievability
+            - understandable
+        schedule:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                $ref: '#/components/schemas/AdherenceCheckScheduleEnum'
+              time:
+                type: string
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalTopic'
+      required:
+        - consents
+        - schedule
+        - topics
+
+    AdherenceCheckScheduleEnum:
+      type: string
+      enum:
+        - morning
+        - noon
+        - afternoon
+        - evening
+        - night
+
+
+    GoalTopic:
+      type: object
+      properties:
+        key:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+      required:
+        - title
+        - description
+
     StudyId:
       type: integer
       format: int64
@@ -2594,6 +2895,7 @@ components:
           - action
           - trigger
           - observation
+          - goal
       required: true
     StudyId:
       name: studyId
@@ -2645,6 +2947,13 @@ components:
       required: true
     TokenId:
       name: tokenId
+      in: path
+      schema:
+        type: integer
+        format: int32
+      required: true
+    GoalTemplateId:
+      name: templateId
       in: path
       schema:
         type: integer
