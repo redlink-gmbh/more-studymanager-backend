@@ -134,6 +134,7 @@ class ObservationServiceTest {
         assertThat(gpsFactory.getHidden()).isTrue();
         assertThat(limFactory.getHidden()).isTrue();
         assertThat(qstFactory.getHidden()).isTrue();
+        assertThat(appUsageFactory.getHidden()).isTrue();
 
         assertThat(extFactory.getVisibility().isChangeable()).isFalse();
 
@@ -142,7 +143,8 @@ class ObservationServiceTest {
         assertThat(garminHeartRateFactory.getVisibility().isHiddenByDefault()).isFalse();
         assertThat(garminSleepFactory.getVisibility().isHiddenByDefault()).isFalse();
         assertThat(garminStepsFactory.getVisibility().isHiddenByDefault()).isFalse();
-        assertThat(appUsageFactory.getVisibility().isHiddenByDefault()).isFalse();
+
+        assertThat(appUsageFactory.getVisibility().isHiddenByDefault()).isTrue();
     }
 
     @Test
