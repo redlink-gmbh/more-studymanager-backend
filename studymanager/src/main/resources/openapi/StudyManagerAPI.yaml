@@ -1318,6 +1318,24 @@ paths:
 # --- START GOALS
 
   /studies/{studyId}/goals/config:
+    get:
+      tags:
+        - goals
+      description: Getter for the goal configuration
+      operationId: getGoalConfig
+      parameters:
+        - $ref: '#/components/parameters/StudyId'
+      responses:
+        '200':
+          description: Study goal configuration updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudyGoalConfigData'
+        '404':
+          description: The referenced study does not exist
+        '400':
+          description: The parsed studyId is invalid
     put:
       tags:
         - goals
@@ -1337,9 +1355,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudyGoalConfig'
+                $ref: '#/components/schemas/StudyGoalConfigData'
+        '404':
+          description: The referenced study does not exist
         '400':
-          description: The parsed study goal configuration was invalid
+          description: The parsed study goal configuration or study id was invalid
 
   /studies/{studyId}/goals/config/categories/topic:
     post:
@@ -2588,14 +2608,28 @@ components:
                 $ref: '#/components/schemas/AdherenceCheckScheduleEnum'
               time:
                 type: string
-        topics:
-          type: array
-          items:
-            $ref: '#/components/schemas/GoalTopic'
+                format: time
+                description: Follows ISO 8601 format for time
+      required:
+        - consents
+        - schedule
+
+    StudyGoalConfigData:
+      allOf:
+        - $ref: "#/components/schemas/StudyGoalConfig"
+        - type: object
+          properties:
+            topics:
+              type: array
+              items:
+                $ref: '#/components/schemas/GoalTopic'
       required:
         - consents
         - schedule
         - topics
+
+
+
 
     AdherenceCheckScheduleEnum:
       type: string
