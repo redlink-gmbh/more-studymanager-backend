@@ -148,19 +148,43 @@ class GoalConfigurationRepositoryTest {
         Long studyY = studyRepository.insert(new Study().setContact(new Contact().setPerson("Y"))).getStudyId();
 
         // Create multiple checks per study
-        GoalAdherenceCheck cX1 = goalConfigurationRepository.insertCheck(
-                new GoalAdherenceCheck().setStudyId(studyX).setTitle("Morning").setTime(LocalTime.of(8, 0)));
-        GoalAdherenceCheck cX2 = goalConfigurationRepository.insertCheck(
-                new GoalAdherenceCheck().setStudyId(studyX).setTitle("Evening").setTime(LocalTime.of(20, 30)));
+        GoalAdherenceCheck cX1 = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck()
+                        .setStudyId(studyX)
+                        .setCheckId(0)
+                        .setTitle("Morning")
+                        .setTime(LocalTime.of(8, 0)));
+        GoalAdherenceCheck cX2 = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck()
+                        .setStudyId(studyX)
+                        .setCheckId(4)
+                        .setTitle("Evening")
+                        .setTime(LocalTime.of(20, 30)));
 
-        GoalAdherenceCheck cY1 = goalConfigurationRepository.insertCheck(
-                new GoalAdherenceCheck().setStudyId(studyY).setTitle("Noon").setTime(LocalTime.of(12, 0)));
+        GoalAdherenceCheck cY1 = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck()
+                        .setStudyId(studyY)
+                        .setCheckId(2)
+                        .setTitle("Noon")
+                        .setTime(LocalTime.of(12, 0)));
 
         // List per study
         assertThat(goalConfigurationRepository.listChecks(studyX))
                 .hasSize(2)
                 .extracting(GoalAdherenceCheck::getTitle)
                 .containsExactlyInAnyOrder("Morning", "Evening");
+
+        //update check
+        cX2.setTime(LocalTime.of(20, 15));
+        GoalAdherenceCheck cX2Updated = goalConfigurationRepository.upsertCheck(cX2);
+        assertThat(cX2Updated.getTime()).isEqualTo(LocalTime.of(20, 15));
+
+        assertThat(goalConfigurationRepository.listChecks(studyX))
+                .hasSize(2)
+                .filteredOn(ac -> "Evening".equals(ac.getTitle()))
+                .extracting(GoalAdherenceCheck::getTime)
+                .containsOnly(cX2Updated.getTime());
+
 
         assertThat(goalConfigurationRepository.listChecks(studyY))
                 .hasSize(1)

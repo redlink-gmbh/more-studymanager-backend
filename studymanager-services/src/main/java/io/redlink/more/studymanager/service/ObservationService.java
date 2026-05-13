@@ -27,6 +27,8 @@ import io.redlink.more.studymanager.sdk.MoreSDK;
 import io.redlink.more.studymanager.utils.RandomSchedulerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
@@ -48,7 +50,7 @@ public class ObservationService {
     private final ObservationRepository repository;
 
     private final MoreSDK sdk;
-    ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     public ObservationService(StudyStateService studyStateService,
                               ObservationRepository repository,
@@ -171,7 +173,11 @@ public class ObservationService {
     }
 
     public Optional<ObservationFactory> getObservationFactory(Observation observation) {
-        return Optional.ofNullable(applicationContext.getBean(observation.getType(), ObservationFactory.class));
+        try {
+            return Optional.of(applicationContext.getBean(observation.getType(), ObservationFactory.class));
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+            return Optional.empty();
+        }
     }
 
     /**

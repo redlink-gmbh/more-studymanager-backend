@@ -12,6 +12,7 @@ import io.redlink.more.studymanager.core.datavalidity.ObservationDataSummary;
 import io.redlink.more.studymanager.core.io.SimpleParticipant;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
+import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.sdk.MoreActionSDK;
 import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
@@ -19,12 +20,15 @@ import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.sdk.schedule.Schedule;
 import io.redlink.more.studymanager.core.ui.DataViewData;
 import io.redlink.more.studymanager.core.ui.ViewConfig;
+import io.redlink.more.studymanager.model.Goal;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.data.ElasticActionDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticObservationDataPoint;
 import io.redlink.more.studymanager.repository.NameValuePairRepository;
 import io.redlink.more.studymanager.repository.ObservationRepository;
+import io.redlink.more.studymanager.repository.goals.GoalRepository;
+import io.redlink.more.studymanager.repository.goals.GoalTemplateRepository;
 import io.redlink.more.studymanager.scheduling.SchedulingService;
 import io.redlink.more.studymanager.scheduling.TriggerJob;
 import io.redlink.more.studymanager.sdk.scoped.MoreActionSDKImpl;
@@ -67,12 +71,16 @@ public class MoreSDK {
 
     private final ObservationRepository observationRepository;
 
+    private final GoalRepository goalRepository;
+
     public MoreSDK(
             NameValuePairRepository nvpairs,
             SchedulingService schedulingService,
             ParticipantService participantService,
             ElasticService elasticService, ElasticDataService elasticDataService,
-            PushNotificationService pushNotificationService, ObservationRepository observationRepository) {
+            PushNotificationService pushNotificationService,
+            ObservationRepository observationRepository,
+            GoalRepository goalRepository) {
         this.nvpairs = nvpairs;
         this.schedulingService = schedulingService;
         this.participantService = participantService;
@@ -80,6 +88,7 @@ public class MoreSDK {
         this.elasticDataService = elasticDataService;
         this.pushNotificationService = pushNotificationService;
         this.observationRepository = observationRepository;
+        this.goalRepository = goalRepository;
     }
 
     public MoreActionSDK scopedActionSDK(Long studyId, Integer studyGroupId, int interventionId, int actionId, String actionType, int participantId) {
@@ -174,6 +183,10 @@ public class MoreSDK {
     public void mergeParticipantProperties(long studyId, Integer participantId, int observationId, ObservationProperties properties) {
         observationRepository.mergeParticipantProperties(studyId, participantId, observationId, properties);
     }
+    public void mergeGoalProperties(long studyId, Integer participantId, int goalTemplateId, GoalTemplateProperties properties) {
+        Goal g = goalRepository.getById(studyId, 1);
+    }
+
 
     public Optional<ObservationProperties> getPropertiesForParticipant(long studyId, Integer participantId, int observationId) {
         return observationRepository.getParticipantProperties(studyId, participantId, observationId);

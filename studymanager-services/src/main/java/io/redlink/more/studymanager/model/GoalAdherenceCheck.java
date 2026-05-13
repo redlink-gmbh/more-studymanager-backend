@@ -1,6 +1,7 @@
 package io.redlink.more.studymanager.model;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class GoalAdherenceCheck {
     private Long studyId;
@@ -42,5 +43,17 @@ public class GoalAdherenceCheck {
     public GoalAdherenceCheck setTime(LocalTime time) {
         this.time = time;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        GoalAdherenceCheck that = (GoalAdherenceCheck) o;
+        return Objects.equals(studyId, that.studyId) && Objects.equals(checkId, that.checkId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studyId, checkId);
     }
 }

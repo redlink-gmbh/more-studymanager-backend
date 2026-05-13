@@ -25,25 +25,28 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 public class TriggerJob implements Job {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TriggerJob.class);
 
     private final MoreSDK moreSDK;
-    private final Map<String, TriggerFactory> triggerFactories;
+    private final ApplicationContext applicationContext;
     private final InterventionService interventionService;
     private final ActionService actionService;
 
     public TriggerJob(
             MoreSDK moreSDK,
-            Map<String, TriggerFactory> triggerFactories,
             InterventionService interventionService,
-            ActionService actionService
-    ) {
+            ActionService actionService,
+            ApplicationContext applicationContext) {
         this.moreSDK = moreSDK;
-        this.triggerFactories = triggerFactories;
+        this.applicationContext = applicationContext;
         this.interventionService = interventionService;
         this.actionService = actionService;
     }
@@ -66,9 +69,8 @@ public class TriggerJob implements Job {
                     new SchedulingException(String.format("Cannot find trigger: sid:%s, iid:%s", studyId, interventionId))
             );
 
-            TriggerFactory factory = Optional.ofNullable(
-                    triggerFactories.get(trigger.getType())
-            ).orElseThrow(() -> new SchedulingException("Cannot find triggerType " + trigger.getType()));
+            TriggerFactory factory = factory(trigger)
+                    .orElseThrow(() -> new SchedulingException("Cannot find triggerType " + trigger.getType()));
 
             MoreTriggerSDK sdk = moreSDK.scopedTriggerSDK(studyId, studyGroupId, interventionId);
             Parameters parameters = new Parameters(Map.of("triggerTime", context.getFireTime()));
@@ -85,4 +87,13 @@ public class TriggerJob implements Job {
         }
 
     }
+
+    private Optional<TriggerFactory> factory(Trigger trigger) {
+        try {
+            return Optional.of(applicationContext.getBean(trigger.getType(), TriggerFactory.class));
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+            return Optional.empty();
+        }
+    }
+
 }

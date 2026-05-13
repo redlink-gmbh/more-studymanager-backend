@@ -14,6 +14,7 @@ import io.redlink.more.studymanager.sdk.MoreSDK;
 import io.redlink.more.studymanager.service.ObservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,14 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class LimeSurveySidecarController {
     private static final Logger LOG = LoggerFactory.getLogger(LimeSurveySidecarController.class);
 
-    private final LimeSurveyObservationFactory factory;
+    private final ApplicationContext applicationContext;
 
     private final ObservationService observationService;
 
     private final MoreSDK sdk;
 
-    public LimeSurveySidecarController(LimeSurveyObservationFactory factory, ObservationService observationService, MoreSDK sdk) {
-        this.factory = factory;
+    public LimeSurveySidecarController(ObservationService observationService, MoreSDK sdk, ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
         this.observationService = observationService;
         this.sdk = sdk;
     }
@@ -57,11 +58,16 @@ public class LimeSurveySidecarController {
     ) {
         LOG.info("Requesting LimeSurveyEndPage for studyID {}, observationID {}, token {}, surveyID: {}, saveId: {}", studyId, observationId, token, surveyid, savedid);
         return observationService.getObservation(studyId, observationId)
-                .map(o -> factory.create(sdk.scopedObservationSDK(o.getStudyId(), o.getStudyGroupId(), o.getObservationId()), o.getProperties()))
+                .map(o -> lookupLimeSurveyObservationFactory().create(sdk.scopedObservationSDK(o.getStudyId(), o.getStudyGroupId(), o.getObservationId()), o.getProperties()))
                 .map(obs -> obs.writeDataPoints(token, surveyid, savedid))
                 .map(r -> r ? true : null)
                 .map(r -> ResponseEntity.ok("<h1>Survey submitted</h1>"))
                 .orElse(ResponseEntity.status(401).build());
     }
+
+    private LimeSurveyObservationFactory lookupLimeSurveyObservationFactory() {
+        return applicationContext.getBean(LimeSurveyObservationFactory.class);
+    }
+
 
 }

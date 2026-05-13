@@ -1,0 +1,2 @@
+# More Studymanager Goal Templates
+
