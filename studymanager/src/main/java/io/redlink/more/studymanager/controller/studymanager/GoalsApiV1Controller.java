@@ -10,6 +10,7 @@ import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
 import io.redlink.more.studymanager.model.Study;
+import io.redlink.more.studymanager.model.StudyGoalConfig;
 import io.redlink.more.studymanager.model.transformer.GoalV1Transformer;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.service.StudyService;
@@ -52,15 +53,15 @@ public class GoalsApiV1Controller implements GoalsApi {
     public ResponseEntity<StudyGoalConfigDataDTO> getGoalConfig(Long studyId) {
         final var currentUser = authService.getCurrentUser();
         validateStudyForUser(studyId, currentUser);
-        final var config = goalService.getGoalConfig(studyId);
+        var config = goalService.getGoalConfig(studyId);
         if(config == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(GoalV1Transformer.toStudyGoalConfigDataDTO_V1(
-                    config,
-                    goalService.getGoalTopics(studyId),
-                    goalService.getGoalAdherenceChecks(studyId)));
+            //no custom goal config set fpr this stury - use the default one (for now empty)
+            config = new StudyGoalConfig();
         }
+        return ResponseEntity.ok(GoalV1Transformer.toStudyGoalConfigDataDTO_V1(
+                config,
+                goalService.getGoalTopics(studyId),
+                goalService.getGoalAdherenceChecks(studyId)));
     }
 
     @Override
