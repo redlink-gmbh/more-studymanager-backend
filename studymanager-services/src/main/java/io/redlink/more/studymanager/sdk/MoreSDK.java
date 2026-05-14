@@ -36,6 +36,7 @@ import io.redlink.more.studymanager.sdk.scoped.MoreObservationSDKImpl;
 import io.redlink.more.studymanager.sdk.scoped.MoreTriggerSDKImpl;
 import io.redlink.more.studymanager.service.ElasticDataService;
 import io.redlink.more.studymanager.service.ElasticService;
+import io.redlink.more.studymanager.service.GoalService;
 import io.redlink.more.studymanager.service.ParticipantService;
 import io.redlink.more.studymanager.service.PushNotificationService;
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class MoreSDK {
 
     private final ObservationRepository observationRepository;
 
-    private final GoalRepository goalRepository;
+    private final GoalService goalService;
 
     public MoreSDK(
             NameValuePairRepository nvpairs,
@@ -80,7 +81,7 @@ public class MoreSDK {
             ElasticService elasticService, ElasticDataService elasticDataService,
             PushNotificationService pushNotificationService,
             ObservationRepository observationRepository,
-            GoalRepository goalRepository) {
+            GoalService goalService) {
         this.nvpairs = nvpairs;
         this.schedulingService = schedulingService;
         this.participantService = participantService;
@@ -88,7 +89,7 @@ public class MoreSDK {
         this.elasticDataService = elasticDataService;
         this.pushNotificationService = pushNotificationService;
         this.observationRepository = observationRepository;
-        this.goalRepository = goalRepository;
+        this.goalService = goalService;
     }
 
     public MoreActionSDK scopedActionSDK(Long studyId, Integer studyGroupId, int interventionId, int actionId, String actionType, int participantId) {
@@ -137,6 +138,8 @@ public class MoreSDK {
         return participants;
     }
 
+
+
     public boolean sendPushNotification(long studyId, int participantId, String title, String message, Map<String, String> data) {
         LOGGER.debug("Sending message to participant (sid:{}, pid:{}): {} -- {}", studyId, participantId, title, message);
         return pushNotificationService.sendPushNotification(studyId, participantId, title, message, data);
@@ -183,10 +186,6 @@ public class MoreSDK {
     public void mergeParticipantProperties(long studyId, Integer participantId, int observationId, ObservationProperties properties) {
         observationRepository.mergeParticipantProperties(studyId, participantId, observationId, properties);
     }
-    public void mergeGoalProperties(long studyId, Integer participantId, int goalTemplateId, GoalTemplateProperties properties) {
-        Goal g = goalRepository.getById(studyId, 1);
-    }
-
 
     public Optional<ObservationProperties> getPropertiesForParticipant(long studyId, Integer participantId, int observationId) {
         return observationRepository.getParticipantProperties(studyId, participantId, observationId);

@@ -109,13 +109,20 @@ class GoalsApiV1ControllerTest {
     }
 
     @Test
-    @DisplayName("GET goal config - not found returns 404")
+    @DisplayName("GET goal config - returns default empty")
     void testGetGoalConfigNotFound() throws Exception {
         when(goalService.getGoalConfig(STUDY_ID)).thenReturn(null);
 
         mvc.perform(get("/api/v1/studies/{studyId}/goals/config", STUDY_ID))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.consents.commitment").isEmpty())
+                .andExpect(jsonPath("$.consents.achievability").isEmpty())
+                .andExpect(jsonPath("$.consents.understandable").isEmpty())
+                .andExpect(jsonPath("$.topics").isArray())
+                .andExpect(jsonPath("$.topics").isEmpty())
+                .andExpect(jsonPath("$.schedule").isArray())
+                .andExpect(jsonPath("$.schedule").isEmpty());
     }
 
     @Test

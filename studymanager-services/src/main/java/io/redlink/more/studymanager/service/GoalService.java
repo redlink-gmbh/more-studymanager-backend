@@ -8,14 +8,11 @@ import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.GoalAdherenceCheck;
 import io.redlink.more.studymanager.model.GoalTemplate;
 import io.redlink.more.studymanager.model.GoalTopic;
-import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.StudyGoalConfig;
 import io.redlink.more.studymanager.repository.goals.GoalConfigurationRepository;
 import io.redlink.more.studymanager.repository.goals.GoalRepository;
 import io.redlink.more.studymanager.repository.goals.GoalTemplateRepository;
-import io.redlink.more.studymanager.sdk.MoreSDK;
-import io.redlink.more.studymanager.utils.RandomSchedulerUtils;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +30,6 @@ import java.util.stream.Collectors;
 @Service
 public class GoalService {
 
-    private final MoreSDK sdk;
     private final StudyStateService studyStateService;
 
     private final GoalConfigurationRepository goalConfigRepo;
@@ -43,13 +39,11 @@ public class GoalService {
 
     public GoalService(
             StudyStateService studyStateService,
-            MoreSDK sdk,
             GoalConfigurationRepository goalConfigRepo,
             GoalTemplateRepository goalTemplateRepo,
             GoalRepository goalRepo,
             ApplicationContext applicationContext) {
         this.studyStateService = studyStateService;
-        this.sdk = sdk;
         this.goalConfigRepo = goalConfigRepo;
         this.goalTemplateRepo = goalTemplateRepo;
         this.goalRepo = goalRepo;

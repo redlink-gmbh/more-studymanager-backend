@@ -72,7 +72,10 @@ class GoalTemplateRepositoryTest {
         goalConfigurationRepository.saveTopic(new GoalTopic().setStudyId(studyId).setKey("lifestyle").setTitle("Lifestyle"));
 
         GoalAdherenceCheck morningCheck = goalConfigurationRepository.upsertCheck(
-                new GoalAdherenceCheck().setStudyId(studyId).setTitle("Morning").setTime(LocalTime.of(8, 0))
+                new GoalAdherenceCheck().setStudyId(studyId)
+                        //NOTE: CheckId is expected to be set on the ordinal of an enum, title to the name
+                        .setCheckId(1).setTitle("Morning")
+                        .setTime(LocalTime.of(8, 0))
         );
 
         // === Create GoalTemplates with all combinations (exactly like the Observation test) ===
