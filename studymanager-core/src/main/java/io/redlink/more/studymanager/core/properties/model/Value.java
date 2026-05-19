@@ -59,7 +59,7 @@ public abstract class Value<T> {
         if (properties.containsKey(id)) {
             try {
                 return OBJECT_MAPPER.convertValue(properties.get(id), getValueType());
-            } catch (ClassCastException e) {
+            } catch (ClassCastException | IllegalArgumentException e) {
                 throw new ValueCastException(this, getValueType());
             }
         } else {
