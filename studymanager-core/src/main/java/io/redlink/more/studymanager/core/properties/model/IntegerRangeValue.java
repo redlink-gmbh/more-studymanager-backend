@@ -12,7 +12,9 @@ import io.redlink.more.studymanager.core.validation.ValidationIssue;
 
 public class IntegerRangeValue extends Value<IntegerRange> {
 
+    // Defines the minimum value of the range, not equal to IntegerRange.lower which defines the user set lower bound
     private int min = 0;
+    // Defines the maximum value of the range, not equal to IntegerRange.upper which defines the user set upper bound
     private int max = Integer.MAX_VALUE;
 
     public IntegerRangeValue(String id) {
@@ -31,10 +33,10 @@ public class IntegerRangeValue extends Value<IntegerRange> {
 
     @Override
     public ValidationIssue doValidate(IntegerRange range) {
-        if(range != null && range.getLower() > range.getUpper()) {
+        if (range != null && range.getLower() > range.getUpper()) {
             return ValidationIssue.error(this, "Lower bound of RangeValue MUST NOT be higer as the upper bound (lower:" + range.getLower() + ",  upper: " + range.getUpper() + ")");
         }
-        if (range != null && (range.getLower() < getMin() || range.getUpper() > getMax()) ) {
+        if (range != null && (range.getLower() < getMin() || range.getUpper() > getMax())) {
             return ValidationIssue.error(this, "Value must between " + getMin() + " and " + getMax());
         }
         return ValidationIssue.NONE;
