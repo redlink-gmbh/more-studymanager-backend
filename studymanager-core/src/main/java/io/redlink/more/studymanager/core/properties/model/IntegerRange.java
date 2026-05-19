@@ -6,7 +6,9 @@ import java.util.Objects;
 
 public class IntegerRange {
 
+    // Defines the lower set value of the range
     private final int lower;
+    // Defines the upper set value of the range
     private final int upper;
 
     @JsonCreator
