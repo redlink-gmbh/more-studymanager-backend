@@ -14,6 +14,7 @@ import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
 import static io.redlink.more.studymanager.component.goaltemplate.AbstractAmountOfGoalTemplateFactory.*;
 
 import java.util.List;
+import java.util.Set;
 
 public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplateFactory<AmoutOfGoalTemplate<GoalTemplateProperties>,GoalTemplateProperties>  {
 
@@ -30,11 +31,17 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                 GoalTemplateFactory.GOAL_TITLE_STATE,
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_GOAL_CONFIGURATION,
-                new StringTemplateValue("goal-preview")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
-                        .setDefaultValue("Ich esse mindestens <goal.amount> Portionen <goal.unit> [an <days-of-week> Tagen der Woche]")
-                        .setImmutable(true),
+                new StringTemplateValue(
+                        "goal-preview",
+                        Set.of(
+                            CONFIGS_GOAL_AMOUNT_VALUE.getId(),
+                            CONFIGS_GOAL_AMOUNT_UNIT.getId(),
+                            DAYS_OF_WEEK.getId()
+                        ))
+                    .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
+                    .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
+                    .setDefaultValue("Ich esse mindestens <goal.amount> Portionen <goal.unit> [an <days-of-week> Tagen der Woche]")
+                    .setImmutable(true),
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_GROUP,
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_VALUE,
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_UNIT,
