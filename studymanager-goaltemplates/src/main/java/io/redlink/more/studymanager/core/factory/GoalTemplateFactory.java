@@ -106,6 +106,8 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
      * Allows to define that a goal is aktive on x days of the week (e.g. 5/7 days)
      */
     public static final Value<IntegerRange> DAYS_OF_WEEK = new IntegerRangeValue("days-of-week")
+            .setMin(1) //at least at one day of the week
+            .setMax(7) //a week has only 7 days
             .setName(GLOBAL_PROPERTY_PREFIX + "days-of-week.name")
             .setDescription(GLOBAL_PROPERTY_PREFIX + "days-of-week.description")
             .setDefaultValue(new IntegerRange(7, 7));

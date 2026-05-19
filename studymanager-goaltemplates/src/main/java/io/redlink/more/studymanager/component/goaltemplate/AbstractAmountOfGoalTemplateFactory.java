@@ -55,6 +55,8 @@ public abstract class AbstractAmountOfGoalTemplateFactory<C extends GoalTemplate
             .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.description")
             .setImmutable(true);
     protected static final Value<IntegerRange> CONFIGS_GOAL_AMOUNT_VALUE = new IntegerRangeValue("goal.amount")
+            .setMin(1)
+            .setMax(Integer.MAX_VALUE)
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal.amount.name")
             .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.amount.description")
             .setRequired(true);
