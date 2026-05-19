@@ -35,11 +35,11 @@ public abstract class AbstractAmountOfGoalTemplateFactory<C extends GoalTemplate
 
     protected static final Value<Void> CONFIG_SECTION_CONFIGURATION = new ConfigSection("configuration")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.name")
-            .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.description")
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.description")
             .setImmutable(true);
     protected static final Value<Void> CONFIG_SECTION_GOAL_CONFIGURATION = new ConfigSection("goal-configuration")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.name")
-            .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.description")
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.description")
             .setImmutable(true);
     protected static final Value<Void> CONFIG_SECTION_STATUS = new ConfigSection("status-texts")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.status-texts.name")

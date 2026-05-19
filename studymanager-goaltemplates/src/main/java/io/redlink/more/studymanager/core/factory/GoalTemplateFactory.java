@@ -16,6 +16,7 @@ import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.model.BooleanValue;
 import io.redlink.more.studymanager.core.properties.model.IntegerRange;
 import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
+import io.redlink.more.studymanager.core.properties.model.StringTextValue;
 import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
@@ -89,15 +90,15 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
      * Used to configure the title of the GoalTemplate as shown in the application
      */
     public static final Value<String> APP_TITLE = new StringValue("app-title")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.appTitle.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.appTitle.description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "appTitle.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "appTitle.description")
             .setRequired(true);
     /**
      * Used to configure the custom description of the GoalTemplate as shown in the application
      */
-    public static final Value<String> APP_DESCRIPTION = new StringValue("app-description")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.appDescription.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.appDescription.description")
+    public static final Value<String> APP_DESCRIPTION = new StringTextValue("app-description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "appDescription.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "appDescription.description")
             .setRequired(false);
 
 
@@ -105,38 +106,38 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
      * Allows to define that a goal is aktive on x days of the week (e.g. 5/7 days)
      */
     public static final Value<IntegerRange> DAYS_OF_WEEK = new IntegerRangeValue("days-of-week")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.days-of-week.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.days-of-week.description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "days-of-week.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "days-of-week.description")
             .setDefaultValue(new IntegerRange(7, 7));
 
     /**
      * User can assign a custom title to the GoalTemplate
      */
     public static final Value<Boolean> GOAL_TITLE_STATE = new BooleanValue("goal-title-state")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.goalTitleState.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.goalTitleState.description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "goalTitleState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "goalTitleState.description")
             .setDefaultValue(false);
     /**
      * User can create multiple instance of the same GoalTemplate
      */
     public static final Value<Boolean> ALLOW_INSTANCES_STATE = new BooleanValue("instance-state")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.instanceState.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.instanceState.description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "instanceState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "instanceState.description")
             .setDefaultValue(false);
 
     /**
      * Allows to configure a self report time.
      */
     public static final Value<String> SELF_REPORT_TIME = new StringValue("self-report-time")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.self-report-time.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.self-report-time.description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "self-report-time.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "self-report-time.description")
             .setDefaultValue("Abends"); //use evening as default FIXME: change to the correct value
     /**
      * Sets the self report time to evening. Just informative. Can not be changed by via configuration
      */
     public static final Value<String> SELF_REPORT_TIME_EVENING = new StringValue("self-report-time")
-            .setName(GLOBAL_PROPERTY_PREFIX + "global.self-report-time.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "global.self-report-time.description")
+            .setName(GLOBAL_PROPERTY_PREFIX + "self-report-time.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "self-report-time.description")
             .setDefaultValue("Abends") // FIXME: change to the correct value
             .setImmutable(true);
 

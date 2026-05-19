@@ -5,6 +5,8 @@ import io.redlink.more.studymanager.core.exception.ConfigurationValidationExcept
 import io.redlink.more.studymanager.core.factory.ComponentFactory;
 import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
+import io.redlink.more.studymanager.core.properties.model.StringTemplateValue;
+import io.redlink.more.studymanager.core.properties.model.StringTextValue;
 import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
@@ -28,7 +30,7 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                 GoalTemplateFactory.GOAL_TITLE_STATE,
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_GOAL_CONFIGURATION,
-                new StringValue("goal-preview")
+                new StringTemplateValue("goal-preview")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                         .setDefaultValue("Ich esse mindestens <goal.amount> Portionen <goal.unit> [an <days-of-week> Tagen der Woche]")
@@ -39,24 +41,24 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                 GoalTemplateFactory.DAYS_OF_WEEK,
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_STATUS,
-                new StringValue("status-100-reached")
+                new StringTextValue("status-100-reached")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-100-reached.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-100-reached.description")
                         .setDefaultValue("Du hast dein Tagesziel erfolgreich gemeistert. Weiter so!"),
-                new StringValue("status-75-reached")
+                new StringTextValue("status-75-reached")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-75-reached.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-75-reached.description")
-                        .setDefaultValue("Dein Ziel ist zum greifen nah. Ein bisschen mehr <goal.unit> und Du hast es geschafft!"),
-                new StringValue("status-not-reached")
+                        .setDefaultValue("Dein Ziel ist zum greifen nah. Ein bisschen mehr und Du hast es geschafft!"),
+                new StringTextValue("status-not-reached")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-not-reached.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-not-reached.description")
-                        .setDefaultValue("Du bist auf den richtigen Weg. Jede Portion <goal.unit> zählt für Dein wohlbefinden."),
+                        .setDefaultValue("Du bist auf den richtigen Weg. Jede Portion zählt für Dein wohlbefinden."),
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_SELF_REPORT,
-                new StringValue("self-report-question")
+                new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
-                        .setDefaultValue("Wie viele Portionen <goal.unit> hast Du heute gegessen? Bitte trage den Wert ein."),
+                        .setDefaultValue("Wie viele Portionen hast Du heute gegessen? Bitte trage den Wert ein."),
                 GoalTemplateFactory.SELF_REPORT_TIME_EVENING
         );
     }

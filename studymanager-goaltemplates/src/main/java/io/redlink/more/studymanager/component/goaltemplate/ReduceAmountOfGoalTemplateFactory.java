@@ -5,6 +5,8 @@ import io.redlink.more.studymanager.core.exception.ConfigurationValidationExcept
 import io.redlink.more.studymanager.core.factory.ComponentFactory;
 import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
+import io.redlink.more.studymanager.core.properties.model.StringTemplateValue;
+import io.redlink.more.studymanager.core.properties.model.StringTextValue;
 import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
@@ -25,7 +27,7 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                 GoalTemplateFactory.GOAL_TITLE_STATE,
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_GOAL_CONFIGURATION,
-                new StringValue("goal-preview")
+                new StringTemplateValue("goal-preview")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                         .setDefaultValue("Ich <goal.activity> maximal <goal.amount> <goal.unit> [an maximal <days-of-week> Tagen in der Woche]")
@@ -41,24 +43,24 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                 GoalTemplateFactory.DAYS_OF_WEEK,
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_STATUS,
-                new StringValue("status-day-not-consumed")
+                new StringTextValue("status-day-not-consumed")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-not-consumed.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-not-consumed.description")
                         .setDefaultValue("Starker Tag! Du hast heute nichts konsumiert."),
-                new StringValue("status-day-under-limit")
+                new StringTextValue("status-day-under-limit")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-under-limit.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-under-limit.description")
                         .setDefaultValue("Du gemacht. Du bist im Ziel geblieben und hast die Kontrolle behalten. Weiter so!"),
-                new StringValue("status-day-over-limit")
+                new StringTextValue("status-day-over-limit")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-over-limit.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-over-limit.description")
                         .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser."),
 
                 AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_SELF_REPORT,
-                new StringValue("self-report-question")
+                new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
-                        .setDefaultValue("Wie viele <goal.unit> hast Du heute <goal.activity>? Bitte trage den Wert ein."),
+                        .setDefaultValue("Wie viele Einheiten hast Du heute <goal.activity>? Bitte trage den Wert ein."),
                 GoalTemplateFactory.SELF_REPORT_TIME_EVENING
         );
     }
