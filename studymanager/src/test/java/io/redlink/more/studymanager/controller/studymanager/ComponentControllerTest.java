@@ -9,15 +9,27 @@
 package io.redlink.more.studymanager.controller.studymanager;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.redlink.more.studymanager.core.factory.ActionFactory;
 import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.model.User;
+import io.redlink.more.studymanager.core.properties.ObservationProperties;
+import io.redlink.more.studymanager.core.properties.model.BooleanValue;
+import io.redlink.more.studymanager.core.properties.model.IntegerRange;
+import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
+import io.redlink.more.studymanager.core.properties.model.IntegerValue;
+import io.redlink.more.studymanager.core.properties.model.StringTextValue;
+import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -53,6 +65,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class ComponentControllerTest {
 
+    private static ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule());
+
+
     @MockitoBean
     private OAuth2AuthenticationService authenticationService;
 
@@ -71,6 +87,36 @@ class ComponentControllerTest {
         public TestComponentConfig(){
             this.observationFactory = mock(ObservationFactory.class);
             when(observationFactory.getId()).thenReturn("my-test-observation");
+            when(observationFactory.getPropertyClass()).thenReturn(ObservationProperties.class);
+            when(observationFactory.getProperties()).thenReturn(List.of(
+                    new BooleanValue("test-boolean")
+                            .setName("Boolean Value Test")
+                            .setRequired(true)
+                            .setImmutable(false)
+                            .setDefaultValue(false),
+                    new IntegerValue("test-integer")
+                            .setName("Integer Value Test")
+                            .setRequired(true)
+                            .setImmutable(false)
+                            .setDefaultValue(-1),
+                    new StringValue("test-string")
+                            .setName("String Value Test")
+                            .setRequired(true)
+                            .setImmutable(false)
+                            .setDefaultValue("default"),
+                    new StringTextValue("test-text")
+                            .setName("Text Value Test")
+                            .setRequired(true)
+                            .setImmutable(false)
+                            .setDefaultValue("default\nmultiline"),
+                    new IntegerRangeValue("test-range")
+                            .setMin(0)
+                            .setMax(100)
+                            .setName("Range Value Test")
+                            .setRequired(true)
+                            .setImmutable(false)
+                            .setDefaultValue(new IntegerRange(1,50))
+            ));
 
             this.triggerFactory = mock(TriggerFactory.class);
             when(triggerFactory.getId()).thenReturn("my-test-trigger");
@@ -174,6 +220,26 @@ class ComponentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content("{}"))
                 .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    public void testComponentProperties() throws Exception {
+
+        Map<String,Object> properties = new HashMap<>();
+        properties.put("test-boolean", true);
+        properties.put("test-integer", 1);
+        properties.put("test-string", "test");
+        properties.put("test-text", "test\nmultiline");
+        properties.put("test-range", Map.of("lower", 1, "upper", 10));
+        String content = MAPPER.writeValueAsString(properties);
+        AuthenticatedUser user = new AuthenticatedUser("user1", "", "","", Set.of());
+        when(authenticationService.getCurrentUser()).thenReturn(user);
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/components/observation/my-test-observation/validate")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(content))
+                .andExpect(status().isOk());
+
 
     }
 

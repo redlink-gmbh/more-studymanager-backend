@@ -1,6 +1,8 @@
 package io.redlink.more.studymanager.core.properties.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
@@ -12,7 +14,9 @@ public class IntegerRange {
     private final int upper;
 
     @JsonCreator
-    public IntegerRange(int lower, int upper) {
+    public IntegerRange(
+            @JsonProperty("lower") @JsonAlias({"min"}) int lower,
+            @JsonProperty("upper") @JsonAlias({"max"}) int upper) {
         this.lower = lower;
         this.upper = upper;
     }
