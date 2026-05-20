@@ -16,9 +16,13 @@ import io.redlink.more.studymanager.service.InterventionService;
 import io.redlink.more.studymanager.utils.LoggingUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Component
@@ -28,7 +32,7 @@ public class ActionService {
 
     private final InterventionService interventionService;
 
-    private final Map<String, ActionFactory> actionFactories;
+    private final ApplicationContext applicationContext;
 
     private final MoreSDK moreSDK;
 
@@ -36,13 +40,13 @@ public class ActionService {
 
     public ActionService(
             InterventionService interventionService,
-            Map<String, ActionFactory> actionFactories,
             MoreSDK moreSDK,
-            ActionWorker worker) {
+            ActionWorker worker,
+            ApplicationContext applicationContext) {
         this.interventionService = interventionService;
-        this.actionFactories = actionFactories;
         this.moreSDK = moreSDK;
         this.worker = worker;
+        this.applicationContext = applicationContext;
     }
 
     public void execute(long studyId, Integer studyGroupId, int interventionId, Set<ActionParameter> parameters) {
@@ -57,8 +61,7 @@ public class ActionService {
                                io.redlink.more.studymanager.model.Action action) {
         try (var ctx = LoggingUtils.createContext()) {
             ctx.putAction(action);
-            ActionFactory factory = actionFactories.get(action.getType());
-
+            ActionFactory factory = factory(action).orElse(null);
             if (factory == null) {
                 LOGGER.error("Skipping action_{} from intervention_{} in study_{}: No factory found for actionType {}",
                         action.getActionId(), interventionId, studyId, action.getType());
@@ -80,6 +83,14 @@ public class ActionService {
                             action.getActionId(), action.getType(), interventionId, studyId, e.getMessage(), e);
                 }
             });
+        }
+    }
+
+    private Optional<ActionFactory> factory(io.redlink.more.studymanager.model.Action action) {
+        try {
+            return Optional.of(applicationContext.getBean(action.getType(), ActionFactory.class));
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+            return Optional.empty();
         }
     }
 

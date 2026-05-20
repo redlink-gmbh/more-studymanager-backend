@@ -34,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,10 +62,11 @@ class ObservationServiceTest {
 
     @Test
     void testValidation() {
+        when(applicationContext.getBean("not-existing-observation", ObservationFactory.class)).thenThrow(NoSuchBeanDefinitionException.class);
         NotFoundException notFoundException = Assertions.assertThrows(NotFoundException.class, () ->
-                observationService.addObservation(new Observation().setStudyId(1L).setObservationId(1).setType("my-observation"))
+                observationService.addObservation(new Observation().setStudyId(1L).setObservationId(1).setType("not-existing-observation"))
         );
-        Assertions.assertEquals("ObservationFactory for Observation[study: 1, id:1, type: my-observation] cannot be found", notFoundException.getMessage());
+        Assertions.assertEquals("ObservationFactory for Observation[study: 1, id:1, type: not-existing-observation] cannot be found", notFoundException.getMessage());
 
         ObservationFactory factory = mock(ObservationFactory.class);
         when(factory.validate(any())).thenThrow(new ConfigurationValidationException(ConfigurationValidationReport.init().error("My error")));
@@ -152,7 +154,7 @@ class ObservationServiceTest {
         java.util.Optional<ObservationFactory> present = observationService.getObservationFactory(obs);
         org.assertj.core.api.Assertions.assertThat(present).containsSame(factory);
 
-        org.mockito.Mockito.when(applicationContext.getBean("x", ObservationFactory.class)).thenReturn(null);
+        org.mockito.Mockito.when(applicationContext.getBean("x", ObservationFactory.class)).thenThrow(NoSuchBeanDefinitionException.class);
         java.util.Optional<ObservationFactory> empty = observationService.getObservationFactory(obs);
         org.assertj.core.api.Assertions.assertThat(empty).isEmpty();
     }

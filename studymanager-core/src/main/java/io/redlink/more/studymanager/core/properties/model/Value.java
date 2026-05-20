@@ -9,10 +9,12 @@
 package io.redlink.more.studymanager.core.properties.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.redlink.more.studymanager.core.exception.ValueCastException;
 import io.redlink.more.studymanager.core.exception.ValueNonNullException;
 import io.redlink.more.studymanager.core.properties.ComponentProperties;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
+
 import java.util.function.Function;
 
 public abstract class Value<T> {
@@ -23,6 +25,7 @@ public abstract class Value<T> {
     private boolean required = false;
     private boolean immutable = false;
     private Function<T, ValidationIssue> validationFunction = (T t) -> ValidationIssue.NONE;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public Value(String id) {
         this.id = id;
@@ -55,8 +58,8 @@ public abstract class Value<T> {
     public T getValue(ComponentProperties properties) {
         if (properties.containsKey(id)) {
             try {
-                return getValueType().cast(properties.get(id));
-            } catch (ClassCastException e) {
+                return OBJECT_MAPPER.convertValue(properties.get(id), getValueType());
+            } catch (ClassCastException | IllegalArgumentException e) {
                 throw new ValueCastException(this, getValueType());
             }
         } else {

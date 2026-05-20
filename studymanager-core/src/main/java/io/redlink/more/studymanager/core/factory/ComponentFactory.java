@@ -36,13 +36,13 @@ public abstract class ComponentFactory<C extends Component, P extends ComponentP
 
     public abstract String getTitle();
 
+    public abstract String getDescription();
+
     public List<Value> getProperties() {
         return List.of();
     }
 
     public abstract <P extends  ComponentProperties> Class<P> getPropertyClass();
-
-    public abstract String getDescription();
 
     //TODO remove in a next step (as soon as interventions impl is done in FE for new props
     public Map<String, Object> getDefaultProperties() {

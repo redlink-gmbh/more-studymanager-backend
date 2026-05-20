@@ -8,6 +8,7 @@
  */
 package io.redlink.more.studymanager.service;
 
+import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.event.StudyStateChangedEvent;
 import io.redlink.more.studymanager.core.component.Component;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
@@ -31,6 +32,9 @@ import java.util.*;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -42,8 +46,7 @@ public class InterventionService {
     private final StudyStateService studyStateService;
     private final InterventionRepository repository;
     private final StudyRepository studyRepository;
-    private final Map<String, ActionFactory> actionFactories;
-    private final Map<String, TriggerFactory> triggerFactories;
+    private final ApplicationContext applicationContext;
 
     private final MoreSDK sdk;
     private static final Logger LOGGER = LoggerFactory.getLogger(InterventionService.class);
@@ -52,13 +55,11 @@ public class InterventionService {
     public InterventionService(StudyStateService studyStateService,
                                InterventionRepository repository, StudyRepository studyRepository,
                                MoreSDK sdk,
-                               Map<String, TriggerFactory> triggerFactories,
-                               Map<String, ActionFactory> actionFactories) {
+                               ApplicationContext applicationContext) {
         this.studyStateService = studyStateService;
         this.repository = repository;
         this.studyRepository = studyRepository;
-        this.actionFactories = actionFactories;
-        this.triggerFactories = triggerFactories;
+        this.applicationContext = applicationContext;
         this.sdk = sdk;
     }
 
@@ -73,14 +74,16 @@ public class InterventionService {
 
         {
             Trigger validated = validateTrigger(trigger);
-            TriggerFactory factory = factory(validated);
+            TriggerFactory factory = factory(validated)
+                    .orElseThrow(() -> NotFoundException.TriggerFactory(trigger.getType()));
             validated.setProperties((TriggerProperties) factory.preImport(validated.getProperties()));
             repository.importTrigger(studyId, imported.getInterventionId(), validateTrigger(validated));
         }
 
         actions.forEach(a -> {
             Action validated = validateAction(a);
-            ActionFactory factory = factory(validated);
+            ActionFactory factory = factory(validated)
+                    .orElseThrow(() -> NotFoundException.ActionFactory(a.getType()));
             validated.setProperties((ActionProperties) factory.preImport(validated.getProperties()));
             repository.importAction(studyId, imported.getInterventionId(), validateAction(validated));
         });
@@ -186,6 +189,7 @@ public class InterventionService {
                 .map(intervention -> Optional.ofNullable(
                                 getTriggerByIds(intervention.getStudyId(), intervention.getInterventionId()))
                         .map(trigger -> factory(trigger)
+                                .orElseThrow(() -> NotFoundException.TriggerFactory(trigger.getType()))
                                 .create(
                                     sdk.scopedTriggerSDK(intervention.getStudyId(), intervention.getStudyGroupId(), intervention.getInterventionId()),
                                     trigger.getProperties()
@@ -196,11 +200,10 @@ public class InterventionService {
     }
 
     private Action validateAction(Action action) {
-        if (!actionFactories.containsKey(action.getType())) {
-            throw NotFoundException.ActionFactory(action.getType());
-        }
         try {
-            factory(action).validate(action.getProperties());
+            factory(action)
+                    .orElseThrow(() -> NotFoundException.ActionFactory(action.getType()))
+                    .validate(action.getProperties());
         } catch (ConfigurationValidationException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -208,11 +211,10 @@ public class InterventionService {
     }
 
     private Trigger validateTrigger(Trigger trigger) {
-        if (!triggerFactories.containsKey(trigger.getType())) {
-            throw NotFoundException.TriggerFactory(trigger.getType());
-        }
         try {
-            factory(trigger).validate(trigger.getProperties());
+            factory(trigger)
+                    .orElseThrow(() -> NotFoundException.TriggerFactory(trigger.getType()))
+                    .validate(trigger.getProperties());
             if(trigger.getProperties().containsKey("cronSchedule")) {
                 try {
                     CronExpression.validateExpression(trigger.getProperties().get("cronSchedule").toString());
@@ -226,11 +228,19 @@ public class InterventionService {
         return trigger;
     }
 
-    private TriggerFactory factory(Trigger trigger) {
-        return triggerFactories.get(trigger.getType());
+    private Optional<TriggerFactory> factory(Trigger trigger) {
+        try {
+            return Optional.of(applicationContext.getBean(trigger.getType(), TriggerFactory.class));
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+            return Optional.empty();
+        }
     }
 
-    private ActionFactory factory(Action action) {
-        return actionFactories.get(action.getType());
+    private Optional<ActionFactory> factory(Action action) {
+        try {
+            return Optional.of(applicationContext.getBean(action.getType(), ActionFactory.class));
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+            return Optional.empty();
+        }
     }
 }

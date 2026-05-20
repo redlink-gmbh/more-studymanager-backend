@@ -39,7 +39,7 @@ public class GoalConfigurationRepository {
     private static final String INSERT_OR_UPDATE_TOPIC = """
             INSERT INTO goal_topics(study_id, key, title, description)
             VALUES (:study_id, :key, :title, :description)
-            ON CONFLICT (study_id, key) DO UPDATE SET 
+            ON CONFLICT (study_id, key) DO UPDATE SET
                 title = EXCLUDED.title,
                 description = EXCLUDED.description,
                 modified = now()""";
@@ -47,9 +47,12 @@ public class GoalConfigurationRepository {
     private static final String LIST_TOPICS = "SELECT * FROM goal_topics WHERE study_id = ? ORDER BY key";
     private static final String DELETE_TOPIC = "DELETE FROM goal_topics WHERE study_id = ? AND key = ?";
 
-    private static final String INSERT_ADHERENCE_CHECK = """
-            INSERT INTO goal_adherence_checks(study_id, check_id, title, time)
-            VALUES (:study_id, (SELECT COALESCE(MAX(check_id),0)+1 FROM goal_adherence_checks WHERE study_id = :study_id), :title, :time)""";
+    private static final String UPSERT_ADHERENCE_CHECK = """
+        INSERT INTO goal_adherence_checks (study_id, check_id, title, time)
+        VALUES (:study_id, :check_id, :title, :time)
+        ON CONFLICT (study_id, check_id) DO UPDATE
+            SET title = EXCLUDED.title,
+                time = EXCLUDED.time;""";
     private static final String IMPORT_ADHERENCE_CHECK = """
             INSERT INTO goal_adherence_checks(study_id, check_id, title, time)
             VALUES (:study_id, :check_id, :title, :time)
@@ -58,6 +61,7 @@ public class GoalConfigurationRepository {
     private static final String GET_ADHERENCE_CHECK_BY_ID = "SELECT * FROM goal_adherence_checks WHERE study_id = ? AND check_id = ?";
     private static final String LIST_ADHERENCE_CHECKS = "SELECT * FROM goal_adherence_checks WHERE study_id = ? ORDER BY check_id";
     private static final String DELETE_ADHERENCE_CHECK = "DELETE FROM goal_adherence_checks WHERE study_id = ? AND check_id = ?";
+    private static final String DELETE_ADHERENCE_CHECKS = "DELETE FROM goal_adherence_checks WHERE study_id = ?";
     private static final String UPDATE_ADHERENCE_CHECK = "UPDATE goal_adherence_checks SET title = :title, time = :time WHERE study_id = :study_id AND check_id = :check_id";
 
     private final JdbcTemplate template;
@@ -127,11 +131,9 @@ public class GoalConfigurationRepository {
     }
 
     @Transactional
-    public GoalAdherenceCheck insertCheck(GoalAdherenceCheck check) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedTemplate.update(INSERT_ADHERENCE_CHECK, toParams(check), keyHolder, new String[]{"check_id"});
-        Integer checkId = keyHolder.getKey().intValue();
-        return getCheckById(check.getStudyId(), checkId);
+    public GoalAdherenceCheck upsertCheck(GoalAdherenceCheck check) {
+        namedTemplate.update(UPSERT_ADHERENCE_CHECK, toParams(check));
+        return getCheckById(check.getStudyId(), check.getCheckId());
     }
 
     @Transactional
@@ -172,6 +174,10 @@ public class GoalConfigurationRepository {
         return getCheckById(check.getStudyId(), check.getCheckId());
     }
 
+    public void deleteChecks(Long studyId) {
+        template.update(DELETE_ADHERENCE_CHECKS, studyId);
+    }
+
     public void deleteCheck(Long studyId, Integer checkId) {
         template.update(DELETE_ADHERENCE_CHECK, studyId, checkId);
     }
@@ -195,6 +201,7 @@ public class GoalConfigurationRepository {
     private MapSqlParameterSource toParams(GoalAdherenceCheck check) {
         return new MapSqlParameterSource()
                 .addValue("study_id", check.getStudyId())
+                .addValue("check_id", check.getCheckId())
                 .addValue("title", check.getTitle())
                 .addValue("time", check.getTime());
     }

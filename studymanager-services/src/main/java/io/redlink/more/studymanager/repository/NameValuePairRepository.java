@@ -22,12 +22,18 @@ public class NameValuePairRepository {
     private static final String UPSERT_O = "INSERT INTO nvpairs_observations(study_id, observation_id, name, value) VALUES (?,?,?,?) ON CONFLICT(study_id, observation_id, name) DO UPDATE SET value = EXCLUDED.value";
     private static final String UPSERT_T = "INSERT INTO nvpairs_triggers(study_id, intervention_id, name, value) VALUES (?,?,?,?) ON CONFLICT(study_id, intervention_id, name) DO UPDATE SET value = EXCLUDED.value";
     private static final String UPSERT_A = "INSERT INTO nvpairs_actions(study_id, intervention_id, action_id, name, value) VALUES (?,?,?,?,?) ON CONFLICT(study_id, intervention_id, action_id, name) DO UPDATE SET value = EXCLUDED.value";
+    private static final String UPSERT_GT = "INSERT INTO nvpairs_goaltemplates(study_id, template_id, name, value) VALUES (?,?,?,?) ON CONFLICT(study_id, template_id, name) DO UPDATE SET value = EXCLUDED.value";
+    private static final String UPSERT_G = "INSERT INTO nvpairs_goals(study_id, goal_id, name, value) VALUES (?,?,?,?) ON CONFLICT(study_id, goal_id, name) DO UPDATE SET value = EXCLUDED.value";
     private static final String READ_O = "SELECT value FROM nvpairs_observations WHERE study_id = ? AND observation_id = ? AND name = ? LIMIT 1";
     private static final String READ_T = "SELECT value FROM nvpairs_triggers WHERE study_id = ? AND intervention_id = ? AND name = ? LIMIT 1";
     private static final String READ_A = "SELECT value FROM nvpairs_actions WHERE study_id = ? AND intervention_id = ? AND action_id = ? AND name = ? LIMIT 1";
+    private static final String READ_GT = "SELECT value FROM nvpairs_goaltemplates WHERE study_id = ? AND template_id = ? AND name = ? LIMIT 1";
+    private static final String READ_G = "SELECT value FROM nvpairs_goals WHERE study_id = ? AND goal_id = ? AND name = ? LIMIT 1";
     private static final String REMOVE_O = "DELETE FROM nvpairs_observations WHERE study_id = ? AND observation_id = ? AND name = ?";
     private static final String REMOVE_T = "DELETE FROM nvpairs_triggers WHERE study_id = ? AND intervention_id = ? AND name = ?";
     private static final String REMOVE_A = "DELETE FROM nvpairs_actions WHERE study_id = ? AND intervention_id = ? AND action_id = ? AND name = ?";
+    private static final String REMOVE_GT = "DELETE FROM nvpairs_goaltemplates WHERE study_id = ? AND template_id = ? AND name = ?";
+    private static final String REMOVE_G = "DELETE FROM nvpairs_goals WHERE study_id = ? AND goal_id = ? AND name = ?";
 
     private final JdbcTemplate template;
 
@@ -45,6 +51,14 @@ public class NameValuePairRepository {
 
     public <T extends Serializable> void setActionValue(Long studyId, int interventionId, int actionId, String name, T value) {
         this.template.update(UPSERT_A, studyId, interventionId, actionId, name, SerializationUtils.serialize(value));
+    }
+
+    public <T extends Serializable> void setGoalTemplateValue(Long studyId, int templateId, String name, T value) {
+        this.template.update(UPSERT_GT, studyId, templateId, name, SerializationUtils.serialize(value));
+    }
+
+    public <T extends Serializable> void setGoalValue(Long studyId, int goalId, String name, T value) {
+        this.template.update(UPSERT_G, studyId, goalId, name, SerializationUtils.serialize(value));
     }
 
     public <T extends Serializable> Optional<T> getObservationValue(Long studyId, int observationId, String name, Class<T> tClass) {
@@ -77,6 +91,26 @@ public class NameValuePairRepository {
         }
     }
 
+    public <T extends Serializable> Optional<T> getGoalTemplateValue(Long studyId, int templateId, String name, Class<T> tClass) {
+        try {
+            return Optional.ofNullable(this.template.queryForObject(READ_GT,
+                    (rs, rowNum) -> tClass.cast(SerializationUtils.deserialize(rs.getBytes("value"))),
+                    studyId, templateId, name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public <T extends Serializable> Optional<T> getGoalValue(Long studyId, int goalId, String name, Class<T> tClass) {
+        try {
+            return Optional.ofNullable(this.template.queryForObject(READ_G,
+                    (rs, rowNum) -> tClass.cast(SerializationUtils.deserialize(rs.getBytes("value"))),
+                    studyId, goalId, name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public void removeObservationValue(Long studyId, int observationId, String name) {
         this.template.update(REMOVE_O, studyId, observationId, name);
     }
@@ -87,6 +121,14 @@ public class NameValuePairRepository {
 
     public void removeActionValue(Long studyId, int interventionId, int actionId, String name) {
         this.template.update(REMOVE_A, studyId, interventionId, actionId, name);
+    }
+
+    public void removeGoalTemplateValue(Long studyId, int templateId, String name) {
+        this.template.update(REMOVE_GT, studyId, templateId, name);
+    }
+
+    public void removeGoalValue(Long studyId, int goalId, String name) {
+        this.template.update(REMOVE_G, studyId, goalId, name);
     }
 
     protected boolean noObservationValues() {

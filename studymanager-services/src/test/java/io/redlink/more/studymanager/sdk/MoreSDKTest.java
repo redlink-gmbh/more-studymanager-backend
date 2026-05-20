@@ -79,6 +79,9 @@ class MoreSDKTest {
     ParticipantService participantService;
 
     @MockitoBean
+    GoalService goalService;
+
+    @MockitoBean
     ElasticService elasticService;
 
     @MockitoBean

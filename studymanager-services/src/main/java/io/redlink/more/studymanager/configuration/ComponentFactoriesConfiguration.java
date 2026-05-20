@@ -9,6 +9,8 @@
 package io.redlink.more.studymanager.configuration;
 
 import io.redlink.more.studymanager.core.factory.ActionFactory;
+import io.redlink.more.studymanager.core.factory.ComponentFactory;
+import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.properties.ComponentFactoriesProperties;
@@ -24,15 +26,14 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.lang.reflect.Modifier;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableConfigurationProperties({ComponentFactoriesProperties.class})
 public class ComponentFactoriesConfiguration implements BeanFactoryAware {
     private final Logger logger = LoggerFactory.getLogger(ComponentFactoriesConfiguration.class);
-    private BeanFactory beanFactory;
+    private ConfigurableBeanFactory beanFactory;
 
     private final Reflections reflections;
     private final ComponentFactoriesProperties componentFactoriesProperties;
@@ -44,42 +45,32 @@ public class ComponentFactoriesConfiguration implements BeanFactoryAware {
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }
-
-    @Bean
-    public Map<String, TriggerFactory> triggerFactoryMap() {
-        Set<Class<? extends TriggerFactory>> triggerFactories = reflections.getSubTypesOf(TriggerFactory.class);
-        return triggerFactories.stream().map(this::instantiate)
-                .collect(Collectors.toMap(
-                (trigger) -> trigger.getId(),
-                (trigger) -> trigger
-        ));
+        this.beanFactory = (ConfigurableBeanFactory) beanFactory;
     }
 
     @PostConstruct
     public void onPostConstruct() {
-        ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
 
-        Set<Class<? extends ObservationFactory>> observationFactories = reflections.getSubTypesOf(ObservationFactory.class);
-        observationFactories.stream().map(this::instantiate)
+        initAndRegisterFactory(getFactoryImplementations(ObservationFactory.class));
+        initAndRegisterFactory(getFactoryImplementations(TriggerFactory.class));
+        initAndRegisterFactory(getFactoryImplementations(ActionFactory.class));
+        initAndRegisterFactory(getFactoryImplementations(GoalTemplateFactory.class));
+    }
+
+    private <T extends ComponentFactory<?,?>> void initAndRegisterFactory(Stream<Class<? extends T>> factories) {
+        factories
+                .map(this::instantiate)
                 .map(f -> f.init(componentFactoriesProperties.get(f.getId())))
                 .forEach(m -> {
-                    logger.trace("Registering observation factory: {}[class:{}, properties:{}]", m.getId(),m.getClass().getName(), m.getProperties());
-                    configurableBeanFactory.registerSingleton(m.getId(), m);
-                }
-        );
+                    logger.trace("Registering ComponentFactory: {} [class:{}, properties:{}]", m.getId(),m.getClass().getName(), m.getProperties());
+                    beanFactory.registerSingleton(m.getId(), m);
+                });
+    }
 
-        /*
-        Set<Class<? extends TriggerFactory>> triggerFactories = reflections.getSubTypesOf(TriggerFactory.class);
-        triggerFactories.stream().map(this::instantiate).forEach(m ->
-                configurableBeanFactory.registerSingleton(m.getId(), m)
-        );*/
-
-        Set<Class<? extends ActionFactory>> actionFactories = reflections.getSubTypesOf(ActionFactory.class);
-        actionFactories.stream().map(this::instantiate).forEach(m ->
-                configurableBeanFactory.registerSingleton(m.getId(), m)
-        );
+    private <T> Stream<Class<? extends T>> getFactoryImplementations(Class<T> factoryType) {
+        return reflections.getSubTypesOf(factoryType)
+                .stream()
+                .filter(c -> !Modifier.isAbstract(c.getModifiers()) && !c.isInterface());
     }
 
     private <T> T instantiate(Class<? extends T> c) {

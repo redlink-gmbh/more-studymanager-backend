@@ -12,6 +12,7 @@
         <module>studymanager-core</module>
         <module>studymanager-observation</module>
         <module>studymanager-intervention</module>
+        <module>studymanager-goaltemplates</module>
         <module>studymanager-services</module>
         <module>studymanager</module>
     </modules>

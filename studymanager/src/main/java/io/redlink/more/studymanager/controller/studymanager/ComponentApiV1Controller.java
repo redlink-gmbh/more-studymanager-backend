@@ -18,6 +18,7 @@ import io.redlink.more.studymanager.core.exception.ApiCallException;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.ActionFactory;
 import io.redlink.more.studymanager.core.factory.ComponentFactory;
+import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.io.Visibility;
@@ -31,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,29 +45,30 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ComponentApiV1Controller implements ComponentsApi {
 
-    private final Map<String, ObservationFactory> observationFactories;
-    private final Map<String, TriggerFactory> triggertFactories;
-    private final Map<String, ActionFactory> actionFactories;
+    private final ObjectProvider<ObservationFactory> observationFactoryProvider;
+    private final ObjectProvider<TriggerFactory> triggerFactoryProvider;
+    private final ObjectProvider<ActionFactory> actionFactoryProvider;
+    private final ObjectProvider<GoalTemplateFactory> goalTemplateFactoryProvider;
     private final OAuth2AuthenticationService authService;
 
     public ComponentApiV1Controller(
-            Map<String, ObservationFactory> observationFactories,
-            Map<String, TriggerFactory> triggertFactories,
-            Map<String, ActionFactory> actionFactories,
+            ApplicationContext applicationContext,
             OAuth2AuthenticationService authService
     ) {
-        this.observationFactories = observationFactories;
-        this.triggertFactories = triggertFactories;
-        this.actionFactories = actionFactories;
+        this.observationFactoryProvider = applicationContext.getBeanProvider(ObservationFactory.class);
+        this.triggerFactoryProvider = applicationContext.getBeanProvider(TriggerFactory.class);
+        this.actionFactoryProvider = applicationContext.getBeanProvider(ActionFactory.class);
+        this.goalTemplateFactoryProvider = applicationContext.getBeanProvider(GoalTemplateFactory.class);
         this.authService = authService;
     }
 
     @Override
     public ResponseEntity<List<ComponentFactoryDTO>> listComponents(String componentType) {
         return switch (componentType) {
-            case "observation" -> ResponseEntity.ok(observationFactories.values().stream().map(this::toComponentDTO).toList());
-            case "trigger" -> ResponseEntity.ok(triggertFactories.values().stream().map(this::toComponentDTO).toList());
-            case "action" -> ResponseEntity.ok(actionFactories.values().stream().map(this::toComponentDTO).toList());
+            case "observation" -> ResponseEntity.ok(observationFactoryProvider.stream().map(this::toComponentDTO).toList());
+            case "trigger" -> ResponseEntity.ok(triggerFactoryProvider.stream().map(this::toComponentDTO).toList());
+            case "action" -> ResponseEntity.ok(actionFactoryProvider.stream().map(this::toComponentDTO).toList());
+            case "goalTemplate" -> ResponseEntity.ok(goalTemplateFactoryProvider.stream().map(this::toComponentDTO).toList());
             default -> ResponseEntity.notFound().build();
         };
     }
@@ -107,15 +112,19 @@ public class ComponentApiV1Controller implements ComponentsApi {
 
     private Optional<ComponentFactory> getComponentFactory(String componentType, String componentId) {
         return switch (componentType) {
-            case "observation" -> getComponentFactory(observationFactories, componentId);
-            case "trigger" -> getComponentFactory(triggertFactories, componentId);
-            case "action" -> getComponentFactory(actionFactories, componentId);
+            case "observation" -> getComponentFactory(observationFactoryProvider, componentId);
+            case "trigger" -> getComponentFactory(triggerFactoryProvider, componentId);
+            case "action" -> getComponentFactory(actionFactoryProvider, componentId);
+            case "goalTemplate" -> getComponentFactory(goalTemplateFactoryProvider, componentId);
             default -> Optional.empty();
         };
     }
 
-    private Optional<ComponentFactory> getComponentFactory(Map<String, ? extends ComponentFactory> factories, String componentId) {
-        return Optional.ofNullable(factories.get(componentId));
+    private Optional<ComponentFactory> getComponentFactory(ObjectProvider<? extends ComponentFactory> factories, String componentId) {
+        return factories.stream()
+                .filter(f -> f.getId().equals(componentId))
+                .map(ComponentFactory.class::cast)
+                .findFirst();
     }
 
     private ResponseEntity<String> getWebComponentScript(ComponentFactory factory, String componentId) {

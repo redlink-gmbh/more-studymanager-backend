@@ -10,7 +10,6 @@ package io.redlink.more.studymanager.service;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.validation.ConfigurationValidationReport;
-import io.redlink.more.studymanager.event.StudyStateChangedEvent;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
@@ -28,21 +27,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class InterventionServiceTest {
     @Mock
-    Map<String, TriggerFactory> triggerFactories;
+    ApplicationContext applicationContext;
     @Mock
     StudyStateService studyStateService;
     @Mock
@@ -60,6 +58,7 @@ class InterventionServiceTest {
 
     @Test
     void testNotFoundValidation() {
+        when(applicationContext.getBean("my-trigger", TriggerFactory.class)).thenThrow(new NoSuchBeanDefinitionException("my-trigger"));
         NotFoundException notFoundException = Assertions.assertThrows(NotFoundException.class, () ->
                 interventionService.updateTrigger(1L, 1, new Trigger().setType("my-trigger"))
         );
@@ -70,8 +69,7 @@ class InterventionServiceTest {
     void testBadRequestValidation() {
         TriggerFactory factory = mock(TriggerFactory.class);
         when(factory.validate(any())).thenThrow(new ConfigurationValidationException(ConfigurationValidationReport.init().error("My error")));
-        when(triggerFactories.get("my-trigger")).thenReturn(factory);
-        when(triggerFactories.containsKey("my-trigger")).thenReturn(true);
+        when(applicationContext.getBean("my-trigger", TriggerFactory.class)).thenReturn(factory);
 
         Assertions.assertThrows(BadRequestException.class, () ->
                 interventionService.updateTrigger(1L, 1, new Trigger().setType("my-trigger"))
