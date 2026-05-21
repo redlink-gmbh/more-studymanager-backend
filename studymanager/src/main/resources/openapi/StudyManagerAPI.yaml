@@ -1360,6 +1360,8 @@ paths:
           description: The referenced study does not exist
         '400':
           description: The parsed study goal configuration or study id was invalid
+        '409':
+          description: If an adherence check is removed that was still used by some GoalTemplate
 
   /studies/{studyId}/goals/config/categories/topic:
     post:
@@ -1423,6 +1425,8 @@ paths:
           description: action deleted successfully
         '400':
           description: bad request
+        '409':
+          description: conflict - deleting the goal topic is not possible while it is used by a goal template
 
 
   /studies/{studyId}/goals/templates:

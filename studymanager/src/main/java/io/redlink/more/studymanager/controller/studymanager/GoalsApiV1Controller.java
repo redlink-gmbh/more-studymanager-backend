@@ -71,8 +71,9 @@ public class GoalsApiV1Controller implements GoalsApi {
         validateStudyForUser(studyId, currentUser);
         var config = GoalV1Transformer.toStudyGoalConfig(studyGoalConfigDTO, studyId);
         var checks = GoalV1Transformer.toGoalAdherenceChecks(studyGoalConfigDTO, studyId);
-        var updatedConfig = goalService.setGoalConfig(config);
+        //process the adherence checks first as this might result in a CONFLICT if one tries to delete a used one
         var updatedChecks = goalService.setGoalAdherenceChecks(studyId, checks);
+        var updatedConfig = goalService.setGoalConfig(config);
         if(updatedConfig == null) {
             return ResponseEntity.notFound().build();
         } else {

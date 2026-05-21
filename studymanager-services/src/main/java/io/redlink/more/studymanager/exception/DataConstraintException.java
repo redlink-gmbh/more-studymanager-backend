@@ -9,6 +9,7 @@
 package io.redlink.more.studymanager.exception;
 
 import io.redlink.more.studymanager.model.StudyRole;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -32,4 +33,11 @@ public class DataConstraintException extends RuntimeException {
                         .formatted(userId, StudyRole.STUDY_ADMIN, studyId)
         );
     }
+
+    public static DataConstraintException createWithMessage(long studyId, String item, String reason) {
+        var msg = "Unable to remove %s from study_%d".formatted(item, studyId);
+        return new DataConstraintException(
+                StringUtils.isNotBlank(reason) ? "%s (reason: %s)".formatted(msg, reason) : msg);
+    }
+
 }
