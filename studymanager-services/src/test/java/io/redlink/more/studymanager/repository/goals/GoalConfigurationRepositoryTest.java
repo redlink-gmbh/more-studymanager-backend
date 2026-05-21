@@ -2,8 +2,10 @@ package io.redlink.more.studymanager.repository.goals;
 
 import io.redlink.more.studymanager.configuration.JPAConfiguration;
 import io.redlink.more.studymanager.exception.BadRequestException;
+import io.redlink.more.studymanager.exception.DataConstraintException;
 import io.redlink.more.studymanager.model.*;
 import io.redlink.more.studymanager.repository.StudyRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -80,12 +83,12 @@ class GoalConfigurationRepositoryTest {
                 .isEqualTo("Commit1-updated");
 
         assertThat(goalConfigurationRepository.getStudyGoalConfig(study2)).isNull(); // other study
-
+        Assertions.setMaxStackTraceElementsDisplayed(100);
         // Delete guard
         Integer t1 = goalTemplateRepository.insert(new GoalTemplate().setStudyId(study1).setType("test")).getTemplateId();
         assertThatThrownBy(() -> goalConfigurationRepository.deleteStudyGoalConfig(study1))
-                .isInstanceOf(BadRequestException.class)
-                .hasMessageContaining("Cannot delete");
+                .isInstanceOf(DataConstraintException.class)
+                .hasMessageContaining("Unable to remove");
 
         // Delete after removing template
         goalTemplateRepository.deleteGoalTemplate(study1, t1);
@@ -292,6 +295,89 @@ class GoalConfigurationRepositoryTest {
 
         assertThat(goalConfigurationRepository.getTopic(studyB, "hydration").getTitle())
                 .isEqualTo("Updated - Drink More Water");
+    }
+
+    @Test
+    @DisplayName("deleteTopic throws DataConstraintException when topic is used by a GoalTemplate")
+    void testDeleteTopic_ThrowsWhenUsed() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test"))).getStudyId();
+
+        String topicKey = "exercise";
+        // Create topic
+        goalConfigurationRepository.saveTopic(
+                new GoalTopic().setStudyId(studyId).setKey(topicKey).setTitle("Physical Exercise")
+        );
+
+        // Create a GoalTemplate that uses this topic
+        GoalTemplate template = new GoalTemplate()
+                .setStudyId(studyId)
+                .setTitle("Template using exercise topic")
+                .setType("fitness")
+                .setTopicKeys(Set.of(topicKey));
+
+        goalTemplateRepository.insert(template);
+
+        // Attempt to delete the used topic → should fail with DataConstraintException
+        assertThatThrownBy(() -> goalConfigurationRepository.deleteTopic(studyId, topicKey))
+                .isInstanceOf(DataConstraintException.class)
+                .hasMessageContaining("Unable to remove Goal Topic %s from study_%s".formatted(topicKey, studyId))
+                .hasMessageContaining("This Topic is still referenced by GoalTemplates in the Study!");
+    }
+
+    @Test
+    @DisplayName("deleteCheck throws DataConstraintException when check is used by a GoalTemplate")
+    void testDeleteCheck_ThrowsWhenUsed() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test"))).getStudyId();
+
+        // Create adherence check
+        GoalAdherenceCheck check = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck()
+                        .setStudyId(studyId)
+                        .setCheckId(1)
+                        .setTitle("Morning")
+                        .setTime(LocalTime.of(20, 0))
+        );
+
+        // Create a GoalTemplate that uses this check
+        GoalTemplate template = new GoalTemplate()
+                .setStudyId(studyId)
+                .setTitle("Template using morning check")
+                .setType("habit")
+                .setAdherenceCheckIds(Set.of(check.getCheckId()));
+
+        goalTemplateRepository.insert(template);
+
+        // Attempt to delete the used check → should fail
+        assertThatThrownBy(() -> goalConfigurationRepository.deleteCheck(studyId, check.getCheckId()))
+                .isInstanceOf(DataConstraintException.class)
+                .hasMessageContaining("Unable to remove Adherence Check %s from study_%s".formatted(check.getCheckId(), studyId))
+                .hasMessageContaining("This Adherence Check is still referenced by GoalTemplates in the Study");
+    }
+
+    @Test
+    @DisplayName("deleteTopic and deleteCheck work when not referenced")
+    void testDeleteTopicAndCheck_WhenNotUsed() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test"))).getStudyId();
+
+        // Create unused topic and check
+        goalConfigurationRepository.saveTopic(
+                new GoalTopic().setStudyId(studyId).setKey("unused-topic").setTitle("Unused")
+        );
+
+        GoalAdherenceCheck check = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck()
+                        .setStudyId(studyId)
+                        .setCheckId(1)
+                        .setTitle("Morning")
+                        .setTime(LocalTime.of(10, 0))
+        );
+
+        // These should succeed
+        goalConfigurationRepository.deleteTopic(studyId, "unused-topic");
+        goalConfigurationRepository.deleteCheck(studyId, check.getCheckId());
+
+        assertThat(goalConfigurationRepository.listTopics(studyId)).isEmpty();
+        assertThat(goalConfigurationRepository.listChecks(studyId)).isEmpty();
     }
 
 }

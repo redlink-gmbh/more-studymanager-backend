@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +79,16 @@ public class GoalService {
     @Transactional
     public Collection<GoalAdherenceCheck> setGoalAdherenceChecks(Long studyId, List<GoalAdherenceCheck> goalAdherenceChecks) {
         studyStateService.assertStudyNotInState(Objects.requireNonNull(studyId), Study.Status.CLOSED);
+        Set<Integer> checkIds = goalAdherenceChecks
+                .stream()
+                .filter(Objects::nonNull)
+                .map(GoalAdherenceCheck::getCheckId)
+                        .collect(Collectors.toSet());
+        //check existing if they are still contained in the parsed list
+        goalConfigRepo.listChecks(studyId).stream()
+                .map(GoalAdherenceCheck::getCheckId)
+                .filter(checkId -> !checkIds.contains(checkId)) //check if we need to delete this one
+                .forEach( checkId -> goalConfigRepo.deleteCheck(studyId, checkId)); // delete
         goalConfigRepo.deleteChecks(studyId);
         return upsertAdherenceChecks(studyId, goalAdherenceChecks);
     }

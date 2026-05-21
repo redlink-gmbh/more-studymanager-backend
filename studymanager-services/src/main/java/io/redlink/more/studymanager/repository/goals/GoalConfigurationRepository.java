@@ -1,12 +1,14 @@
 package io.redlink.more.studymanager.repository.goals;
 
 import io.redlink.more.studymanager.exception.BadRequestException;
+import io.redlink.more.studymanager.exception.DataConstraintException;
 import io.redlink.more.studymanager.model.GoalAdherenceCheck;
 import io.redlink.more.studymanager.model.GoalTopic;
 import io.redlink.more.studymanager.model.StudyGoalConfig;
 import io.redlink.more.studymanager.repository.RepositoryUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -97,7 +99,7 @@ public class GoalConfigurationRepository {
     public void deleteStudyGoalConfig(Long studyId) {
         Integer count = template.queryForObject(COUNT_GOAL_TEMPLATES, Integer.class, studyId);
         if (count != null && count > 0) {
-            throw new BadRequestException("Cannot delete study goal config while GoalTemplates exist for study " + studyId);
+            throw DataConstraintException.createWithMessage(studyId, "Gaol Configuration", "Cannot delete study goal config while GoalTemplates exist for study " + studyId);
         }
         template.update(DELETE_STUDY_GOAL_CONFIG, studyId);
     }
@@ -127,7 +129,11 @@ public class GoalConfigurationRepository {
     }
 
     public void deleteTopic(Long studyId, String key) {
-        template.update(DELETE_TOPIC, studyId, key);
+        try {
+            template.update(DELETE_TOPIC, studyId, key);
+        } catch (DataIntegrityViolationException e) {
+            throw DataConstraintException.createWithMessage(studyId, "Goal Topic " + key, "This Topic is still referenced by GoalTemplates in the Study!");
+        }
     }
 
     @Transactional
@@ -175,11 +181,19 @@ public class GoalConfigurationRepository {
     }
 
     public void deleteChecks(Long studyId) {
-        template.update(DELETE_ADHERENCE_CHECKS, studyId);
+        try {
+            template.update(DELETE_ADHERENCE_CHECKS, studyId);
+        } catch (DataIntegrityViolationException e) {
+            throw DataConstraintException.createWithMessage(studyId, "Adherence Checks", "Adherence Checks are still referenced by GoalTemplates in the Study!");
+        }
     }
 
     public void deleteCheck(Long studyId, Integer checkId) {
-        template.update(DELETE_ADHERENCE_CHECK, studyId, checkId);
+        try {
+            template.update(DELETE_ADHERENCE_CHECK, studyId, checkId);
+        } catch (DataIntegrityViolationException e) {
+            throw DataConstraintException.createWithMessage(studyId, "Adherence Check " + checkId, "This Adherence Check is still referenced by GoalTemplates in the Study!");
+        }
     }
 
     private MapSqlParameterSource toParams(StudyGoalConfig config) {
