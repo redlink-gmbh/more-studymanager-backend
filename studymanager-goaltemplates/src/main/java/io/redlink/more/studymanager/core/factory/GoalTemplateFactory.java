@@ -127,21 +127,4 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDescription(GLOBAL_PROPERTY_PREFIX + "instanceState.description")
             .setDefaultValue(false);
 
-    /**
-     * Allows to configure a self report time.
-     */
-    public static final Value<String> SELF_REPORT_TIME = new StringValue("self-report-time")
-            .setName(GLOBAL_PROPERTY_PREFIX + "self-report-time.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "self-report-time.description")
-            .setDefaultValue("Abends"); //use evening as default FIXME: change to the correct value
-    /**
-     * Sets the self report time to evening. Just informative. Can not be changed by via configuration
-     */
-    public static final Value<String> SELF_REPORT_TIME_EVENING = new StringValue("self-report-time")
-            .setName(GLOBAL_PROPERTY_PREFIX + "self-report-time.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "self-report-time.description")
-            .setDefaultValue("Abends") // FIXME: change to the correct value
-            .setImmutable(true);
-
-
 }

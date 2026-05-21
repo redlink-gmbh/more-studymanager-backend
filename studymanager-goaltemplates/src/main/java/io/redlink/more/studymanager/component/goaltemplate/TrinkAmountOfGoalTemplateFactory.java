@@ -37,7 +37,7 @@ public class TrinkAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempla
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                         .setDefaultValue("Ich trinke mindestens <goal.amount> <goal.unit> [an <days-of-week> Tagen der Woche]")
-                        .setImmutable(true),
+                        .setImmutable(false),
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_GROUP,
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_VALUE,
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_UNIT,
@@ -61,8 +61,7 @@ public class TrinkAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempla
                 new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
-                        .setDefaultValue("Wie viele Einheiten hast Du heute getrunken? Bitte trage den Wert ein."),
-                GoalTemplateFactory.SELF_REPORT_TIME_EVENING
+                        .setDefaultValue("Wie viele Einheiten hast Du heute getrunken? Bitte trage den Wert ein.")
         );
     }
 

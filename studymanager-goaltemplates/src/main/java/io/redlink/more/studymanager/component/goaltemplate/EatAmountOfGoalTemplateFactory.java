@@ -41,7 +41,7 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                     .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
                     .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                     .setDefaultValue("Ich esse mindestens <goal.amount> Portionen <goal.unit> [an <days-of-week> Tagen der Woche]")
-                    .setImmutable(true),
+                    .setImmutable(false),
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_GROUP,
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_VALUE,
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_UNIT,
@@ -65,8 +65,7 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                 new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
-                        .setDefaultValue("Wie viele Portionen hast Du heute gegessen? Bitte trage den Wert ein."),
-                GoalTemplateFactory.SELF_REPORT_TIME_EVENING
+                        .setDefaultValue("Wie viele Portionen hast Du heute gegessen? Bitte trage den Wert ein.")
         );
     }
 

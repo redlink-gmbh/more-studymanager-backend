@@ -38,7 +38,7 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                         .setDefaultValue("Ich <goal.activity> maximal <goal.amount> <goal.unit> [an maximal <days-of-week> Tagen in der Woche]")
-                        .setImmutable(true),
+                        .setImmutable(false),
                 AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_GROUP,
                 new StringValue("goal.activity")
                         .setName(GOAL_TEMPLATE_PROPERTY_PREFIX + "reduceAmountOf.goal.activity.name")
@@ -67,8 +67,7 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                 new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
-                        .setDefaultValue("Wie viele Einheiten hast Du heute <goal.activity>? Bitte trage den Wert ein."),
-                GoalTemplateFactory.SELF_REPORT_TIME_EVENING
+                        .setDefaultValue("Wie viele Einheiten hast Du heute <goal.activity>? Bitte trage den Wert ein.")
         );
     }
 
