@@ -68,7 +68,6 @@ public class GoalTemplateRepository {
                      gt.type, gt.kind, gt.study_group_id,
                      gt.properties, gt.created, gt.modified""";
 
-    // Same fix applied to the "ForGroup" query
     private static final String LIST_GOAL_TEMPLATES_FOR_GROUP = """
             SELECT gt.*,
                    ARRAY_AGG(gtog.observation_group_id) FILTER (WHERE gtog.observation_group_id IS NOT NULL) AS observation_group_ids,
