@@ -47,14 +47,23 @@ class GoalRepositoryTest {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    Long studyId = null;
+
     @BeforeEach
     void deleteAll() {
         goalRepository.clear();
+        participantRepository.clear();
+        goalTemplateRepository.clear();
+        goalConfigurationRepository.clear();
+        if(studyId != null) {
+            studyRepository.deleteById(studyId);
+            studyId = null;
+        }
     }
 
     @Test
     public void testInsertListUpdateDeleteAndFlexibleQueries() {
-        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
         Integer participantId = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("t")).getParticipantId();
         Integer templateId = goalTemplateRepository.insert(new GoalTemplate().setStudyId(studyId).setType("test")).getTemplateId();
 
@@ -86,7 +95,7 @@ class GoalRepositoryTest {
     @Test
     public void testFlexibleListQueriesWithMultipleGoalsPerParticipantAndTemplate() {
         // === Setup ===
-        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
 
         Integer p1 = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("p1")).getParticipantId();
         Integer p2 = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("p2")).getParticipantId();
@@ -189,7 +198,7 @@ class GoalRepositoryTest {
     @Test
     @DisplayName("Goal adherence checks are correctly saved, loaded and updated")
     void testGoalAdherenceChecksMapping() {
-        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
         Integer participantId = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("t")).getParticipantId();
         Integer templateId = goalTemplateRepository.insert(new GoalTemplate().setStudyId(studyId).setType("test")).getTemplateId();
 
