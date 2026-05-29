@@ -11,6 +11,7 @@ public class Goal {
     private Integer goalId;
     private Integer participantId;
     private Integer templateId;
+    private String title;
     private Set<Integer> adherenceCheckIds;
     private GoalProperties properties;
     private Instant created;
@@ -49,6 +50,15 @@ public class Goal {
 
     public Goal setTemplateId(Integer templateId) {
         this.templateId = templateId;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Goal setTitle(String title) {
+        this.title = title;
         return this;
     }
 

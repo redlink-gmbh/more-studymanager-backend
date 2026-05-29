@@ -211,6 +211,7 @@ class GoalRepositoryTest {
         Goal goal = new Goal()
                 .setStudyId(studyId)
                 .setParticipantId(participantId)
+                .setTitle("My custom goal title")
                 .setTemplateId(templateId)
                 .setProperties(new GoalProperties(Map.of("progress", 50)))
                 .setAdherenceCheckIds(Set.of(check1.getCheckId(), check2.getCheckId()));
@@ -219,6 +220,7 @@ class GoalRepositoryTest {
 
         assertThat(inserted.getAdherenceCheckIds())
                 .containsExactlyInAnyOrder(check1.getCheckId(), check2.getCheckId());
+        assertThat(inserted.getTitle()).isEqualTo(goal.getTitle());
 
         // Verify via getById
         Goal loaded = goalRepository.getById(studyId, inserted.getGoalId());

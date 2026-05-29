@@ -31,10 +31,10 @@ public class GoalRepository {
     private final static Logger LOG = LoggerFactory.getLogger(GoalRepository.class);
 
     private static final String INSERT_NEW_GOAL = """
-            INSERT INTO goal(study_id,goal_id,participant_id,template_id,properties)
+            INSERT INTO goal(study_id,goal_id,participant_id,template_id, title, properties)
             VALUES (:study_id,
                     (SELECT COALESCE(MAX(goal_id),0)+1 FROM goal WHERE study_id = :study_id),
-                    :participant_id,:template_id,:properties::jsonb)""";
+                    :participant_id,:template_id,:title, :properties::jsonb)""";
 
     private static final String GET_GOAL_BY_IDS = """
             SELECT g.*,
@@ -56,7 +56,7 @@ public class GoalRepository {
 
     private static final String UPDATE_GOAL = """
             UPDATE goal 
-            SET participant_id=:participant_id, template_id=:template_id, 
+            SET participant_id=:participant_id, template_id=:template_id, title=:title,
                 properties=:properties::jsonb, modified=now() 
             WHERE study_id=:study_id AND goal_id=:goal_id""";
 
@@ -171,6 +171,7 @@ public class GoalRepository {
                 .addValue("study_id", goal.getStudyId(), Types.BIGINT)
                 .addValue("participant_id", goal.getParticipantId(), Types.INTEGER)
                 .addValue("template_id", goal.getTemplateId(), Types.INTEGER)
+                .addValue("title", goal.getTitle(), Types.VARCHAR)
                 .addValue("properties", MapperUtils.writeValueAsString(goal.getProperties()));
     }
 
@@ -180,6 +181,7 @@ public class GoalRepository {
                 .setGoalId(rs.getInt("goal_id"))
                 .setParticipantId(rs.getInt("participant_id"))
                 .setTemplateId(rs.getInt("template_id"))
+                .setTitle(rs.getString("title"))
                 .setAdherenceCheckIds(RepositoryUtils.readSet(rs, "adherence_check_ids", Integer.class))
                 .setProperties(MapperUtils.readValue(rs.getString("properties"), GoalProperties.class))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"))
