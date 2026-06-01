@@ -3,12 +3,16 @@ package io.redlink.more.studymanager.model;
 import io.redlink.more.studymanager.core.properties.GoalProperties;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Goal {
     private Long studyId;
     private Integer goalId;
     private Integer participantId;
     private Integer templateId;
+    private String title;
+    private Set<Integer> adherenceCheckIds;
     private GoalProperties properties;
     private Instant created;
     private Instant modified;
@@ -47,6 +51,24 @@ public class Goal {
     public Goal setTemplateId(Integer templateId) {
         this.templateId = templateId;
         return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Goal setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Goal setAdherenceCheckIds(Set<Integer> adherenceCheckIds) {
+        this.adherenceCheckIds = adherenceCheckIds == null ? new HashSet<>() : adherenceCheckIds;
+        return this;
+    }
+
+    public Set<Integer> getAdherenceCheckIds() {
+        return adherenceCheckIds;
     }
 
     public GoalProperties getProperties() {
