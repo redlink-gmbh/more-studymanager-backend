@@ -8,6 +8,21 @@
  */
 package io.redlink.more.studymanager.core.properties.model;
 
+/**
+ * A ConfigSection is a marker property that allows to goup different parts of the
+ * configuration.
+ *
+ * It defines a title and an optional description and visually group all Values until the
+ * next ConfigSection in the configuration dialog. It does not contribute to the
+ * configuration.
+ *
+ * The ConfigSection property is always:
+ * <ul>
+ *     <li>{@link Value#isImmutable()} == true</li>
+ *     <li>{@link Value#getDefaultValue()} == null</li>
+ *     <li>{@link Value#isRequired()} == false</li>
+ * </ul>
+ */
 public class ConfigSection extends Value<Void> {
     public ConfigSection(String id) {
         super(id);
@@ -21,5 +36,20 @@ public class ConfigSection extends Value<Void> {
     @Override
     public String getType() {
         return "GROUPING";
+    }
+
+    @Override
+    public final boolean isImmutable() {
+        return true;
+    }
+
+    @Override
+    public final Void getDefaultValue() {
+        return null;
+    }
+
+    @Override
+    public final boolean isRequired() {
+        return false;
     }
 }

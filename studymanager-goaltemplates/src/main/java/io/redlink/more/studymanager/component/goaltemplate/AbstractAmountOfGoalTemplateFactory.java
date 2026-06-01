@@ -35,32 +35,27 @@ public abstract class AbstractAmountOfGoalTemplateFactory<C extends GoalTemplate
 
     protected static final Value<Void> CONFIG_SECTION_CONFIGURATION = new ConfigSection("configuration")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.description")
-            .setImmutable(true);
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.description");
     protected static final Value<Void> CONFIG_SECTION_GOAL_CONFIGURATION = new ConfigSection("goal-configuration")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.description")
-            .setImmutable(true);
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.description");
     protected static final Value<Void> CONFIG_SECTION_STATUS = new ConfigSection("status-texts")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.status-texts.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.status-texts.description")
-            .setImmutable(true);
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.status-texts.description");
     protected static final Value<Void> CONFIG_SECTION_SELF_REPORT = new ConfigSection("self-report")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.self-report.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.self-report.description")
-            .setImmutable(true);
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.self-report.description");
 
     protected static final Value<Void> CONFIGS_GOAL_AMOUNT_GROUP = new ValueGroup("goal")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.description")
-            .setImmutable(true);
-    protected static final Value<IntegerRange> CONFIGS_GOAL_AMOUNT_VALUE = new IntegerRangeValue("goal.amount")
+            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.description");
+    protected static final Value<IntegerRange> CONFIGS_GOAL_AMOUNT_VALUE = new IntegerRangeValue(CONFIGS_GOAL_AMOUNT_GROUP.getId() + ".amount")
             .setMin(1)
             .setMax(Integer.MAX_VALUE)
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal.amount.name")
             .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.amount.description")
             .setRequired(true);
-    protected static final Value<String> CONFIGS_GOAL_AMOUNT_UNIT = new StringValue("goal.unit")
+    protected static final Value<String> CONFIGS_GOAL_AMOUNT_UNIT = new StringValue(CONFIGS_GOAL_AMOUNT_GROUP.getId() + ".unit")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal.unit.name")
             .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.unit.description")
             .setRequired(true);

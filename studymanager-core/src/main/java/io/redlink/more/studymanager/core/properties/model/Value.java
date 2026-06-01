@@ -15,6 +15,7 @@ import io.redlink.more.studymanager.core.exception.ValueNonNullException;
 import io.redlink.more.studymanager.core.properties.ComponentProperties;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
 
+import java.util.Objects;
 import java.util.function.Function;
 
 public abstract class Value<T> {
@@ -35,6 +36,12 @@ public abstract class Value<T> {
         if (required) {
             if (t == null) {
                 return ValidationIssue.requiredMissing(this);
+            }
+        }
+
+        if(immutable) {
+            if(!Objects.equals(defaultValue, t)){
+                return ValidationIssue.immutablePropertyChanged(this);
             }
         }
 
