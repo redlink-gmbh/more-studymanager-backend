@@ -66,6 +66,9 @@ public class GoalConfigurationRepository {
     private static final String DELETE_ADHERENCE_CHECKS = "DELETE FROM goal_adherence_checks WHERE study_id = ?";
     private static final String UPDATE_ADHERENCE_CHECK = "UPDATE goal_adherence_checks SET title = :title, time = :time WHERE study_id = :study_id AND check_id = :check_id";
 
+    private static final String DELETE_ALL = "DELETE FROM study_goal_config";
+
+
     private final JdbcTemplate template;
     private final NamedParameterJdbcTemplate namedTemplate;
 
@@ -194,6 +197,10 @@ public class GoalConfigurationRepository {
         } catch (DataIntegrityViolationException e) {
             throw DataConstraintException.createWithMessage(studyId, "Adherence Check " + checkId, "This Adherence Check is still referenced by GoalTemplates in the Study!");
         }
+    }
+
+    public void clear() {
+        template.execute(DELETE_ALL);
     }
 
     private MapSqlParameterSource toParams(StudyGoalConfig config) {

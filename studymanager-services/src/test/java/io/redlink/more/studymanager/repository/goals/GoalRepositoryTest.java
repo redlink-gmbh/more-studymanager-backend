@@ -7,6 +7,7 @@ import io.redlink.more.studymanager.repository.goals.GoalTemplateRepository;
 import io.redlink.more.studymanager.repository.ParticipantRepository;
 import io.redlink.more.studymanager.repository.StudyRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,7 +16,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalTime;
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @EnableAutoConfiguration
 @ContextConfiguration(classes = {
-        GoalRepository.class, GoalTemplateRepository.class, StudyRepository.class,
+        GoalRepository.class, GoalTemplateRepository.class, GoalConfigurationRepository.class, StudyRepository.class,
         ParticipantRepository.class, JPAConfiguration.class
 })
 @ActiveProfiles("test-containers-flyway")
@@ -36,19 +39,31 @@ class GoalRepositoryTest {
     private GoalTemplateRepository goalTemplateRepository;
 
     @Autowired
+    private GoalConfigurationRepository goalConfigurationRepository;
+
+    @Autowired
     private StudyRepository studyRepository;
 
     @Autowired
     private ParticipantRepository participantRepository;
 
+    Long studyId = null;
+
     @BeforeEach
     void deleteAll() {
         goalRepository.clear();
+        participantRepository.clear();
+        goalTemplateRepository.clear();
+        goalConfigurationRepository.clear();
+        if(studyId != null) {
+            studyRepository.deleteById(studyId);
+            studyId = null;
+        }
     }
 
     @Test
     public void testInsertListUpdateDeleteAndFlexibleQueries() {
-        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
         Integer participantId = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("t")).getParticipantId();
         Integer templateId = goalTemplateRepository.insert(new GoalTemplate().setStudyId(studyId).setType("test")).getTemplateId();
 
@@ -80,7 +95,7 @@ class GoalRepositoryTest {
     @Test
     public void testFlexibleListQueriesWithMultipleGoalsPerParticipantAndTemplate() {
         // === Setup ===
-        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
 
         Integer p1 = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("p1")).getParticipantId();
         Integer p2 = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("p2")).getParticipantId();
@@ -178,5 +193,50 @@ class GoalRepositoryTest {
 
         goalRepository.deleteGoal(studyId, gP1T1b.getGoalId());
         assertThat(goalRepository.list(studyId, null, null)).hasSize(4);
+    }
+
+    @Test
+    @DisplayName("Goal adherence checks are correctly saved, loaded and updated")
+    void testGoalAdherenceChecksMapping() {
+        studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        Integer participantId = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("t")).getParticipantId();
+        Integer templateId = goalTemplateRepository.insert(new GoalTemplate().setStudyId(studyId).setType("test")).getTemplateId();
+
+        // Create some adherence checks
+        GoalAdherenceCheck check1 = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck().setStudyId(studyId).setCheckId(1).setTitle("Morning").setTime(LocalTime.of(8,0)));
+        GoalAdherenceCheck check2 = goalConfigurationRepository.upsertCheck(
+                new GoalAdherenceCheck().setStudyId(studyId).setCheckId(3).setTitle("Evening").setTime(LocalTime.of(20,0)));
+
+        Goal goal = new Goal()
+                .setStudyId(studyId)
+                .setParticipantId(participantId)
+                .setTitle("My custom goal title")
+                .setTemplateId(templateId)
+                .setProperties(new GoalProperties(Map.of("progress", 50)))
+                .setAdherenceCheckIds(Set.of(check1.getCheckId(), check2.getCheckId()));
+
+        Goal inserted = goalRepository.insert(goal);
+
+        assertThat(inserted.getAdherenceCheckIds())
+                .containsExactlyInAnyOrder(check1.getCheckId(), check2.getCheckId());
+        assertThat(inserted.getTitle()).isEqualTo(goal.getTitle());
+
+        // Verify via getById
+        Goal loaded = goalRepository.getById(studyId, inserted.getGoalId());
+        assertThat(loaded.getAdherenceCheckIds())
+                .containsExactlyInAnyOrder(check1.getCheckId(), check2.getCheckId());
+
+        // Update - change adherence checks
+        loaded.setAdherenceCheckIds(Set.of(check2.getCheckId()));
+        Goal updated = goalRepository.update(loaded);
+
+        assertThat(updated.getAdherenceCheckIds())
+                .containsExactly(check2.getCheckId());
+
+        // Clear adherence checks
+        updated.setAdherenceCheckIds(null);
+        Goal cleared = goalRepository.update(updated);
+        assertThat(cleared.getAdherenceCheckIds()).isEmpty();
     }
 }

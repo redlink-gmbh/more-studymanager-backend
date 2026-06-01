@@ -1,0 +1,3 @@
+ALTER TABLE goal
+    ADD COLUMN title VARCHAR;
+

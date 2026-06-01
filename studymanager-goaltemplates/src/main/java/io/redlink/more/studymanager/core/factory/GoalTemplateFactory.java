@@ -128,6 +128,15 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDefaultValue(false);
 
     /**
+     * If enabled the participant can select adherence checks for the goal. If missing/disabled the adherence checks
+     * as defined by the template are used.
+     */
+    public static final Value<Boolean> CUSTOM_ADHERENCE_CHECKS_STATE = new BooleanValue("custom-adherence-checks-state")
+            .setName(GLOBAL_PROPERTY_PREFIX + "customAdherenceChecksState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "customAdherenceChecksState.description")
+            .setDefaultValue(false);
+
+    /**
      * Allows to configure a self report time.
      */
     public static final Value<String> SELF_REPORT_TIME = new StringValue("self-report-time")
