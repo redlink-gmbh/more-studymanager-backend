@@ -46,11 +46,17 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 @EnableConfigurationProperties({ElasticProperties.class})
 public class ElasticService {
+
+    // For observations we accept raw integer ids as well as `observation_<id>`
+    private static final Pattern OBSERVATION_ID_PATTERN = Pattern.compile("^(?:observation_)?(\\d+)$");
+    // For goal templates we accept only `goaltemplate_<id>`
+    private static final Pattern GOALTEMPLATE_ID_PATTERN = Pattern.compile("^goaltemplate_?(\\d+)$");
 
     private static final Logger LOG = LoggerFactory.getLogger(ElasticService.class);
 
@@ -288,7 +294,7 @@ public class ElasticService {
                                                 )
                                 )
                 );
-        try{
+        try {
             List<ParticipationData> participationDataList = new ArrayList<>();
 
             List<StringTermsBucket> observationBuckets =  client.search(builder.build(), Map.class)
@@ -298,6 +304,11 @@ public class ElasticService {
                     .buckets()
                     .array();
             for(StringTermsBucket observation : observationBuckets){
+                var observationIdMatcher = OBSERVATION_ID_PATTERN.matcher(observation.key().stringValue());
+                if(!observationIdMatcher.find()){
+                    continue; // ignore everything that is no observation (for now)
+                }
+                int observationId = Integer.parseInt(observationIdMatcher.group(1));
                 List<StringTermsBucket> participantBuckets = observation
                         .aggregations()
                         .get("participant_ids")
@@ -326,7 +337,7 @@ public class ElasticService {
                                      .substring(12)), null);
                     assert lastDataReceived != null;
                     participationDataList.add(new ParticipationData(
-                            new ParticipationData.NamedId(Integer.parseInt(observation.key().stringValue().replaceAll("observation_", "")), null),
+                            new ParticipationData.NamedId(observationId, null),
                             "observationType",
                             new ParticipationData.NamedId(Integer.parseInt(participant.key().stringValue().substring(12)), null),
                             studyGroup,
@@ -335,7 +346,7 @@ public class ElasticService {
                 }
             }
             return participationDataList;
-        }catch (IOException | ElasticsearchException e) {
+        } catch (IOException | ElasticsearchException e) {
             if (isElasticIndexNotFound(e)) {
                 return List.of();
             }
