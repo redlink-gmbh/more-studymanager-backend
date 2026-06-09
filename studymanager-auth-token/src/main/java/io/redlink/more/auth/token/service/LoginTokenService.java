@@ -9,7 +9,7 @@
 package io.redlink.more.auth.token.service;
 
 import io.redlink.more.auth.token.configuration.LoginTokenProperties;
-import io.redlink.more.auth.token.event.ParticipantUpdateEvent;
+import io.redlink.more.auth.event.ParticipantUpdateEvent;
 import io.redlink.more.auth.token.repository.LoginTokenRepository;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;

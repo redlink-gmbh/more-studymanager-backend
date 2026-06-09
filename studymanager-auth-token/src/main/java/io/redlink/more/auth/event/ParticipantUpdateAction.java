@@ -1,4 +1,4 @@
-package io.redlink.more.auth.token.event;
+package io.redlink.more.auth.event;
 
 public enum ParticipantUpdateAction {
     DELETE;
