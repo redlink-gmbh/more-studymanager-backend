@@ -6,12 +6,21 @@
  * Foerderung der wissenschaftlichen Forschung).
  * Licensed under the Elastic License 2.0.
  */
-package io.redlink.more.auth.token.model;
+package io.redlink.more.auth.model;
 
 import java.io.Serializable;
 import java.util.OptionalInt;
 import java.util.Set;
 
+/**
+ * Provide information about the study context of the authenticated user
+ * @param studyId the id of the study the authenticated user is participating in
+ * @param participantId the id of the study participant for the authenticated user
+ * @param rawStudyGroupId the optional study group id (negative number if not applicable)
+ * @param observationGroupIds the observation group ids for the study participant
+ * @param studyActive if the study is currently active
+ * @param participantActive if the participant is currently active
+ */
 public record RoutingInfo(
         long studyId,
         int participantId,

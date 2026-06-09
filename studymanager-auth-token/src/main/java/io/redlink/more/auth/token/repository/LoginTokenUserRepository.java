@@ -9,7 +9,7 @@
 package io.redlink.more.auth.token.repository;
 
 import io.redlink.more.auth.token.model.LoginTokenUserDetails;
-import io.redlink.more.auth.token.model.RoutingInfo;
+import io.redlink.more.auth.model.RoutingInfo;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;

@@ -8,6 +8,7 @@
  */
 package io.redlink.more.auth.token.model;
 
+import io.redlink.more.auth.model.RoutingInfo;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
