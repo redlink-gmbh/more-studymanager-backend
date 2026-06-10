@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         StudyGroupRepository.class, ObservationRepository.class, JPAConfiguration.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 class OccurredObservationRepositoryTest {
 
     @Autowired

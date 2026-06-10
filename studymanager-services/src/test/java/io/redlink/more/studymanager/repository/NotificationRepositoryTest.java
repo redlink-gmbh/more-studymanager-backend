@@ -36,7 +36,7 @@ import java.util.Map;
         JPAConfiguration.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 public class NotificationRepositoryTest {
 
     @Autowired

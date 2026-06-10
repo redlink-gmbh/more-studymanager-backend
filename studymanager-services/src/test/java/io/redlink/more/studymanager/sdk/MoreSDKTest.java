@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
         StudyGroupService.class, StudyStateService.class, FirebaseMessagingService.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 class MoreSDKTest {
 
     @MockitoSpyBean

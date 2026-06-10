@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EnableAutoConfiguration
 @ContextConfiguration(classes = {AuditLogRepository.class, JPAConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 class AuditLogRepositoryTest {
 
     @Autowired
