@@ -8,7 +8,7 @@
  */
 package io.redlink.more.auth.token.configuration;
 
-import io.redlink.more.auth.token.model.LoginTokenUserDetails;
+import io.redlink.more.auth.token.model.TokenAuthUserDetails;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,11 +29,11 @@ public class AuthenticationFacade {
     /**
      * Asserts that hte current authentication context contains the provided authority ("role").
      * @param authority the required authority
-     * @return the authentication principal as {@link LoginTokenUserDetails}.
+     * @return the authentication principal as {@link TokenAuthUserDetails}.
      * @throws IllegalArgumentException if authority is {@code null}
      * @throws AccessDeniedException if not authentication context is available or the required authority is not present.
      */
-    public LoginTokenUserDetails assertAuthority(String authority) {
+    public TokenAuthUserDetails assertAuthority(String authority) {
         if (authority == null) throw new IllegalArgumentException("authority must not be null");
 
         final Authentication authentication = getAuthentication();
@@ -45,7 +45,7 @@ public class AuthenticationFacade {
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(authority::equals)) {
             final Object principal = authentication.getPrincipal();
-            if (principal instanceof LoginTokenUserDetails userDetails) {
+            if (principal instanceof TokenAuthUserDetails userDetails) {
                 return userDetails;
             }
         }

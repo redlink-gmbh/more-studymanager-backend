@@ -1,6 +1,6 @@
 package io.redlink.more.auth.token.configuration;
 
-import io.redlink.more.auth.token.service.LoginTokenUserDetailService;
+import io.redlink.more.auth.token.service.TokenAuthUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,17 +17,17 @@ import java.util.Map;
 @Configuration
 public class DaoAuthenticationConfiguration {
 
-    private final LoginTokenUserDetailService loginTokenUserDetailService;
+    private final TokenAuthUserDetailService tokenAuthUserDetailService;
 
-    DaoAuthenticationConfiguration(LoginTokenUserDetailService loginTokenUserDetailService) {
-        this.loginTokenUserDetailService = loginTokenUserDetailService;
+    DaoAuthenticationConfiguration(TokenAuthUserDetailService tokenAuthUserDetailService) {
+        this.tokenAuthUserDetailService = tokenAuthUserDetailService;
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(loginTokenUserDetailService);
+        provider.setUserDetailsService(tokenAuthUserDetailService);
         return provider;
     }
 

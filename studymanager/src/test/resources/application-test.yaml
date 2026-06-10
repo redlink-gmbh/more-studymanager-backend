@@ -1,0 +1,4 @@
+more:
+  login-token:
+    encryption-key: "test-encryption-key"
+    salt-key: "test-salt-key"
