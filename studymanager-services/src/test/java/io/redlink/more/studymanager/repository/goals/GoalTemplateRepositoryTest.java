@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         JPAConfiguration.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 class GoalTemplateRepositoryTest {
 
     @Autowired

@@ -8,8 +8,8 @@
  */
 package io.redlink.more.auth.token.service;
 
-import io.redlink.more.auth.token.model.LoginTokenUserDetails;
-import io.redlink.more.auth.token.repository.LoginTokenUserRepository;
+import io.redlink.more.auth.token.model.TokenAuthUserDetails;
+import io.redlink.more.auth.token.repository.TokenAuthUserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,19 +18,19 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class LoginTokenUserDetailService implements UserDetailsService {
+public class TokenAuthUserDetailService implements UserDetailsService {
 
     public static final String APP_ROLE = "APP";
 
-    private final LoginTokenUserRepository loginTokenUserRepository;
+    private final TokenAuthUserRepository tokenAuthUserRepository;
 
-    LoginTokenUserDetailService(LoginTokenUserRepository loginTokenUserRepository) {
-        this.loginTokenUserRepository = loginTokenUserRepository;
+    TokenAuthUserDetailService(TokenAuthUserRepository tokenAuthUserRepository) {
+        this.tokenAuthUserRepository = tokenAuthUserRepository;
     }
 
     @Override
-    public LoginTokenUserDetails loadUserByUsername(String apiId) throws UsernameNotFoundException {
-        final Optional<LoginTokenUserDetails> gatewayUserDetails = this.loginTokenUserRepository.findByApiId(apiId, Set.of(APP_ROLE));
+    public TokenAuthUserDetails loadUserByUsername(String apiId) throws UsernameNotFoundException {
+        final Optional<TokenAuthUserDetails> gatewayUserDetails = this.tokenAuthUserRepository.findByApiId(apiId, Set.of(APP_ROLE));
 
         return gatewayUserDetails.orElseThrow(
                 () -> new UsernameNotFoundException(String.format("ApiId [%s] not found", apiId))

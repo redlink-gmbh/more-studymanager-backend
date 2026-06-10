@@ -16,11 +16,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class LoginTokenUserDetails extends User {
+public class TokenAuthUserDetails extends User {
 
     private final RoutingInfo routingInfo;
 
-    public LoginTokenUserDetails(String username, String password, Set<String> roles, RoutingInfo routingInfo) {
+    public TokenAuthUserDetails(String username, String password, Set<String> roles, RoutingInfo routingInfo) {
         super(username, password, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()));
         this.routingInfo = routingInfo;
     }
@@ -34,7 +34,7 @@ public class LoginTokenUserDetails extends User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        LoginTokenUserDetails that = (LoginTokenUserDetails) o;
+        TokenAuthUserDetails that = (TokenAuthUserDetails) o;
         return Objects.equals(routingInfo, that.routingInfo);
     }
 

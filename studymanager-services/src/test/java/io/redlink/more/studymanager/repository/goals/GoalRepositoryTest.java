@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         GoalRepository.class, GoalTemplateRepository.class, GoalConfigurationRepository.class, StudyRepository.class,
         ParticipantRepository.class, JPAConfiguration.class
 })
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 class GoalRepositoryTest {
 
     @Autowired

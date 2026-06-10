@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         StudyRepository.class, JPAConfiguration.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@ActiveProfiles("test-containers-flyway")
+@ActiveProfiles({"test", "test-containers-flyway"})
 class StudyRepositoryTest {
 
     @Autowired
