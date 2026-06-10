@@ -10,6 +10,7 @@
 
     <modules>
         <module>studymanager-core</module>
+        <module>studymanager-auth-token</module>
         <module>studymanager-observation</module>
         <module>studymanager-intervention</module>
         <module>studymanager-goaltemplates</module>
@@ -445,11 +446,6 @@
                 <version>0.10.1</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>0.10.2</version>
-            </dependency>
             <dependency>
                 <groupId>jakarta.json</groupId>
                 <artifactId>jakarta.json-api</artifactId>
