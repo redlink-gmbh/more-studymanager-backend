@@ -3,6 +3,7 @@ package io.redlink.more.studymanager.core.properties.model;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,6 +25,10 @@ public class StringTemplateValue extends StringValue {
     public StringTemplateValue(String id, Set<String> allowList) {
         super(id);
         this.allowList = allowList;
+    }
+
+    public Set<String> getAllowList() {
+        return allowList;
     }
 
     @Override
@@ -52,6 +57,11 @@ public class StringTemplateValue extends StringValue {
             }
         }
         return super.doValidate(value);
+    }
+
+    @Override
+    public Value<String> clone() {
+        return copyState(new StringTemplateValue(getId(),getAllowList()));
     }
 
 }

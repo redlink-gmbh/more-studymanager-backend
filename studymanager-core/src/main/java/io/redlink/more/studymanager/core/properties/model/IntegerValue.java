@@ -54,4 +54,12 @@ public class IntegerValue extends Value<Integer> {
         this.max = max;
         return this;
     }
+
+    @Override
+    public Value<Integer> clone() {
+        return copyState(new IntegerValue(getId())
+                .setMax(getMax())
+                .setMin(getMin()));
+    }
+
 }

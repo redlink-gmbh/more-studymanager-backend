@@ -61,4 +61,9 @@ public class ValueGroup extends Value<Void> {
         return false;
     }
 
+    @Override
+    public Value<Void> clone() {
+        return copyState(new ValueGroup(getId()));
+    }
+
 }

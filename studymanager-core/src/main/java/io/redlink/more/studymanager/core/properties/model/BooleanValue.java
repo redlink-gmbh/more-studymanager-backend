@@ -22,4 +22,9 @@ public class BooleanValue extends Value<Boolean> {
     public String getType() {
         return "BOOLEAN";
     }
+
+    @Override
+    public Value<Boolean> clone() {
+        return copyState(new BooleanValue(getId()));
+    }
 }
