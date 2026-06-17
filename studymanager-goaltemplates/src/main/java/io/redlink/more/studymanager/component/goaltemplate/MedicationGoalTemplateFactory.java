@@ -21,18 +21,23 @@ public class MedicationGoalTemplateFactory extends AbstractBooleanGoalTemplateFa
                 CONFIG_SECTION_CONFIGURATION,
                 APP_TITLE,
                 APP_DESCRIPTION,
+                //Changing the Goal Title is allowed by participants
                 GOAL_TITLE_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),
+                //participants can create multiple instances
                 ALLOW_INSTANCES_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),
+                //participants are expected to assign adherence checks
                 CUSTOM_ADHERENCE_CHECKS_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),
+                //the schedule is based on adherence checks (not the whole day)
                 ADHERENCE_CHECK_BASED_SCHEDULE_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),
+                //medication goals are always shown in the to do list of the today tab
                 SHOW_AS_TODO_ITEM_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),

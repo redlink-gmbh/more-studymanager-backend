@@ -24,6 +24,7 @@ public class DrinkAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempla
                 APP_TITLE,
                 APP_DESCRIPTION,
                 GOAL_TITLE_STATE,
+                //ALLOW_INSTANCES_STATE -> not multiple instances of amount-of goals
                 SHOW_AS_TODO_ITEM_STATE,
                 CUSTOM_SHOW_AS_TODO_ITEM_STATE,
 
