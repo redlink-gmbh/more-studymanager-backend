@@ -46,4 +46,11 @@ public class StringListValue extends Value<List> {
         this.maxSize = maxSize;
         return this;
     }
+
+    @Override
+    public Value<List> clone() {
+        return copyState(new StringListValue(getId())
+                .setMinSize(getMinSize())
+                .setMaxSize(getMaxSize()));
+    }
 }

@@ -61,4 +61,11 @@ public class NamedIntegerRangeValue extends Value<NamedIntegerRange> {
         return this;
     }
 
+    @Override
+    public Value<NamedIntegerRange> clone() {
+        return copyState(new NamedIntegerRangeValue(getId())
+                .setMax(getMax())
+                .setMin(getMin()));
+    }
+
 }

@@ -22,4 +22,10 @@ public class StringTextValue extends Value<String> {
     public Class<String> getValueType() {
         return String.class;
     }
+
+    @Override
+    public Value<String> clone() {
+        return copyState(new StringTextValue(getId()));
+    }
+
 }

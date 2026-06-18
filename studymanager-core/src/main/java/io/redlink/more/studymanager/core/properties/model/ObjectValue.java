@@ -22,4 +22,10 @@ public class ObjectValue extends Value<Object> {
     public String getType() {
         return "OBJECT";
     }
+
+    @Override
+    public Value<Object> clone() {
+        return copyState(new ObjectValue(getId()));
+    }
+
 }

@@ -136,4 +136,30 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDescription(GLOBAL_PROPERTY_PREFIX + "customAdherenceChecksState.description")
             .setDefaultValue(false);
 
+    /**
+     * If enabled the schedule for a goal is calculated based on the actuve adherence checks. If disabled the goal is
+     * active the whole day.
+     */
+    public static final Value<Boolean> ADHERENCE_CHECK_BASED_SCHEDULE_STATE = new BooleanValue("adherence-check-schedule-state")
+            .setName(GLOBAL_PROPERTY_PREFIX + "adherenceChecksScheduleState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "adherenceChecksScheduleState.description")
+            .setDefaultValue(false);
+
+    /**
+     * If enabled the activity of the goal is shown as a to do itme in the praecura app. This allows interacting with
+     * the goal step directly via the today view
+     */
+    public static final Value<Boolean> SHOW_AS_TODO_ITEM_STATE = new BooleanValue("show-as-todo-item-state")
+            .setName(GLOBAL_PROPERTY_PREFIX + "showAsTodoItemState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "showAsTodoItemState.description")
+            .setDefaultValue(false);
+    /**
+     * If enabled the participant can activate/disactivate if the goal is included in the to do item list. The
+     * <code>show-as-todo-item-state</code> is used as a default
+     */
+    public static final Value<Boolean> CUSTOM_SHOW_AS_TODO_ITEM_STATE = new BooleanValue("custom-show-as-todo-item-state")
+            .setName(GLOBAL_PROPERTY_PREFIX + "customShowAsTodoItemState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "customShowAsTodoItemState.description")
+            .setDefaultValue(false);
+
 }

@@ -52,4 +52,11 @@ public class ConfigSection extends Value<Void> {
     public final boolean isRequired() {
         return false;
     }
+
+    @Override
+    public Value<Void> clone() {
+        return copyState(new ConfigSection(getId()));
+    }
+
+
 }

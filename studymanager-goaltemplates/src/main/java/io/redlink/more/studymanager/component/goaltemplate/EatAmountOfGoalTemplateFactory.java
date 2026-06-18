@@ -1,17 +1,12 @@
 package io.redlink.more.studymanager.component.goaltemplate;
 
-import io.redlink.more.studymanager.core.component.GoalTemplate;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
-import io.redlink.more.studymanager.core.factory.ComponentFactory;
 import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.model.StringTemplateValue;
 import io.redlink.more.studymanager.core.properties.model.StringTextValue;
-import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
-
-import static io.redlink.more.studymanager.component.goaltemplate.AbstractAmountOfGoalTemplateFactory.*;
 
 import java.util.List;
 import java.util.Set;
@@ -25,12 +20,14 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
 
     public List<Value> getProperties() {
         return List.of(
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_CONFIGURATION,
-                GoalTemplateFactory.APP_TITLE,
-                GoalTemplateFactory.APP_DESCRIPTION,
-                GoalTemplateFactory.GOAL_TITLE_STATE,
+                CONFIG_SECTION_CONFIGURATION,
+                APP_TITLE,
+                APP_DESCRIPTION,
+                GOAL_TITLE_STATE,
+                SHOW_AS_TODO_ITEM_STATE,
+                CUSTOM_SHOW_AS_TODO_ITEM_STATE,
 
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_GOAL_CONFIGURATION,
+                CONFIG_SECTION_GOAL_CONFIGURATION,
                 new StringTemplateValue(
                         "goal-preview",
                         Set.of(
@@ -42,12 +39,12 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                     .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                     .setDefaultValue("Ich esse mindestens <goal.amount> Portionen <goal.unit> [an <days-of-week> Tagen der Woche]")
                     .setImmutable(false),
-                AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_GROUP,
-                AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_VALUE,
-                AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_UNIT,
-                GoalTemplateFactory.DAYS_OF_WEEK,
+                CONFIGS_GOAL_AMOUNT_GROUP,
+                CONFIGS_GOAL_AMOUNT_VALUE,
+                CONFIGS_GOAL_AMOUNT_UNIT,
+                DAYS_OF_WEEK,
 
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_STATUS,
+                CONFIG_SECTION_STATUS,
                 new StringTextValue("status-100-reached")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-100-reached.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-100-reached.description")
@@ -61,7 +58,7 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-not-reached.description")
                         .setDefaultValue("Du bist auf den richtigen Weg. Jede Portion zählt für Dein wohlbefinden."),
 
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_SELF_REPORT,
+                CONFIG_SECTION_SELF_REPORT,
                 new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")

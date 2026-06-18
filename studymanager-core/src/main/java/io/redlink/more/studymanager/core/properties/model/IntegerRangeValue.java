@@ -60,4 +60,10 @@ public class IntegerRangeValue extends Value<IntegerRange> {
         return this;
     }
 
+    @Override
+    public Value<IntegerRange> clone() {
+        return copyState(new IntegerRangeValue(getId())
+                .setMax(getMax())
+                .setMin(getMin()));
+    }
 }

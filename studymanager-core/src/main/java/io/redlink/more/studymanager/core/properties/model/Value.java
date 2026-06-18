@@ -18,7 +18,7 @@ import io.redlink.more.studymanager.core.validation.ValidationIssue;
 import java.util.Objects;
 import java.util.function.Function;
 
-public abstract class Value<T> {
+public abstract class Value<T> implements Cloneable{
     private final String id;
     private String name;
     private String description;
@@ -135,6 +135,25 @@ public abstract class Value<T> {
     public Value<T> setValidationFunction(Function<T, ValidationIssue> validationFunction) {
         this.validationFunction = validationFunction;
         return this;
+    }
+
+    /**
+     * Creates a copy of the current Value
+     * @return
+     */
+    public Value<T> copyOf(){
+        return this.clone();
+    }
+
+    public abstract Value<T> clone();
+
+    protected Value<T> copyState(Value<T> target) {
+        target.setName(getName());
+        target.setDescription(getDescription());
+        target.setRequired(isRequired());
+        target.setImmutable(isImmutable());
+        target.setDefaultValue(getDefaultValue());
+        return target;
     }
 
     @Override

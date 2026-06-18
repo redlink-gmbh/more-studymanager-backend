@@ -1,8 +1,6 @@
 package io.redlink.more.studymanager.component.goaltemplate;
 
-import io.redlink.more.studymanager.core.component.GoalTemplate;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
-import io.redlink.more.studymanager.core.factory.ComponentFactory;
 import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.model.StringTemplateValue;
@@ -22,12 +20,14 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
 
     public List<Value> getProperties() {
         return List.of(
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_CONFIGURATION,
-                GoalTemplateFactory.APP_TITLE,
-                GoalTemplateFactory.APP_DESCRIPTION,
-                GoalTemplateFactory.GOAL_TITLE_STATE,
+                CONFIG_SECTION_CONFIGURATION,
+                APP_TITLE,
+                APP_DESCRIPTION,
+                GOAL_TITLE_STATE,
+                SHOW_AS_TODO_ITEM_STATE,
+                CUSTOM_SHOW_AS_TODO_ITEM_STATE,
 
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_GOAL_CONFIGURATION,
+                CONFIG_SECTION_GOAL_CONFIGURATION,
                 new StringTemplateValue(
                         "goal-preview",
                         Set.of(
@@ -39,17 +39,17 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal-preview.description")
                         .setDefaultValue("Ich <goal.activity> maximal <goal.amount> <goal.unit> [an maximal <days-of-week> Tagen in der Woche]")
                         .setImmutable(false),
-                AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_GROUP,
+                CONFIGS_GOAL_AMOUNT_GROUP,
                 new StringValue("goal.activity")
                         .setName(GOAL_TEMPLATE_PROPERTY_PREFIX + "reduceAmountOf.goal.activity.name")
                         .setDescription(GOAL_TEMPLATE_PROPERTY_PREFIX + "reduceAmountOf.goal.activity.description")
                         .setDefaultValue("konsumiere")
                         .setRequired(true),
-                AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_VALUE,
-                AbstractAmountOfGoalTemplateFactory.CONFIGS_GOAL_AMOUNT_UNIT,
-                GoalTemplateFactory.DAYS_OF_WEEK,
+                CONFIGS_GOAL_AMOUNT_VALUE,
+                CONFIGS_GOAL_AMOUNT_UNIT,
+                DAYS_OF_WEEK,
 
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_STATUS,
+                CONFIG_SECTION_STATUS,
                 new StringTextValue("status-day-not-consumed")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-not-consumed.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-not-consumed.description")
@@ -63,7 +63,7 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-over-limit.description")
                         .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser."),
 
-                AbstractAmountOfGoalTemplateFactory.CONFIG_SECTION_SELF_REPORT,
+                CONFIG_SECTION_SELF_REPORT,
                 new StringTextValue("self-report-question")
                         .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
                         .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
