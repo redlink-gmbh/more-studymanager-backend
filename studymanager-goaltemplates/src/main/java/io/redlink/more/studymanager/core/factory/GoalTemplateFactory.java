@@ -164,7 +164,7 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDefaultValue(false);
 
     /*
-     * Config Section
+     * Config Sections for Goals
      */
     protected static final Value<Void> CONFIG_SECTION_CONFIGURATION = new ConfigSection("configuration")
             .setName(GLOBAL_PROPERTY_PREFIX + "section.configuration.name")
@@ -180,7 +180,7 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDescription(GLOBAL_PROPERTY_PREFIX + "section.self-report.description");
 
     /*
-     * x-percent reached
+     * Goal status properties
      */
     protected static final Value<String> STATUS_100_PERCENT_REACHED = new StringTextValue("status-100-reached")
                         .setName(GLOBAL_PROPERTY_PREFIX + "status-100-reached.name")
@@ -209,7 +209,7 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
                         .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser.");
 
     /*
-     * Self Report
+     * Self Report Properties
      */
 
     protected static final Value<String> SELF_REPORT_QUESTION = new StringTextValue("self-report-question")
