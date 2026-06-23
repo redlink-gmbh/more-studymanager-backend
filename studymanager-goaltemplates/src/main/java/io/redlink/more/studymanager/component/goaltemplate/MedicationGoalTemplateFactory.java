@@ -42,15 +42,8 @@ public class MedicationGoalTemplateFactory extends AbstractBooleanGoalTemplateFa
                         .setDefaultValue(true)
                         .setImmutable(true),
 
-                CONFIG_SECTION_GOAL_CONFIGURATION,
-                CONFIGS_GOAL_QUESTION.copyOf()
-                        .setDefaultValue("Medikament eingenommen?"),
-
                 CONFIG_SECTION_SELF_REPORT,
-                new StringTextValue("self-report-question")
-                        .setName(BOOLEAN_PROPERTY_PREFIX + "self-report-question.name")
-                        .setDescription(BOOLEAN_PROPERTY_PREFIX + "self-report-question.description")
-                        .setRequired(false)
+                SELF_REPORT_QUESTION.copyOf()
                         .setDefaultValue("Hast du das Medikament eingenommen?")
         );
     }

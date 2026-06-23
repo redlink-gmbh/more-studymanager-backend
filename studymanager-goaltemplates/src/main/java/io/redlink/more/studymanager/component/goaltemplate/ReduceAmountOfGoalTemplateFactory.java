@@ -50,23 +50,15 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
                 DAYS_OF_WEEK,
 
                 CONFIG_SECTION_STATUS,
-                new StringTextValue("status-day-not-consumed")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-not-consumed.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-not-consumed.description")
+                STATUS_NOT_CONSUMED.copyOf()
                         .setDefaultValue("Starker Tag! Du hast heute nichts konsumiert."),
-                new StringTextValue("status-day-under-limit")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-under-limit.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-under-limit.description")
+                STATUS_UNDER_LIMIT.copyOf()
                         .setDefaultValue("Du gemacht. Du bist im Ziel geblieben und hast die Kontrolle behalten. Weiter so!"),
-                new StringTextValue("status-day-over-limit")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-day-over-limit.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-day-over-limit.description")
+                STATUS_OVER_LIMIT.copyOf()
                         .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser."),
 
                 CONFIG_SECTION_SELF_REPORT,
-                new StringTextValue("self-report-question")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
+                SELF_REPORT_QUESTION.copyOf()
                         .setDefaultValue("Wie viele Einheiten hast Du heute <goal.activity>? Bitte trage den Wert ein.")
         );
     }

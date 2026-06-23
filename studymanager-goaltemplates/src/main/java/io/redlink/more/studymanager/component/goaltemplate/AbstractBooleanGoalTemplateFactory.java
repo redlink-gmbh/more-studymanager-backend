@@ -35,19 +35,6 @@ public abstract class AbstractBooleanGoalTemplateFactory<C extends GoalTemplate<
 
     protected static final String BOOLEAN_PROPERTY_PREFIX = GOAL_TEMPLATE_PROPERTY_PREFIX + "boolean.";
 
-    protected static final Value<Void> CONFIG_SECTION_CONFIGURATION = new ConfigSection("configuration")
-            .setName(BOOLEAN_PROPERTY_PREFIX + "section.configuration.name")
-            .setDescription(BOOLEAN_PROPERTY_PREFIX + "section.configuration.description");
-    protected static final Value<Void> CONFIG_SECTION_GOAL_CONFIGURATION = new ConfigSection("goal-configuration")
-            .setName(BOOLEAN_PROPERTY_PREFIX + "section.goal.name")
-            .setDescription(BOOLEAN_PROPERTY_PREFIX + "section.goal.description");
-    protected static final Value<Void> CONFIG_SECTION_STATUS = new ConfigSection("status-texts")
-            .setName(BOOLEAN_PROPERTY_PREFIX + "section.status-texts.name")
-            .setDescription(BOOLEAN_PROPERTY_PREFIX + "section.status-texts.description");
-    protected static final Value<Void> CONFIG_SECTION_SELF_REPORT = new ConfigSection("self-report")
-            .setName(BOOLEAN_PROPERTY_PREFIX + "section.self-report.name")
-            .setDescription(BOOLEAN_PROPERTY_PREFIX + "section.self-report.description");
-
     protected static final Value<Boolean> CONFIGS_GOAL_DESIRED = new BooleanValue("goal.desired")
             .setName(BOOLEAN_PROPERTY_PREFIX + "goal.desired.name")
             .setDescription(BOOLEAN_PROPERTY_PREFIX + "goal.desired.description")

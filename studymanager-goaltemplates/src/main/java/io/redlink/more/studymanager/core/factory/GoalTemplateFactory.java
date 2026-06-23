@@ -14,6 +14,7 @@ import io.redlink.more.studymanager.core.io.Visibility;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.model.BooleanValue;
+import io.redlink.more.studymanager.core.properties.model.ConfigSection;
 import io.redlink.more.studymanager.core.properties.model.IntegerRange;
 import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
 import io.redlink.more.studymanager.core.properties.model.StringTextValue;
@@ -161,5 +162,59 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setName(GLOBAL_PROPERTY_PREFIX + "customShowAsTodoItemState.name")
             .setDescription(GLOBAL_PROPERTY_PREFIX + "customShowAsTodoItemState.description")
             .setDefaultValue(false);
+
+    /*
+     * Config Sections for Goals
+     */
+    protected static final Value<Void> CONFIG_SECTION_CONFIGURATION = new ConfigSection("configuration")
+            .setName(GLOBAL_PROPERTY_PREFIX + "section.configuration.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "section.configuration.description");
+    protected static final Value<Void> CONFIG_SECTION_GOAL_CONFIGURATION = new ConfigSection("goal-configuration")
+            .setName(GLOBAL_PROPERTY_PREFIX + "section.goal.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "section.goal.description");
+    protected static final Value<Void> CONFIG_SECTION_STATUS = new ConfigSection("status-texts")
+            .setName(GLOBAL_PROPERTY_PREFIX + "section.status-texts.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "section.status-texts.description");
+    protected static final Value<Void> CONFIG_SECTION_SELF_REPORT = new ConfigSection("self-report")
+            .setName(GLOBAL_PROPERTY_PREFIX + "section.self-report.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "section.self-report.description");
+
+    /*
+     * Goal status properties
+     */
+    protected static final Value<String> STATUS_100_PERCENT_REACHED = new StringTextValue("status-100-reached")
+                        .setName(GLOBAL_PROPERTY_PREFIX + "status-100-reached.name")
+                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-100-reached.description")
+                        .setDefaultValue("Du hast dein Tagesziel erfolgreich gemeistert. Weiter so!");
+    protected static final Value<String> STATUS_75_PERCENT_REACHED = new StringTextValue("status-75-reached")
+                        .setName(GLOBAL_PROPERTY_PREFIX + "status-75-reached.name")
+                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-75-reached.description")
+                        .setDefaultValue("Dein Ziel ist zum greifen nah. Du hast es fast geschafft!");
+    protected static final Value<String> STATUS_0_PERCENT_REACHED = new StringTextValue("status-not-reached")
+                        .setName(GLOBAL_PROPERTY_PREFIX + "status-not-reached.name")
+                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-not-reached.description")
+                        .setDefaultValue("Du bist auf den richtigen Weg. Behalte Dein Tagesziel im Auge.");
+
+    protected static final Value<String> STATUS_NOT_CONSUMED = new StringTextValue("status-day-not-consumed")
+                        .setName(GLOBAL_PROPERTY_PREFIX + "status-day-not-consumed.name")
+                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-not-consumed.description")
+                        .setDefaultValue("Starker Tag! Du hast heute nichts konsumiert.");
+    protected static final Value<String> STATUS_UNDER_LIMIT = new StringTextValue("status-day-under-limit")
+                        .setName(GLOBAL_PROPERTY_PREFIX + "status-day-under-limit.name")
+                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-under-limit.description")
+                        .setDefaultValue("Du gemacht. Du bist im Ziel geblieben und hast die Kontrolle behalten. Weiter so!");
+    protected static final Value<String> STATUS_OVER_LIMIT = new StringTextValue("status-day-over-limit")
+                        .setName(GLOBAL_PROPERTY_PREFIX + "status-day-over-limit.name")
+                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-over-limit.description")
+                        .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser.");
+
+    /*
+     * Self Report Properties
+     */
+
+    protected static final Value<String> SELF_REPORT_QUESTION = new StringTextValue("self-report-question")
+            .setName(GLOBAL_PROPERTY_PREFIX + "self-report-question.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "self-report-question.description");
+
 
 }

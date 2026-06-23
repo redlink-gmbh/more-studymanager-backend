@@ -46,23 +46,14 @@ public class DrinkAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempla
                 DAYS_OF_WEEK,
 
                 CONFIG_SECTION_STATUS,
-                new StringTextValue("status-100-reached")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-100-reached.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-100-reached.description")
-                        .setDefaultValue("Du hast dein Tagesziel erfolgreich gemeistert. Weiter so!"),
-                new StringTextValue("status-75-reached")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-75-reached.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-75-reached.description")
+                STATUS_100_PERCENT_REACHED,
+                STATUS_75_PERCENT_REACHED.copyOf()
                         .setDefaultValue("Dein Ziel ist zum greifen nah. Ein bisschen und Du hast es geschafft!"),
-                new StringTextValue("status-not-reached")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "status-not-reached.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "status-not-reached.description")
+                STATUS_0_PERCENT_REACHED.copyOf()
                         .setDefaultValue("Du bist auf dem richtigen Weg. Jede Schluck zählt für Dein wohlbefinden."),
 
                 CONFIG_SECTION_SELF_REPORT,
-                new StringTextValue("self-report-question")
-                        .setName(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.name")
-                        .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "self-report-question.description")
+                SELF_REPORT_QUESTION.copyOf()
                         .setDefaultValue("Wie viele Einheiten hast Du heute getrunken? Bitte trage den Wert ein.")
         );
     }
