@@ -33,19 +33,6 @@ public abstract class AbstractAmountOfGoalTemplateFactory<C extends GoalTemplate
 
     protected static final String AMOUNT_OF_PROPERTY_PREFIX = GOAL_TEMPLATE_PROPERTY_PREFIX + "amountOfGoal.";
 
-    protected static final Value<Void> CONFIG_SECTION_CONFIGURATION = new ConfigSection("configuration")
-            .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.configuration.description");
-    protected static final Value<Void> CONFIG_SECTION_GOAL_CONFIGURATION = new ConfigSection("goal-configuration")
-            .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.goal.description");
-    protected static final Value<Void> CONFIG_SECTION_STATUS = new ConfigSection("status-texts")
-            .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.status-texts.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.status-texts.description");
-    protected static final Value<Void> CONFIG_SECTION_SELF_REPORT = new ConfigSection("self-report")
-            .setName(AMOUNT_OF_PROPERTY_PREFIX + "section.self-report.name")
-            .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "section.self-report.description");
-
     protected static final Value<Void> CONFIGS_GOAL_AMOUNT_GROUP = new ValueGroup("goal")
             .setName(AMOUNT_OF_PROPERTY_PREFIX + "goal.name")
             .setDescription(AMOUNT_OF_PROPERTY_PREFIX + "goal.description");
