@@ -1,9 +1,7 @@
 package io.redlink.more.studymanager.component.goaltemplate;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
-import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
-import io.redlink.more.studymanager.core.properties.model.StringTextValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
 

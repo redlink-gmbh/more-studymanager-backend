@@ -5,7 +5,6 @@ import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.measurement.Measurement;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
-import io.redlink.more.studymanager.core.properties.model.ConfigSection;
 import io.redlink.more.studymanager.core.properties.model.IntegerRange;
 import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
 import io.redlink.more.studymanager.core.properties.model.StringValue;
