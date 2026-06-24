@@ -1,14 +1,11 @@
 package io.redlink.more.studymanager.component.goaltemplate;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
-import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
-import io.redlink.more.studymanager.core.properties.model.StringTextValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
 
 import java.util.List;
-import java.util.Set;
 
 
 public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFactory<BooleanGoalTemplate<GoalTemplateProperties>, GoalTemplateProperties>  {
@@ -35,10 +32,7 @@ public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFacto
                 SHOW_AS_TODO_ITEM_STATE,
 
                 CONFIG_SECTION_SELF_REPORT,
-                new StringTextValue("self-report-question")
-                        .setName(BOOLEAN_PROPERTY_PREFIX + "self-report-question.name")
-                        .setDescription(BOOLEAN_PROPERTY_PREFIX + "self-report-question.description")
-                        .setRequired(false)
+                SELF_REPORT_QUESTION.copyOf()
                         .setDefaultValue("Hast du Heute dein Ziel erreicht?")
         );
     }
