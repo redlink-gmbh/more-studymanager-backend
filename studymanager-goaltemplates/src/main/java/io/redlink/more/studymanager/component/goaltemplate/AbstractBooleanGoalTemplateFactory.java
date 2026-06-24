@@ -6,13 +6,8 @@ import io.redlink.more.studymanager.core.measurement.Measurement;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.model.BooleanValue;
-import io.redlink.more.studymanager.core.properties.model.ConfigSection;
-import io.redlink.more.studymanager.core.properties.model.IntegerRange;
-import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
 import io.redlink.more.studymanager.core.properties.model.StringTextValue;
-import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
-import io.redlink.more.studymanager.core.properties.model.ValueGroup;
 
 import java.util.Objects;
 import java.util.Set;
