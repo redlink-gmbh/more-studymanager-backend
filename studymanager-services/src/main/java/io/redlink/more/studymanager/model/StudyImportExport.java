@@ -26,6 +26,8 @@ public class StudyImportExport {
     private Map<Integer, Trigger> triggers = new HashMap<>();
     private Map<Integer, List<Action>> actions =  new HashMap<>();
     private List<IntegrationInfo> integrations = new ArrayList<>();
+    private StudyGoalConfig studyGoalConfig = null;
+    private List<GoalTemplate> goalTemplates = new ArrayList<>();
 
     public Study getStudy() {
         return study;

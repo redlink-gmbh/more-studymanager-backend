@@ -10,6 +10,7 @@ import io.redlink.more.studymanager.model.GoalTemplate;
 import io.redlink.more.studymanager.model.GoalTopic;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.StudyGoalConfig;
+import io.redlink.more.studymanager.model.StudyGoalConfigData;
 import io.redlink.more.studymanager.repository.goals.GoalConfigurationRepository;
 import io.redlink.more.studymanager.repository.goals.GoalRepository;
 import io.redlink.more.studymanager.repository.goals.GoalTemplateRepository;
@@ -61,6 +62,11 @@ public class GoalService {
         return goalConfigRepo.saveStudyGoalConfig(studyGoalConfig);
     }
 
+    @Transactional
+    public StudyGoalConfigData getGaolConfigData(long studyId){
+        StudyGoalConfig config = getGoalConfig(studyId);
+        var configData = config != null ? new StudyGoalConfigData(studyId) : new StudyGoalConfigData(config);
+    }
 
     public Collection<GoalTopic> getGoalTopics(long studyId) {
         return goalConfigRepo.listTopics(studyId);

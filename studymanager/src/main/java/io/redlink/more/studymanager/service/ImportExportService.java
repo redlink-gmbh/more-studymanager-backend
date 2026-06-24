@@ -42,6 +42,7 @@ public class ImportExportService {
     private final StudyGroupService studyGroupService;
     private final ObservationGroupService observationGroupService;
     private final IntegrationService integrationService;
+    private final GoalService goalService;
 
     private final ElasticService elasticService;
     private final GatewayProperties gatewayProperties;
@@ -49,7 +50,9 @@ public class ImportExportService {
     public ImportExportService(ParticipantService participantService, StudyService studyService, StudyStateService studyStateService,
                                ObservationService observationService, InterventionService interventionService, StudyGroupService studyGroupService,
                                ObservationGroupService observationGroupService,
-                               IntegrationService integrationService, ElasticService elasticService, GatewayProperties gatewayProperties) {
+                               IntegrationService integrationService,
+                               GoalService goalService,
+                               ElasticService elasticService, GatewayProperties gatewayProperties) {
         this.participantService = participantService;
         this.studyService = studyService;
         this.studyStateService = studyStateService;
@@ -58,6 +61,7 @@ public class ImportExportService {
         this.studyGroupService = studyGroupService;
         this.observationGroupService = observationGroupService;
         this.integrationService = integrationService;
+        this.goalService = goalService;
         this.elasticService = elasticService;
         this.gatewayProperties = gatewayProperties;
     }
