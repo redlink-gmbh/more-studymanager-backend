@@ -19,8 +19,6 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
                 GOAL_TITLE_STATE,
                 SHOW_AS_TODO_ITEM_STATE,
                 CUSTOM_SHOW_AS_TODO_ITEM_STATE,
