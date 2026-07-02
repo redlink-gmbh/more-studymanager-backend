@@ -29,7 +29,6 @@ public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFacto
                 DAYS_OF_WEEK,
 
                 ADHERENCE_CHECK_BASED_SCHEDULE_STATE,
-                SHOW_AS_TODO_ITEM_STATE,
 
                 CONFIG_SECTION_SELF_REPORT,
                 SELF_REPORT_QUESTION.copyOf()

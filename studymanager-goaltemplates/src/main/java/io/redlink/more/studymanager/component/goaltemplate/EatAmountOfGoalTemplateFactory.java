@@ -22,8 +22,6 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
                 APP_TITLE,
                 APP_DESCRIPTION,
                 GOAL_TITLE_STATE,
-                SHOW_AS_TODO_ITEM_STATE,
-                CUSTOM_SHOW_AS_TODO_ITEM_STATE,
 
                 CONFIG_SECTION_GOAL_CONFIGURATION,
                 new StringTemplateValue(

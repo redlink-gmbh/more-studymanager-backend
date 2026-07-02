@@ -35,10 +35,6 @@ public class MedicationGoalTemplateFactory extends AbstractBooleanGoalTemplateFa
                 ADHERENCE_CHECK_BASED_SCHEDULE_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),
-                //medication goals are always shown in the to do list of the today tab
-                SHOW_AS_TODO_ITEM_STATE.copyOf()
-                        .setDefaultValue(true)
-                        .setImmutable(true),
 
                 CONFIG_SECTION_SELF_REPORT,
                 SELF_REPORT_QUESTION.copyOf()
