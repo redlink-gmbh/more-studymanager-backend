@@ -88,22 +88,6 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
     private static final String GLOBAL_PROPERTY_PREFIX = GOAL_TEMPLATE_PROPERTY_PREFIX + "global.";
 
     /**
-     * Used to configure the title of the GoalTemplate as shown in the application
-     */
-    public static final Value<String> APP_TITLE = new StringValue("app-title")
-            .setName(GLOBAL_PROPERTY_PREFIX + "appTitle.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "appTitle.description")
-            .setRequired(true);
-    /**
-     * Used to configure the custom description of the GoalTemplate as shown in the application
-     */
-    public static final Value<String> APP_DESCRIPTION = new StringTextValue("app-description")
-            .setName(GLOBAL_PROPERTY_PREFIX + "appDescription.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "appDescription.description")
-            .setRequired(false);
-
-
-    /**
      * Allows to define that a goal is aktive on x days of the week (e.g. 5/7 days)
      */
     public static final Value<IntegerRange> DAYS_OF_WEEK = new IntegerRangeValue("days-of-week")

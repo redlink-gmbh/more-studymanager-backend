@@ -17,8 +17,6 @@ public class MedicationGoalTemplateFactory extends AbstractBooleanGoalTemplateFa
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
                 //Changing the Goal Title is allowed by participants
                 GOAL_TITLE_STATE.copyOf()
                         .setDefaultValue(true)

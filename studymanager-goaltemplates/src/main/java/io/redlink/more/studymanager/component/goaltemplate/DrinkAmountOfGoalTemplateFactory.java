@@ -19,8 +19,6 @@ public class DrinkAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempla
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
                 GOAL_TITLE_STATE,
                 //ALLOW_INSTANCES_STATE -> not multiple instances of amount-of goals
 

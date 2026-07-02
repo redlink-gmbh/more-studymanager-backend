@@ -17,8 +17,6 @@ public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFacto
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
                 //GOAL_TITLE_STATE, -> title can not be modified by user!
                 //ALLOW_INSTANCES_STATE -> not multiple instances of boolean goals
                 CUSTOM_ADHERENCE_CHECKS_STATE, //allow to enable/disable custom adherence checks for multiple checks per day
