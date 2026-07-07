@@ -18,7 +18,6 @@ import io.redlink.more.studymanager.core.properties.model.ConfigSection;
 import io.redlink.more.studymanager.core.properties.model.IntegerRange;
 import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
 import io.redlink.more.studymanager.core.properties.model.StringTextValue;
-import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
 
@@ -129,6 +128,17 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setName(GLOBAL_PROPERTY_PREFIX + "adherenceChecksScheduleState.name")
             .setDescription(GLOBAL_PROPERTY_PREFIX + "adherenceChecksScheduleState.description")
             .setDefaultValue(false);
+
+    /**
+     * If enabled (default) baseline tracking is enabled for the goal template. This means that the user can track
+     * progress without setting a goal. The Idea of baseline tracking is to collect expirience and data with a goal
+     * before setting a specific goal to reach.
+     */
+    public static final Value<Boolean> BASELINE_TRACKING_STATE = new BooleanValue("baseline-tracking-state")
+            .setName(GLOBAL_PROPERTY_PREFIX + "baselineTrackingState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "baselineTrackingState.description")
+            .setDefaultValue(true);
+
 
     /*
      * Config Sections for Goals

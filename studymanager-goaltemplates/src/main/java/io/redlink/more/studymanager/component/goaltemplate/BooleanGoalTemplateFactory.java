@@ -20,6 +20,7 @@ public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFacto
                 //GOAL_TITLE_STATE, -> title can not be modified by user!
                 //ALLOW_INSTANCES_STATE -> not multiple instances of boolean goals
                 CUSTOM_ADHERENCE_CHECKS_STATE, //allow to enable/disable custom adherence checks for multiple checks per day
+                BASELINE_TRACKING_STATE, //allow to configure baseline tracking for boolean goals (default enabled)
 
                 CONFIG_SECTION_GOAL_CONFIGURATION,
                 CONFIGS_GOAL_QUESTION,
