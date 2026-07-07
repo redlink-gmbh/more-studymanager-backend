@@ -20,6 +20,7 @@ public class EatAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTemplate
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
                 GOAL_TITLE_STATE,
+                BASELINE_TRACKING_STATE, //allow to configure baseline tracking for boolean goals (default enabled)
 
                 CONFIG_SECTION_GOAL_CONFIGURATION,
                 new StringTemplateValue(

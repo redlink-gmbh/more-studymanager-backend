@@ -21,6 +21,7 @@ public class DrinkAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempla
                 CONFIG_SECTION_CONFIGURATION,
                 GOAL_TITLE_STATE,
                 //ALLOW_INSTANCES_STATE -> not multiple instances of amount-of goals
+                BASELINE_TRACKING_STATE, //allow to configure baseline tracking for boolean goals (default enabled)
 
                 CONFIG_SECTION_GOAL_CONFIGURATION,
                 new StringTemplateValue(
