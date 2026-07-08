@@ -61,7 +61,6 @@ public class GoalService {
         return goalConfigRepo.saveStudyGoalConfig(studyGoalConfig);
     }
 
-
     public Collection<GoalTopic> getGoalTopics(long studyId) {
         return goalConfigRepo.listTopics(studyId);
     }
@@ -171,6 +170,10 @@ public class GoalService {
         }
     }
 
+    public List<GoalTemplate> getGoalTemplates(Long studyId) {
+        return goalTemplateRepo.listGoalTemplates(studyId);
+    }
+
 
     /**
      * Ensures the goalTemplageFactory for the parsed goalTemplate
@@ -202,4 +205,25 @@ public class GoalService {
     }
 
 
+    public List<GoalTopic> importGoalTopics(long studyId, List<GoalTopic> topics) {
+        if(topics != null){
+            return topics.stream()
+                .filter(Objects::nonNull)
+                .map(topic -> goalConfigRepo.doImport(studyId, topic))
+                .toList();
+        } else {
+            return null;
+        }
+    }
+
+    public List<GoalAdherenceCheck> importAdherenceChecks(Long studyId, List<GoalAdherenceCheck> adherenceChecks) {
+        if(adherenceChecks != null){
+            return adherenceChecks.stream()
+                .filter(Objects::nonNull)
+                .map(adherenceCheck -> goalConfigRepo.doImport(studyId, adherenceCheck))
+                .toList();
+        } else {
+            return null;
+        }
+    }
 }

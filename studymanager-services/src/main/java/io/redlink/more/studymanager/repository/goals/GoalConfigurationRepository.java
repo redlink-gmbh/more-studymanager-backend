@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class GoalConfigurationRepository {
@@ -114,9 +115,14 @@ public class GoalConfigurationRepository {
 
     @Transactional
     public GoalTopic doImport(Long studyId, GoalTopic topic) {
-        // Force the correct studyId — ignore whatever came in the object
-        topic.setStudyId(studyId);
-        return saveTopic(topic);
+        var existing = getTopic(topic.getStudyId(), topic.getKey());
+        if(existing == null) {
+            // Force the correct studyId — ignore whatever came in the object
+            topic.setStudyId(studyId);
+            return saveTopic(topic);
+        } else {
+            return existing;
+        }
     }
 
     public GoalTopic getTopic(Long studyId, String key) {
@@ -147,17 +153,22 @@ public class GoalConfigurationRepository {
 
     @Transactional
     public GoalAdherenceCheck doImport(Long studyId, GoalAdherenceCheck check) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        namedTemplate.update(
+        var existing = getCheckById(studyId, check.getCheckId());
+        if(existing == null) {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            namedTemplate.update(
                 IMPORT_ADHERENCE_CHECK,
                 toParams(check)
-                        .addValue("study_id", studyId)
-                        .addValue("check_id", check.getCheckId()),
+                    .addValue("study_id", studyId)
+                    .addValue("check_id", check.getCheckId()),
                 keyHolder,
                 new String[]{"check_id"}
-        );
-        Integer checkId = keyHolder.getKey().intValue();
-        return getCheckById(studyId, checkId);
+            );
+            Integer checkId = Objects.requireNonNull(keyHolder.getKey()).intValue();
+            return getCheckById(studyId, checkId);
+        } else { //do not override existing adherence check in the study
+            return existing;
+        }
     }
 
     /**

@@ -254,6 +254,37 @@ class GoalConfigurationRepositoryTest {
     }
 
     @Test
+    @DisplayName("GoalAdherenceCheck import does not override existing")
+    void testDoSkipImportExistingAdherenceCheck() {
+        Long studyX = studyRepository.insert(new Study().setContact(new Contact().setPerson("X"))).getStudyId();
+        Long studyY = studyRepository.insert(new Study().setContact(new Contact().setPerson("Y"))).getStudyId();
+        //add an existing adherence check for the id=1 to studyY
+        goalConfigurationRepository.upsertCheck(new GoalAdherenceCheck()
+                .setStudyId(studyY)
+                .setCheckId(1)                     // pretend exported
+                .setTitle("Existing Check")
+                .setTime(LocalTime.of(14, 05)));
+
+        //now create a check for StudyX with the same id=1 but different title and time
+        GoalAdherenceCheck originalStudyX = new GoalAdherenceCheck()
+                .setStudyId(studyX)
+                .setCheckId(1)                     // pretend exported
+                .setTitle("Imported Check")
+                .setTime(LocalTime.of(14, 15));
+
+        //import the check from studyX and validate that the existing one is not overridden
+        GoalAdherenceCheck imported = goalConfigurationRepository.doImport(studyY, originalStudyX);
+
+        assertThat(imported.getStudyId()).isEqualTo(studyY);
+        assertThat(imported.getCheckId()).isEqualTo(1);
+        assertThat(imported.getTitle()).isEqualTo("Existing Check");
+        assertThat(imported.getTime()).isEqualTo(LocalTime.of(14, 05));
+
+        assertThat(goalConfigurationRepository.listChecks(studyY)).hasSize(1);
+        assertThat(goalConfigurationRepository.listChecks(studyX)).isEmpty();
+    }
+
+    @Test
     @DisplayName("GoalTopic can be imported with forced studyId (upsert behavior)")
     void testDoImportGoalTopic() {
         Long studyA = studyRepository.insert(new Study().setContact(new Contact().setPerson("A"))).getStudyId();
