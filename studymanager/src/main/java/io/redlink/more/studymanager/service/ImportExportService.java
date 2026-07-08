@@ -14,6 +14,7 @@ import io.redlink.more.studymanager.model.*;
 import io.redlink.more.studymanager.model.transformer.ParticipantTransformer;
 import io.redlink.more.studymanager.properties.GatewayProperties;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ByteArrayResource;
@@ -21,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,6 +137,11 @@ public class ImportExportService {
             export.getTriggers()
                     .put(interventionId, interventionService.getTriggerByIds(studyId, interventionId));
         }
+
+        //Goals
+        export.setStudyGoalConfig(getGoalConfigData(studyId));
+        export.setGoalTemplates(goalService.getGoalTemplates(studyId));
+
         return export;
     }
 
@@ -170,6 +177,22 @@ public class ImportExportService {
         studyImport.getIntegrations().forEach(integration ->
                 integrationService.addToken(studyId, integration.observationId(), integration.name()));
 
+        //Goals
+        var goalConfData = studyImport.getStudyGoalConfig();
+        StudyGoalConfig goalConfig = new StudyGoalConfig()
+            .setStudyId(studyId)
+            .setAchievability(goalConfData.getAchievability())
+            .setCommitment(goalConfData.getCommitment())
+            .setUnderstandability(goalConfData.getUnderstandability());
+        if(goalConfig.getAchievability() != null || goalConfig.getCommitment() != null || goalConfig.getUnderstandability() != null) {
+            goalService.setGoalConfig(goalConfig);
+        } //else if all values are null we do not need to set a config as this is the default
+        goalService.importGoalTopics(studyId, goalConfData.getTopics());
+        goalService.importAdherenceChecks(studyId, goalConfData.getAdherenceChecks());
+        studyImport.getGoalTemplates().stream()
+            .filter(Objects::nonNull)
+            .forEach(gt -> goalService.importGoalTemplate(studyId, gt));
+
         return newStudy;
     }
 
@@ -204,4 +227,15 @@ public class ImportExportService {
             LOGGER.error("Cannot export study data for {}", studyId, e);
         }
     }
+
+    private StudyImportExport.@NonNull StudyGoalConfigData getGoalConfigData(Long studyId) {
+        var goalConfig = goalService.getGoalConfig(studyId);
+        var goalConfigData = goalConfig == null ? new StudyImportExport.StudyGoalConfigData(studyId) :
+            new StudyImportExport.StudyGoalConfigData(goalConfig);
+        goalConfigData.setTopics(goalService.getGoalTopics(studyId));
+        goalConfigData.setAdherenceChecks(goalService.getGoalAdherenceChecks(studyId));
+        return goalConfigData;
+    }
+
+
 }

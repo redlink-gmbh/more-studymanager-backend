@@ -10,7 +10,6 @@ import io.redlink.more.studymanager.model.GoalTemplate;
 import io.redlink.more.studymanager.model.GoalTopic;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.StudyGoalConfig;
-import io.redlink.more.studymanager.model.StudyGoalConfigData;
 import io.redlink.more.studymanager.repository.goals.GoalConfigurationRepository;
 import io.redlink.more.studymanager.repository.goals.GoalRepository;
 import io.redlink.more.studymanager.repository.goals.GoalTemplateRepository;
@@ -60,12 +59,6 @@ public class GoalService {
     public StudyGoalConfig setGoalConfig(StudyGoalConfig studyGoalConfig) {
         studyStateService.assertStudyNotInState(studyGoalConfig.getStudyId(), Study.Status.CLOSED);
         return goalConfigRepo.saveStudyGoalConfig(studyGoalConfig);
-    }
-
-    @Transactional
-    public StudyGoalConfigData getGaolConfigData(long studyId){
-        StudyGoalConfig config = getGoalConfig(studyId);
-        var configData = config != null ? new StudyGoalConfigData(studyId) : new StudyGoalConfigData(config);
     }
 
     public Collection<GoalTopic> getGoalTopics(long studyId) {
@@ -177,6 +170,10 @@ public class GoalService {
         }
     }
 
+    public List<GoalTemplate> getGoalTemplates(Long studyId) {
+        return goalTemplateRepo.listGoalTemplates(studyId);
+    }
+
 
     /**
      * Ensures the goalTemplageFactory for the parsed goalTemplate
@@ -208,4 +205,25 @@ public class GoalService {
     }
 
 
+    public List<GoalTopic> importGoalTopics(long studyId, List<GoalTopic> topics) {
+        if(topics != null){
+            return topics.stream()
+                .filter(Objects::nonNull)
+                .map(topic -> goalConfigRepo.doImport(studyId, topic))
+                .toList();
+        } else {
+            return null;
+        }
+    }
+
+    public List<GoalAdherenceCheck> importAdherenceChecks(Long studyId, List<GoalAdherenceCheck> adherenceChecks) {
+        if(adherenceChecks != null){
+            return adherenceChecks.stream()
+                .filter(Objects::nonNull)
+                .map(adherenceCheck -> goalConfigRepo.doImport(studyId, adherenceCheck))
+                .toList();
+        } else {
+            return null;
+        }
+    }
 }

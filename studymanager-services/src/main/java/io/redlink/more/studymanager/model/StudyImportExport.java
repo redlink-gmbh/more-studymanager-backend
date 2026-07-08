@@ -8,7 +8,10 @@
  */
 package io.redlink.more.studymanager.model;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +29,7 @@ public class StudyImportExport {
     private Map<Integer, Trigger> triggers = new HashMap<>();
     private Map<Integer, List<Action>> actions =  new HashMap<>();
     private List<IntegrationInfo> integrations = new ArrayList<>();
-    private StudyGoalConfig studyGoalConfig = null;
+    private StudyGoalConfigData studyGoalConfig = null;
     private List<GoalTemplate> goalTemplates = new ArrayList<>();
 
     public Study getStudy() {
@@ -110,6 +113,24 @@ public class StudyImportExport {
         return this;
     }
 
+    public List<GoalTemplate> getGoalTemplates() {
+        return goalTemplates;
+    }
+
+    public StudyImportExport setGoalTemplates(List<GoalTemplate> goalTemplates) {
+        this.goalTemplates = goalTemplates == null ? new ArrayList<>() : goalTemplates;
+        return this;
+    }
+
+    public StudyGoalConfigData getStudyGoalConfig() {
+        return studyGoalConfig;
+    }
+
+    public StudyImportExport setStudyGoalConfig(StudyGoalConfigData studyGoalConfig) {
+        this.studyGoalConfig = studyGoalConfig;
+        return this;
+    }
+
     public record ParticipantInfo(
             Integer groupId,
             Set<Integer> observationGroupIds
@@ -117,5 +138,43 @@ public class StudyImportExport {
         public ParticipantInfo {
             observationGroupIds = observationGroupIds == null ? Collections.emptySet() : observationGroupIds;
         }
+    }
+
+    public static class StudyGoalConfigData extends StudyGoalConfig {
+
+        private List<GoalTopic> topics =  new ArrayList<>();
+        private List<GoalAdherenceCheck> adherenceChecks = new ArrayList<>();
+
+        public StudyGoalConfigData(long studyId) {
+            super();
+            setStudyId(studyId);
+        }
+
+        public StudyGoalConfigData(StudyGoalConfig config) {
+            super();
+            setStudyId(config.getStudyId());
+            setAchievability(config.getAchievability());
+            setCommitment(config.getCommitment());
+            setUnderstandability(config.getUnderstandability());
+        }
+
+        public List<GoalAdherenceCheck> getAdherenceChecks() {
+            return adherenceChecks;
+        }
+
+        public StudyGoalConfigData setAdherenceChecks(Collection<GoalAdherenceCheck> adherenceChecks) {
+            this.adherenceChecks = adherenceChecks == null ? new ArrayList<>() : new ArrayList<>(adherenceChecks);
+            return this;
+        }
+
+        public List<GoalTopic> getTopics() {
+            return topics;
+        }
+
+        public StudyGoalConfigData setTopics(Collection<GoalTopic> topics) {
+            this.topics = topics == null ? new ArrayList<>() : new ArrayList<>(topics);
+            return this;
+        }
+
     }
 }
