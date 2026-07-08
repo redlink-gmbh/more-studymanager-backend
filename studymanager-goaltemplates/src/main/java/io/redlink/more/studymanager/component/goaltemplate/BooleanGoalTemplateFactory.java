@@ -17,11 +17,10 @@ public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFacto
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
                 //GOAL_TITLE_STATE, -> title can not be modified by user!
                 //ALLOW_INSTANCES_STATE -> not multiple instances of boolean goals
                 CUSTOM_ADHERENCE_CHECKS_STATE, //allow to enable/disable custom adherence checks for multiple checks per day
+                BASELINE_TRACKING_STATE, //allow to configure baseline tracking for boolean goals (default enabled)
 
                 CONFIG_SECTION_GOAL_CONFIGURATION,
                 CONFIGS_GOAL_QUESTION,
@@ -29,7 +28,6 @@ public class BooleanGoalTemplateFactory extends AbstractBooleanGoalTemplateFacto
                 DAYS_OF_WEEK,
 
                 ADHERENCE_CHECK_BASED_SCHEDULE_STATE,
-                SHOW_AS_TODO_ITEM_STATE,
 
                 CONFIG_SECTION_SELF_REPORT,
                 SELF_REPORT_QUESTION.copyOf()

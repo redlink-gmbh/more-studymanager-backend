@@ -18,7 +18,6 @@ import io.redlink.more.studymanager.core.properties.model.ConfigSection;
 import io.redlink.more.studymanager.core.properties.model.IntegerRange;
 import io.redlink.more.studymanager.core.properties.model.IntegerRangeValue;
 import io.redlink.more.studymanager.core.properties.model.StringTextValue;
-import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
 
@@ -88,22 +87,6 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
     private static final String GLOBAL_PROPERTY_PREFIX = GOAL_TEMPLATE_PROPERTY_PREFIX + "global.";
 
     /**
-     * Used to configure the title of the GoalTemplate as shown in the application
-     */
-    public static final Value<String> APP_TITLE = new StringValue("app-title")
-            .setName(GLOBAL_PROPERTY_PREFIX + "appTitle.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "appTitle.description")
-            .setRequired(true);
-    /**
-     * Used to configure the custom description of the GoalTemplate as shown in the application
-     */
-    public static final Value<String> APP_DESCRIPTION = new StringTextValue("app-description")
-            .setName(GLOBAL_PROPERTY_PREFIX + "appDescription.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "appDescription.description")
-            .setRequired(false);
-
-
-    /**
      * Allows to define that a goal is aktive on x days of the week (e.g. 5/7 days)
      */
     public static final Value<IntegerRange> DAYS_OF_WEEK = new IntegerRangeValue("days-of-week")
@@ -138,7 +121,7 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDefaultValue(false);
 
     /**
-     * If enabled the schedule for a goal is calculated based on the actuve adherence checks. If disabled the goal is
+     * If enabled the schedule for a goal is calculated based on the active adherence checks. If disabled the goal is
      * active the whole day.
      */
     public static final Value<Boolean> ADHERENCE_CHECK_BASED_SCHEDULE_STATE = new BooleanValue("adherence-check-schedule-state")
@@ -147,21 +130,15 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
             .setDefaultValue(false);
 
     /**
-     * If enabled the activity of the goal is shown as a to do itme in the praecura app. This allows interacting with
-     * the goal step directly via the today view
+     * If enabled (default) baseline tracking is enabled for the goal template. This means that the user can track
+     * progress without setting a goal. The Idea of baseline tracking is to collect expirience and data with a goal
+     * before setting a specific goal to reach.
      */
-    public static final Value<Boolean> SHOW_AS_TODO_ITEM_STATE = new BooleanValue("show-as-todo-item-state")
-            .setName(GLOBAL_PROPERTY_PREFIX + "showAsTodoItemState.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "showAsTodoItemState.description")
-            .setDefaultValue(false);
-    /**
-     * If enabled the participant can activate/disactivate if the goal is included in the to do item list. The
-     * <code>show-as-todo-item-state</code> is used as a default
-     */
-    public static final Value<Boolean> CUSTOM_SHOW_AS_TODO_ITEM_STATE = new BooleanValue("custom-show-as-todo-item-state")
-            .setName(GLOBAL_PROPERTY_PREFIX + "customShowAsTodoItemState.name")
-            .setDescription(GLOBAL_PROPERTY_PREFIX + "customShowAsTodoItemState.description")
-            .setDefaultValue(false);
+    public static final Value<Boolean> BASELINE_TRACKING_STATE = new BooleanValue("baseline-tracking-state")
+            .setName(GLOBAL_PROPERTY_PREFIX + "baselineTrackingState.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "baselineTrackingState.description")
+            .setDefaultValue(true);
+
 
     /*
      * Config Sections for Goals

@@ -19,11 +19,8 @@ public class ReduceAmountOfGoalTemplateFactory extends AbstractAmountOfGoalTempl
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
                 GOAL_TITLE_STATE,
-                SHOW_AS_TODO_ITEM_STATE,
-                CUSTOM_SHOW_AS_TODO_ITEM_STATE,
+                BASELINE_TRACKING_STATE, //allow to configure baseline tracking for boolean goals (default enabled)
 
                 CONFIG_SECTION_GOAL_CONFIGURATION,
                 new StringTemplateValue(

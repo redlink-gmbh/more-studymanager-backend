@@ -17,8 +17,7 @@ public class MedicationGoalTemplateFactory extends AbstractBooleanGoalTemplateFa
     public List<Value> getProperties() {
         return List.of(
                 CONFIG_SECTION_CONFIGURATION,
-                APP_TITLE,
-                APP_DESCRIPTION,
+                BASELINE_TRACKING_STATE, //allow to configure baseline tracking for boolean goals (default enabled)
                 //Changing the Goal Title is allowed by participants
                 GOAL_TITLE_STATE.copyOf()
                         .setDefaultValue(true)
@@ -33,10 +32,6 @@ public class MedicationGoalTemplateFactory extends AbstractBooleanGoalTemplateFa
                         .setImmutable(true),
                 //the schedule is based on adherence checks (not the whole day)
                 ADHERENCE_CHECK_BASED_SCHEDULE_STATE.copyOf()
-                        .setDefaultValue(true)
-                        .setImmutable(true),
-                //medication goals are always shown in the to do list of the today tab
-                SHOW_AS_TODO_ITEM_STATE.copyOf()
                         .setDefaultValue(true)
                         .setImmutable(true),
 
