@@ -80,8 +80,8 @@ public class StepGoalTemplateFactory extends GoalTemplateFactory<StepGoalTemplat
 
                 CONFIG_SECTION_SELF_REPORT,
                 new StringValue("question")
-                        .setName(STEP_PROPERTY_PREFIX + "question.name")
-                        .setDescription(STEP_PROPERTY_PREFIX + "question.description")
+                        .setName(STEP_PROPERTY_PREFIX + "goal.question.name")
+                        .setDescription(STEP_PROPERTY_PREFIX + "goal.question.description")
                         .setRequired(false),
                 new StringListValue("answers")
                         .setMinSize(2)
@@ -94,8 +94,8 @@ public class StepGoalTemplateFactory extends GoalTemplateFactory<StepGoalTemplat
                         ))
                         .setRequired(false),
                 new BooleanValue("singleChoiceState")
-                        .setName(STEP_PROPERTY_PREFIX + "singleChoiceState.name")
-                        .setDescription(STEP_PROPERTY_PREFIX + "singleChoiceState.description")
+                        .setName(STEP_PROPERTY_PREFIX + "goal.singleChoiceState.name")
+                        .setDescription(STEP_PROPERTY_PREFIX + "goal.singleChoiceState.description")
                         .setRequired(false)
                 );
     }
