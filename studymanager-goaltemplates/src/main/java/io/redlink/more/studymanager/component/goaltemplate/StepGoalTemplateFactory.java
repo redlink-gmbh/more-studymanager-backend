@@ -80,7 +80,7 @@ public class StepGoalTemplateFactory extends GoalTemplateFactory<StepGoalTemplat
 
                 CONFIG_SECTION_SELF_REPORT,
                 new StringValue("question")
-                        .setName(STEP_PROPERTY_PREFIX + ".question.name")
+                        .setName(STEP_PROPERTY_PREFIX + "question.name")
                         .setDescription(STEP_PROPERTY_PREFIX + "question.description")
                         .setRequired(false),
                 new StringListValue("answers")
@@ -94,7 +94,7 @@ public class StepGoalTemplateFactory extends GoalTemplateFactory<StepGoalTemplat
                         ))
                         .setRequired(false),
                 new BooleanValue("singleChoiceState")
-                        .setName(STEP_PROPERTY_PREFIX + ".singleChoiceState.name")
+                        .setName(STEP_PROPERTY_PREFIX + "singlFeChoiceState.name")
                         .setDescription(STEP_PROPERTY_PREFIX + "singleChoiceState.description")
                         .setRequired(false)
                 );
