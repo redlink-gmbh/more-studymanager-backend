@@ -94,7 +94,7 @@ public class StepGoalTemplateFactory extends GoalTemplateFactory<StepGoalTemplat
                         ))
                         .setRequired(false),
                 new BooleanValue("singleChoiceState")
-                        .setName(STEP_PROPERTY_PREFIX + "singlFeChoiceState.name")
+                        .setName(STEP_PROPERTY_PREFIX + "singleChoiceState.name")
                         .setDescription(STEP_PROPERTY_PREFIX + "singleChoiceState.description")
                         .setRequired(false)
                 );
