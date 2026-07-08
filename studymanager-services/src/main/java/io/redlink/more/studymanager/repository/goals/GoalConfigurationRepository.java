@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class GoalConfigurationRepository {
@@ -153,7 +154,7 @@ public class GoalConfigurationRepository {
     @Transactional
     public GoalAdherenceCheck doImport(Long studyId, GoalAdherenceCheck check) {
         var existing = getCheckById(studyId, check.getCheckId());
-        if(existing != null) {
+        if(existing == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             namedTemplate.update(
                 IMPORT_ADHERENCE_CHECK,
@@ -163,7 +164,7 @@ public class GoalConfigurationRepository {
                 keyHolder,
                 new String[]{"check_id"}
             );
-            Integer checkId = keyHolder.getKey().intValue();
+            Integer checkId = Objects.requireNonNull(keyHolder.getKey()).intValue();
             return getCheckById(studyId, checkId);
         } else { //do not override existing adherence check in the study
             return existing;
