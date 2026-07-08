@@ -9,6 +9,7 @@
 package io.redlink.more.studymanager.service;
 
 import io.redlink.more.studymanager.core.properties.ActionProperties;
+import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
 import io.redlink.more.studymanager.model.*;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -57,6 +59,9 @@ public class ImportExportServiceTest {
     @Spy
     private ObservationGroupService observationGroupService = mock(ObservationGroupService.class);
 
+    @Spy
+    private GoalService goalService = mock(GoalService.class);
+
     @InjectMocks
     ImportExportService importExportService;
 
@@ -84,6 +89,18 @@ public class ImportExportServiceTest {
     @Captor
     private ArgumentCaptor<String> aliasCaptor;
 
+    @Captor
+    private ArgumentCaptor<StudyGoalConfig> goalConfigCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<GoalTopic>> goalTopicsCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<GoalAdherenceCheck>> adherenceChecksCaptor;
+
+    @Captor
+    private ArgumentCaptor<GoalTemplate> goalTemplateCaptor;
+
     private final AuthenticatedUser currentUser = new AuthenticatedUser(
             UUID.randomUUID().toString(),
             "Test User", "test@example.com", "Test Inc.",
@@ -105,6 +122,73 @@ public class ImportExportServiceTest {
     @DisplayName("Study configuration should be imported and set id's correctly")
     void testImportStudy() {
         Long studyId = 1L;
+
+
+        StudyImportExport.StudyGoalConfigData goalConfigData = new StudyImportExport.StudyGoalConfigData(studyId);
+        goalConfigData
+                .setAchievability("Is this goal achievable?")
+                .setCommitment("Do you commit to your goals?")
+                .setUnderstandability("Have you understood your goals?");
+
+        GoalTopic topic1 = new GoalTopic()
+                .setKey("topic-key-1")
+                .setTitle("Topic 1 Title")
+                .setDescription("Description for topic 1");
+        GoalTopic topic2 = new GoalTopic()
+                .setKey("topic-key-2")
+                .setTitle("Topic 2 Title")
+                .setDescription("Description for topic 2");
+        goalConfigData.setTopics(List.of(topic1, topic2));
+
+        GoalAdherenceCheck check1 = new GoalAdherenceCheck()
+                .setCheckId(10)
+                .setTitle("Daily Morning")
+                .setTime(LocalTime.of(7, 30));
+        GoalAdherenceCheck check2 = new GoalAdherenceCheck()
+                .setCheckId(20)
+                .setTitle("Daily Evening")
+                .setTime(LocalTime.of(19, 45));
+        goalConfigData.setAdherenceChecks(List.of(check1, check2));
+
+        GoalTemplate gt1 = new GoalTemplate()
+                .setTemplateId(101)
+                .setTitle("Goal Template without group")
+                .setParticipantTitle("Participant view title 1")
+                .setParticipantInfo("Some info")
+                .setType("test-goal-type")
+                .setKind("test-kind")
+                .setStudyGroupId(null)
+                .setProperties(new GoalTemplateProperties())
+                .setObservationGroupIds(Set.of())
+                .setTopicKeys(Set.of("topic-key-1"))
+                .setAdherenceCheckIds(Set.of(10));
+
+        GoalTemplate gt2 = new GoalTemplate()
+                .setTemplateId(102)
+                .setTitle("Goal Template with study group 2")
+                .setParticipantTitle("Participant view title 2")
+                .setParticipantInfo("Some info 2")
+                .setType("test-goal-type")
+                .setKind("test-kind")
+                .setStudyGroupId(2)
+                .setProperties(new GoalTemplateProperties())
+                .setObservationGroupIds(Set.of(1))
+                .setTopicKeys(Set.of("topic-key-1", "topic-key-2"))
+                .setAdherenceCheckIds(Set.of(10, 20));
+
+        GoalTemplate gt3 = new GoalTemplate()
+                .setTemplateId(103)
+                .setTitle("Goal Template with study group 3 and multiple obs groups")
+                .setParticipantTitle("Participant view title 3")
+                .setParticipantInfo("Some info 3")
+                .setType("test-goal-type")
+                .setKind("test-kind")
+                .setStudyGroupId(3)
+                .setProperties(new GoalTemplateProperties())
+                .setObservationGroupIds(Set.of(1, 2))
+                .setTopicKeys(Set.of("topic-key-2"))
+                .setAdherenceCheckIds(Set.of(20));
+
         StudyImportExport studyImport = new StudyImportExport()
                 .setStudy(new Study()
                         .setTitle("title")
@@ -200,17 +284,19 @@ public class ImportExportServiceTest {
                         new StudyImportExport.ParticipantInfo(4, Set.of(1)),
                         new StudyImportExport.ParticipantInfo(4, Set.of(2))
                 ))
-            .setIntegrations(List.of(
-                    new IntegrationInfo("Integration 1", 1),
-                    new IntegrationInfo("Integration 2", 3)
-            ));
+                .setIntegrations(List.of(
+                        new IntegrationInfo("Integration 1", 1),
+                        new IntegrationInfo("Integration 2", 3)
+                ))
+                .setStudyGoalConfig(goalConfigData)
+                .setGoalTemplates(List.of(gt1, gt2, gt3));
 
         when(studyService.createStudy(any(), any()))
                 .thenAnswer(invocationOnMock ->
                         ((Study) invocationOnMock.getArgument(0)).setStudyId(studyId));
         when(observationService.importObservation(any(), any()))
                 .thenAnswer(invocationOnMock ->
-                                ((Observation) invocationOnMock.getArgument(1)).setStudyId(studyId));
+                        ((Observation) invocationOnMock.getArgument(1)).setStudyId(studyId));
         when(interventionService.importIntervention(any(), any(), any(), any()))
                 .thenAnswer(invocationOnMock ->
                         ((Intervention) invocationOnMock.getArgument(1)).setStudyId(studyId));
@@ -235,6 +321,13 @@ public class ImportExportServiceTest {
         verify(participantService, times(8)).createParticipant(participantsCaptor.capture());
         verify(integrationService, times(2)).addToken(idLongCaptor.capture(), idIntegerCaptor.capture(), aliasCaptor.capture());
 
+        verify(goalService).setGoalConfig(goalConfigCaptor.capture());
+        verify(goalService).importGoalTopics(idLongCaptor.capture(), goalTopicsCaptor.capture());
+        verify(goalService).importAdherenceChecks(idLongCaptor.capture(), adherenceChecksCaptor.capture());
+        verify(goalService, times(3)).importGoalTemplate(idLongCaptor.capture(), goalTemplateCaptor.capture());
+
+        assertThat(idLongCaptor.getAllValues()).allMatch(Predicate.isEqual(1L));
+
         assertThat(observationCaptor.getAllValues().get(0).getObservationId()).isEqualTo(1);
         assertThat(observationCaptor.getAllValues().get(0).getStudyGroupId()).isEqualTo(3);
         assertThat(observationCaptor.getAllValues().get(0).getObservationGroupIds()).containsExactlyInAnyOrder(1);
@@ -255,8 +348,6 @@ public class ImportExportServiceTest {
         assertThat(interventionCaptor.getAllValues().get(2).getStudyGroupId()).isEqualTo(3);
         assertThat(interventionCaptor.getAllValues().get(2).getObservationGroupIds()).containsExactlyInAnyOrder(1, 2);
 
-        assertThat(idLongCaptor.getAllValues()).allMatch(Predicate.isEqual(1L));
-
         assertThat(participantsCaptor.getAllValues().stream().map(Participant::getStudyId)).allMatch(Predicate.isEqual(1L));
         assertThat(participantsCaptor.getAllValues().subList(0,3).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(0));
         assertThat(participantsCaptor.getAllValues().subList(3,6).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(2));
@@ -269,7 +360,47 @@ public class ImportExportServiceTest {
         assertThat(participantsCaptor.getAllValues().get(5).getObservationGroupIds()).containsExactlyInAnyOrder(1, 2);
         assertThat(participantsCaptor.getAllValues().get(6).getObservationGroupIds()).containsExactlyInAnyOrder(1);
         assertThat(participantsCaptor.getAllValues().get(7).getObservationGroupIds()).containsExactlyInAnyOrder(2);
-    }
 
+        // === Goal assertions ===
+        assertThat(goalConfigCaptor.getValue().getStudyId()).isEqualTo(studyId);
+        assertThat(goalConfigCaptor.getValue().getAchievability()).isEqualTo("Is this goal achievable?");
+        assertThat(goalConfigCaptor.getValue().getCommitment()).isEqualTo("Do you commit to your goals?");
+        assertThat(goalConfigCaptor.getValue().getUnderstandability()).isEqualTo("Have you understood your goals?");
+
+        assertThat(goalTopicsCaptor.getValue()).hasSize(2);
+        assertThat(goalTopicsCaptor.getValue().get(0).getKey()).isEqualTo("topic-key-1");
+        assertThat(goalTopicsCaptor.getValue().get(0).getTitle()).isEqualTo("Topic 1 Title");
+        assertThat(goalTopicsCaptor.getValue().get(0).getDescription()).isEqualTo("Description for topic 1");
+        assertThat(goalTopicsCaptor.getValue().get(1).getKey()).isEqualTo("topic-key-2");
+        assertThat(goalTopicsCaptor.getValue().get(1).getTitle()).isEqualTo("Topic 2 Title");
+
+        assertThat(adherenceChecksCaptor.getValue()).hasSize(2);
+        assertThat(adherenceChecksCaptor.getValue().get(0).getCheckId()).isEqualTo(10);
+        assertThat(adherenceChecksCaptor.getValue().get(0).getTitle()).isEqualTo("Daily Morning");
+        assertThat(adherenceChecksCaptor.getValue().get(0).getTime()).isEqualTo(LocalTime.of(7, 30));
+        assertThat(adherenceChecksCaptor.getValue().get(1).getCheckId()).isEqualTo(20);
+        assertThat(adherenceChecksCaptor.getValue().get(1).getTitle()).isEqualTo("Daily Evening");
+        assertThat(adherenceChecksCaptor.getValue().get(1).getTime()).isEqualTo(LocalTime.of(19, 45));
+
+        assertThat(goalTemplateCaptor.getAllValues()).hasSize(3);
+
+        assertThat(goalTemplateCaptor.getAllValues().get(0).getTemplateId()).isEqualTo(101);
+        assertThat(goalTemplateCaptor.getAllValues().get(0).getStudyGroupId()).isNull();
+        assertThat(goalTemplateCaptor.getAllValues().get(0).getObservationGroupIds()).isEmpty();
+        assertThat(goalTemplateCaptor.getAllValues().get(0).getTopicKeys()).containsExactlyInAnyOrder("topic-key-1");
+        assertThat(goalTemplateCaptor.getAllValues().get(0).getAdherenceCheckIds()).containsExactlyInAnyOrder(10);
+
+        assertThat(goalTemplateCaptor.getAllValues().get(1).getTemplateId()).isEqualTo(102);
+        assertThat(goalTemplateCaptor.getAllValues().get(1).getStudyGroupId()).isEqualTo(2);
+        assertThat(goalTemplateCaptor.getAllValues().get(1).getObservationGroupIds()).containsExactlyInAnyOrder(1);
+        assertThat(goalTemplateCaptor.getAllValues().get(1).getTopicKeys()).containsExactlyInAnyOrder("topic-key-1", "topic-key-2");
+        assertThat(goalTemplateCaptor.getAllValues().get(1).getAdherenceCheckIds()).containsExactlyInAnyOrder(10, 20);
+
+        assertThat(goalTemplateCaptor.getAllValues().get(2).getTemplateId()).isEqualTo(103);
+        assertThat(goalTemplateCaptor.getAllValues().get(2).getStudyGroupId()).isEqualTo(3);
+        assertThat(goalTemplateCaptor.getAllValues().get(2).getObservationGroupIds()).containsExactlyInAnyOrder(1, 2);
+        assertThat(goalTemplateCaptor.getAllValues().get(2).getTopicKeys()).containsExactlyInAnyOrder("topic-key-2");
+        assertThat(goalTemplateCaptor.getAllValues().get(2).getAdherenceCheckIds()).containsExactlyInAnyOrder(20);
+    }
 
 }
