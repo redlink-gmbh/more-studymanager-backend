@@ -2701,6 +2701,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/IntegrationInfo'
+        goalConfiguration:
+          $ref: '#/components/schemas/GoalConfiguration'
+        goalTemplates:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalTemplate'
 
     ParticipantInfo:
       type: object
@@ -2720,6 +2726,47 @@ components:
           type: string
         observationId:
           $ref: '#/components/schemas/Id'
+
+    GoalConfiguration:
+      type: object
+      properties:
+        consent:
+          $ref: '#/components/schemas/GoalConsent'
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalTopic'
+        adherenceChecks:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalAdherenceCheck'
+      required:
+        - topics
+        - adherenceChecks
+
+    GoalConsent:
+      type: object
+      properties:
+        commitment:
+          type: string
+        achievability:
+          type: string
+        understandability:
+          type: string
+
+    GoalAdherenceCheck:
+      type: object
+      description: aktivates an adherence check enum member for the study and assigns a time to it
+      properties:
+        check:
+          $ref: '#/components/schemas/AdherenceCheckScheduleEnum'
+        time:
+          type: string
+          format: time
+      required:
+        - check
+        - time
+
 
     UserSearchResultList:
       type: object

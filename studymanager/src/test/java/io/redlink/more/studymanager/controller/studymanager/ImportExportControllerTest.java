@@ -8,11 +8,17 @@
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
+import io.redlink.more.studymanager.api.v1.model.AdherenceCheckScheduleEnumDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTemplateCategoriesDTO;
 import io.redlink.more.studymanager.core.properties.ActionProperties;
+import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
 import io.redlink.more.studymanager.model.Action;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
+import io.redlink.more.studymanager.model.GoalAdherenceCheck;
+import io.redlink.more.studymanager.model.GoalTemplate;
+import io.redlink.more.studymanager.model.GoalTopic;
 import io.redlink.more.studymanager.model.Intervention;
 import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.ObservationGroup;
@@ -29,14 +35,18 @@ import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,8 +57,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -176,6 +188,51 @@ class ImportExportControllerTest {
                 .setCreated(Instant.now())
                 .setModified(Instant.now());
 
+        StudyImportExport.StudyGoalConfigData goalConfig = new StudyImportExport.StudyGoalConfigData(study.getStudyId());
+        goalConfig.setAchievability("Ist das Ziel erreichbar?");
+        goalConfig.setCommitment("Bist Du motiviert das Ziel zu erreichen?");
+        goalConfig.setUnderstandability("Ist das Ziel verständlich?");
+        goalConfig.setAdherenceChecks(List.of(
+                new GoalAdherenceCheck()
+                        .setStudyId(study.getStudyId())
+                        .setCheckId(AdherenceCheckScheduleEnumDTO.NOON.ordinal())
+                        .setTitle(AdherenceCheckScheduleEnumDTO.NOON.getValue())
+                        .setTime(LocalTime.parse("12:00:00")),
+                new GoalAdherenceCheck()
+                        .setStudyId(study.getStudyId())
+                        .setCheckId(AdherenceCheckScheduleEnumDTO.EVENING.ordinal())
+                        .setTitle(AdherenceCheckScheduleEnumDTO.EVENING.getValue())
+                        .setTime(LocalTime.parse("20:00:00"))
+        ));
+        goalConfig.setTopics(List.of(
+                new GoalTopic()
+                        .setStudyId(study.getStudyId())
+                        .setKey("drink")
+                        .setTitle("Trinken")
+                        .setDescription("Trinken Beschreibung"),
+                new GoalTopic()
+                        .setStudyId(study.getStudyId())
+                        .setKey("eat")
+                        .setTitle("Essen")
+                        .setDescription("Essen Beschreibung")
+        ));
+        GoalTemplate goalTemplate = new GoalTemplate()
+                .setStudyId(study.getStudyId())
+                .setTemplateId(1)
+                .setType("eatAmountOf")
+                .setKind(GoalTemplateCategoriesDTO.KindEnum.BEHAVIORAL.getValue())
+                .setAdherenceCheckIds(Set.of(
+                        AdherenceCheckScheduleEnumDTO.NOON.ordinal(),
+                        AdherenceCheckScheduleEnumDTO.EVENING.ordinal()))
+                .setTopicKeys(Set.of("eat"))
+                .setParticipantTitle("Portionen Obst Essen")
+                .setParticipantInfo("Jeden Tag Obst Essen")
+                .setStudyGroupId(group.getStudyGroupId())
+                .setObservationGroupIds(Set.of(observationGroup1.getObservationGroupId()))
+                .setTitle("Obst Essen")
+                .setProperties(new GoalTemplateProperties(Map.of("property", "new value")))
+                                ;
+
         StudyImportExport studyImportExport = new StudyImportExport()
                 .setStudy(study)
                 .setStudyGroups(List.of(group))
@@ -185,18 +242,72 @@ class ImportExportControllerTest {
                 .setTriggers(Map.of(intervention.getInterventionId(), trigger))
                 .setActions(Map.of(intervention.getInterventionId(), List.of(action)))
                 .setParticipants(new ArrayList<>())
-                .setIntegrations(new ArrayList<>());
+                .setIntegrations(new ArrayList<>())
+                .setStudyGoalConfig(goalConfig)
+                .setGoalTemplates(List.of(goalTemplate));
 
         when(importExportService.exportStudy(anyLong(), any()))
                 .thenAnswer(invocationOnMock -> studyImportExport);
         when(importExportService.importStudy(any(StudyImportExport.class), any()))
-                .thenAnswer(invocationOnMock ->
-                        invocationOnMock.getArgument(0, StudyImportExport.class)
-                                .getStudy()
-                                .setStudyId(2L)
-                                .setStudyState(Study.Status.DRAFT)
-                                .setCreated(Instant.ofEpochMilli(0))
-                                .setModified(Instant.ofEpochMilli(0)));
+                .thenAnswer(invocationOnMock -> {
+                    var data = invocationOnMock.getArgument(0, StudyImportExport.class);
+                    assertThat(data.getStudyGoalConfig()).isNotNull();
+                    assertThat(data.getStudyGoalConfig().getAchievability()).isEqualTo("Ist das Ziel erreichbar?");
+                    assertThat(data.getStudyGoalConfig().getCommitment()).isEqualTo("Bist Du motiviert das Ziel zu erreichen?");
+                    assertThat(data.getStudyGoalConfig().getUnderstandability()).isEqualTo("Ist das Ziel verständlich?");
+                    assertThat(data.getStudyGoalConfig().getTopics())
+                            .hasSize(2)
+                            .extracting("key", "title", "description")
+                            .containsExactlyInAnyOrder(
+                                    tuple(
+                                            "eat",
+                                            "Essen",
+                                            "Essen Beschreibung"
+                                    ),
+                                    tuple(
+                                            "drink",
+                                            "Trinken",
+                                            "Trinken Beschreibung"
+                                    )
+                            );
+                    assertThat(data.getStudyGoalConfig().getAdherenceChecks())
+                            .hasSize(2)
+                            .extracting("checkId", "title", "time")
+                            .containsExactlyInAnyOrder(
+                                    tuple(
+                                            AdherenceCheckScheduleEnumDTO.NOON.ordinal(),
+                                            AdherenceCheckScheduleEnumDTO.NOON.getValue(),
+                                            LocalTime.parse("12:00:00")
+                                    ),
+                                    tuple(
+                                            AdherenceCheckScheduleEnumDTO.EVENING.ordinal(),
+                                            AdherenceCheckScheduleEnumDTO.EVENING.getValue(),
+                                            LocalTime.parse("20:00:00")
+                                    )
+                            );
+                    assertThat(data.getGoalTemplates()).hasSize(1);
+                    assertThat(data.getGoalTemplates().get(0).getStudyId()).isEqualTo(1);
+                    assertThat(data.getGoalTemplates().get(0).getTemplateId()).isEqualTo(1);
+                    assertThat(data.getGoalTemplates().get(0).getType()).isEqualTo("eatAmountOf");
+                    assertThat(data.getGoalTemplates().get(0).getKind()).isEqualTo(GoalTemplateCategoriesDTO.KindEnum.BEHAVIORAL.getValue());
+                    assertThat(data.getGoalTemplates().get(0).getAdherenceCheckIds()).hasSize(2);
+                    assertThat(data.getGoalTemplates().get(0).getAdherenceCheckIds()).containsExactlyInAnyOrder(
+                            AdherenceCheckScheduleEnumDTO.EVENING.ordinal(),
+                            AdherenceCheckScheduleEnumDTO.NOON.ordinal());
+                    assertThat(data.getGoalTemplates().get(0).getTitle()).isEqualTo("Obst Essen");
+                    assertThat(data.getGoalTemplates().get(0).getParticipantTitle()).isEqualTo("Portionen Obst Essen");
+                    assertThat(data.getGoalTemplates().get(0).getParticipantInfo()).isEqualTo("Jeden Tag Obst Essen");
+                    assertThat(data.getGoalTemplates().get(0).getProperties().get("property")).isEqualTo("new value");
+                    assertThat(data.getGoalTemplates().get(0).getStudyGroupId()).isEqualTo(group.getStudyGroupId());
+                    assertThat(data.getGoalTemplates().get(0).getObservationGroupIds()).containsExactlyInAnyOrder(observationGroup1.getObservationGroupId());
+
+                    return data
+                            .getStudy()
+                            .setStudyId(2L)
+                            .setStudyState(Study.Status.DRAFT)
+                            .setCreated(Instant.ofEpochMilli(0))
+                            .setModified(Instant.ofEpochMilli(0));
+                });
 
 
         MvcResult resultExport = mvc.perform(get("/api/v1/studies/1/export/study")
@@ -321,6 +432,45 @@ class ImportExportControllerTest {
                 .andExpect(jsonPath("$.participants.length()").value(0))
                 .andExpect(jsonPath("$.integrations").isArray())
                 .andExpect(jsonPath("$.integrations.length()").value(0))
+                .andExpect(jsonPath("$.goalConfiguration").exists())
+                .andExpect(jsonPath("$.goalConfiguration.consent").exists())
+                .andExpect(jsonPath("$.goalConfiguration.consent.achievability").value("Ist das Ziel erreichbar?"))
+                .andExpect(jsonPath("$.goalConfiguration.consent.commitment").value("Bist Du motiviert das Ziel zu erreichen?"))
+                .andExpect(jsonPath("$.goalConfiguration.consent.understandability").value("Ist das Ziel verständlich?"))
+                .andExpect(jsonPath("$.goalConfiguration.adherenceChecks").isArray())
+                .andExpect(jsonPath("$.goalConfiguration.adherenceChecks[0].check").value(AdherenceCheckScheduleEnumDTO.NOON.getValue()))
+                .andExpect(jsonPath("$.goalConfiguration.adherenceChecks[0].time").value("12:00:00"))
+                .andExpect(jsonPath("$.goalConfiguration.adherenceChecks[1].check").value(AdherenceCheckScheduleEnumDTO.EVENING.getValue()))
+                .andExpect(jsonPath("$.goalConfiguration.adherenceChecks[1].time").value("20:00:00"))
+                .andExpect(jsonPath("$.goalConfiguration.topics").isArray())
+                .andExpect(jsonPath("$.goalConfiguration.topics[0].key").value("drink"))
+                .andExpect(jsonPath("$.goalConfiguration.topics[0].title").value("Trinken"))
+                .andExpect(jsonPath("$.goalConfiguration.topics[0].description").value("Trinken Beschreibung"))
+                .andExpect(jsonPath("$.goalConfiguration.topics[1].key").value("eat"))
+                .andExpect(jsonPath("$.goalConfiguration.topics[1].title").value("Essen"))
+                .andExpect(jsonPath("$.goalConfiguration.topics[1].description").value("Essen Beschreibung"))
+                .andExpect(jsonPath("$.goalTemplates").isArray())
+                .andExpect(jsonPath("$.goalTemplates[0].studyId").value(1))
+                .andExpect(jsonPath("$.goalTemplates[0].templateId").value(1))
+                .andExpect(jsonPath("$.goalTemplates[0].studyGroupId").value(1))
+                .andExpect(jsonPath("$.goalTemplates[0].observationGroupIds.length()").value(1))
+                .andExpect(jsonPath("$.goalTemplates[0].observationGroupIds[0]").value(1))
+                .andExpect(jsonPath("$.goalTemplates[0].title").value("Obst Essen"))
+                .andExpect(jsonPath("$.goalTemplates[0].participantTitle").value("Portionen Obst Essen"))
+                .andExpect(jsonPath("$.goalTemplates[0].participantInfo").value("Jeden Tag Obst Essen"))
+                .andExpect(jsonPath("$.goalTemplates[0].type").value("eatAmountOf"))
+                .andExpect(jsonPath("$.goalTemplates[0].categories").exists())
+                .andExpect(jsonPath("$.goalTemplates[0].categories.kind").value(GoalTemplateCategoriesDTO.KindEnum.BEHAVIORAL.getValue()))
+                .andExpect(jsonPath("$.goalTemplates[0].categories.topics").isArray())
+                .andExpect(jsonPath("$.goalTemplates[0].categories.topics.length()").value(1))
+                .andExpect(jsonPath("$.goalTemplates[0].categories.topics[0]").value("eat"))
+                .andExpect(jsonPath("$.goalTemplates[0].adherenceChecks").isArray())
+                .andExpect(jsonPath("$.goalTemplates[0].adherenceChecks.length()").value(2))
+                .andExpect(jsonPath("$.goalTemplates[0].adherenceChecks").value(Matchers.containsInAnyOrder(
+                        AdherenceCheckScheduleEnumDTO.EVENING.getValue(),
+                        AdherenceCheckScheduleEnumDTO.NOON.getValue())))
+                .andExpect(jsonPath("$.goalTemplates[0].properties").exists())
+                .andExpect(jsonPath("$.goalTemplates[0].properties.property").value("new value"))
                 .andReturn();
 
 
