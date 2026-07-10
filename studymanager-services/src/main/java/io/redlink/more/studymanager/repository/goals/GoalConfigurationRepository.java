@@ -115,7 +115,7 @@ public class GoalConfigurationRepository {
 
     @Transactional
     public GoalTopic doImport(Long studyId, GoalTopic topic) {
-        var existing = getTopic(topic.getStudyId(), topic.getKey());
+        var existing = getTopic(studyId, topic.getKey());
         if(existing == null) {
             // Force the correct studyId — ignore whatever came in the object
             topic.setStudyId(studyId);
@@ -159,8 +159,7 @@ public class GoalConfigurationRepository {
             namedTemplate.update(
                 IMPORT_ADHERENCE_CHECK,
                 toParams(check)
-                    .addValue("study_id", studyId)
-                    .addValue("check_id", check.getCheckId()),
+                    .addValue("study_id", studyId),
                 keyHolder,
                 new String[]{"check_id"}
             );
