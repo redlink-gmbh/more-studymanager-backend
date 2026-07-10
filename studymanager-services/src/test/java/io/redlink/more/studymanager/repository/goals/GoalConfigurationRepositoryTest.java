@@ -322,10 +322,12 @@ class GoalConfigurationRepositoryTest {
         GoalTopic reImported = goalConfigurationRepository.doImport(studyB, updatedVersion);
 
         assertThat(reImported.getStudyId()).isEqualTo(studyB);
-        assertThat(reImported.getTitle()).isEqualTo("Updated - Drink More Water");
+        //it is expected that it is NOT overridden if already existing. So the old title is expected
+        assertThat(reImported.getTitle()).isEqualTo("Drink Water");
 
+        //validate also directly in the DB
         assertThat(goalConfigurationRepository.getTopic(studyB, "hydration").getTitle())
-                .isEqualTo("Updated - Drink More Water");
+                .isEqualTo("Drink Water");
     }
 
     @Test
