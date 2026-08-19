@@ -34,6 +34,7 @@ import io.redlink.more.studymanager.model.data.ParticipationData;
 import io.redlink.more.studymanager.model.data.SimpleDataPoint;
 import io.redlink.more.studymanager.properties.ElasticProperties;
 import io.redlink.more.studymanager.utils.MapperUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -46,11 +47,18 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 @EnableConfigurationProperties({ElasticProperties.class})
 public class ElasticService {
+
+    // For observations we accept raw integer ids as well as `observation_<id>`
+    private static final Pattern OBSERVATION_TYPE_ID_PATTERN = Pattern.compile("\"^(?:(?<type>[a-z]+)_)?(?<id>\\d+)$\"");
+    // For goal templates we accept only `goaltemplate_<id>`
+    private static final Pattern GOALTEMPLATE_ID_PATTERN = Pattern.compile("^goaltemplate_?(\\d+)$");
 
     private static final Logger LOG = LoggerFactory.getLogger(ElasticService.class);
 
@@ -288,7 +296,7 @@ public class ElasticService {
                                                 )
                                 )
                 );
-        try{
+        try {
             List<ParticipationData> participationDataList = new ArrayList<>();
 
             List<StringTermsBucket> observationBuckets =  client.search(builder.build(), Map.class)
@@ -298,6 +306,11 @@ public class ElasticService {
                     .buckets()
                     .array();
             for(StringTermsBucket observation : observationBuckets){
+                Map.Entry<String,Integer> obsTypeId = parseObservationTypeAndId(observation.key().stringValue());
+                if(obsTypeId == null || !obsTypeId.getKey().equals("observation")) {
+                    continue; //unable to parse observation id ...
+                }
+                int observationId = obsTypeId.getValue();
                 List<StringTermsBucket> participantBuckets = observation
                         .aggregations()
                         .get("participant_ids")
@@ -326,7 +339,7 @@ public class ElasticService {
                                      .substring(12)), null);
                     assert lastDataReceived != null;
                     participationDataList.add(new ParticipationData(
-                            new ParticipationData.NamedId(Integer.parseInt(observation.key().stringValue().replaceAll("observation_", "")), null),
+                            new ParticipationData.NamedId(observationId, null),
                             "observationType",
                             new ParticipationData.NamedId(Integer.parseInt(participant.key().stringValue().substring(12)), null),
                             studyGroup,
@@ -335,7 +348,7 @@ public class ElasticService {
                 }
             }
             return participationDataList;
-        }catch (IOException | ElasticsearchException e) {
+        } catch (IOException | ElasticsearchException e) {
             if (isElasticIndexNotFound(e)) {
                 return List.of();
             }
@@ -488,5 +501,25 @@ public class ElasticService {
     static <E extends Exception, T extends Exception> void handleIndexNotFoundException(E e, Function<E, T> exceptionWrapper) throws T {
         if (!isElasticIndexNotFound(e))
             throw exceptionWrapper.apply(e);
+    }
+
+    /**
+     * Parses an ID string and returns the type and numeric ID.
+     *
+     * @param idStr the input string (e.g. "42", "observation_41", "goaltemplate_40")
+     * @return Map.Entry with type (String) and id (Integer)
+     * @throws IllegalArgumentException if the string doesn't match the expected format
+     */
+    private static Map.Entry<String, Integer> parseObservationTypeAndId(String idStr) {
+        if (StringUtils.isBlank(idStr)) {
+            throw new IllegalArgumentException("ID string cannot be null or empty");
+        }
+       Matcher matcher = OBSERVATION_TYPE_ID_PATTERN.matcher(idStr);
+        if (!matcher.matches()) {
+            return null;
+        }
+        String type = matcher.group("type");
+        return new AbstractMap.SimpleEntry<>(
+                type == null ? "observation" : type, Integer.parseInt(matcher.group("id")));
     }
 }
