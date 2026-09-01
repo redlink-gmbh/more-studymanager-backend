@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model;
 
@@ -56,7 +56,7 @@ public class Participant {
         return this;
     }
 
-    public Participant setStart( Instant start ) {
+    public Participant setStart(Instant start) {
         this.start = start;
         return this;
     }
@@ -107,7 +107,7 @@ public class Participant {
     }
 
     public Participant addObservationGroupId(Integer observationGroupId) {
-        if(observationGroupIds != null) {
+        if (observationGroupIds != null) {
             this.observationGroupIds.add(observationGroupId);
         }
         return this;

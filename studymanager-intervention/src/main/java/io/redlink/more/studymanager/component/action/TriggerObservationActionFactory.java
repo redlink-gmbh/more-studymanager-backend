@@ -4,14 +4,16 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.action;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.ActionFactory;
 import io.redlink.more.studymanager.core.properties.ActionProperties;
-import io.redlink.more.studymanager.core.properties.model.*;
+import io.redlink.more.studymanager.core.properties.model.StringTextValue;
+import io.redlink.more.studymanager.core.properties.model.StringValue;
+import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreActionSDK;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class TriggerObservationActionFactory extends ActionFactory<TriggerObserv
                     .setDescription("intervention.factory.actions.triggerObservation.properties.observation.description")
                     .setName("intervention.factory.actions.triggerObservation.properties.observation.name")
     );
+
     @Override
     public TriggerObservationAction create(MoreActionSDK sdk, ActionProperties properties) throws ConfigurationValidationException {
         return new TriggerObservationAction(sdk, validate(properties));

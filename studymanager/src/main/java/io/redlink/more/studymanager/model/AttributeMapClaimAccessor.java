@@ -4,13 +4,14 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model;
 
-import java.util.Map;
 import org.springframework.security.oauth2.core.ClaimAccessor;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimAccessor;
+
+import java.util.Map;
 
 public record AttributeMapClaimAccessor(Map<String, Object> claims) implements IdTokenClaimAccessor {
 

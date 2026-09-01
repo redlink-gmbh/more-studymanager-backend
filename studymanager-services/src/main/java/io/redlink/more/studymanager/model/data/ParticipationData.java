@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.data;
 
@@ -34,10 +34,11 @@ public record ParticipationData(
     public record NamedId(
             int id,
             String title
-    ) implements Comparable<NamedId>{
+    ) implements Comparable<NamedId> {
 
         public static final Comparator<NamedId> PAIR_COMPARATOR =
                 Comparator.comparing(NamedId::id);
+
         @Override
         public int compareTo(NamedId compData) {
             return PAIR_COMPARATOR.compare(this, compData);

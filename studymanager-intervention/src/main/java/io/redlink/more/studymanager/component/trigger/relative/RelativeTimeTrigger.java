@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger.relative;
 
@@ -18,14 +18,15 @@ import io.redlink.more.studymanager.core.properties.TriggerProperties;
 import io.redlink.more.studymanager.core.sdk.MorePlatformSDK;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.sdk.schedule.CronSchedule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RelativeTimeTrigger extends Trigger<TriggerProperties> {
 
@@ -37,6 +38,7 @@ public class RelativeTimeTrigger extends Trigger<TriggerProperties> {
     protected RelativeTimeTrigger(MoreTriggerSDK sdk, TriggerProperties properties) throws ConfigurationValidationException {
         super(sdk, properties);
     }
+
     @Override
     public void activate() {
         String schedule = sdk.addSchedule(new CronSchedule("1 0 * * * ?"));

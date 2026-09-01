@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation;
 
@@ -31,14 +31,14 @@ public class GpsMobileObservationFactory<C extends Observation<P>, P extends Obs
     @Override
     public String getDescription() {
         return
-"""
-observation.factory.gpsMobile.description
-""";
+                """
+                        observation.factory.gpsMobile.description
+                        """;
     }
 
     @Override
     public GpsMobileObservation create(MoreObservationSDK sdk, ObservationProperties properties) throws ConfigurationValidationException {
-        return new GpsMobileObservation(sdk, validate((P)properties));
+        return new GpsMobileObservation(sdk, validate((P) properties));
     }
 
     @Override

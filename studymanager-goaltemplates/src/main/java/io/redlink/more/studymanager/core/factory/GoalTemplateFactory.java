@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.factory;
 
@@ -41,6 +41,7 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
     /**
      * Getter for the propertiy to internationalize the title
      * (<pre>{@link #GOAL_TEMPLATE_FACTORY_PREFIX} + {@link #getId()} + ".name"</pre>)
+     *
      * @return the internationalisation property for the title
      */
     public final String getTitle() {
@@ -50,6 +51,7 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
     /**
      * Getter for the propertiy to internationalize the description
      * (<pre>{@link #GOAL_TEMPLATE_FACTORY_PREFIX} + {@link #getId()} + ".description"</pre>)
+     *
      * @return the internationalisation property for the description
      */
     public final String getDescription() {
@@ -61,11 +63,11 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
     /**
      * The kind of the goal (outcome, behavioral)
      */
-    public static final String FIELD_GOAL_KIND =  "goal-kind";
+    public static final String FIELD_GOAL_KIND = "goal-kind";
     /**
      * The key of the goal category
      */
-    public static final String FIELD_GOAL_CATEGORY =  "goal-category";
+    public static final String FIELD_GOAL_CATEGORY = "goal-category";
 
 
     /**
@@ -160,30 +162,30 @@ public abstract class GoalTemplateFactory<C extends GoalTemplate<P>, P extends G
      * Goal status properties
      */
     protected static final Value<String> STATUS_100_PERCENT_REACHED = new StringTextValue("status-100-reached")
-                        .setName(GLOBAL_PROPERTY_PREFIX + "status-100-reached.name")
-                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-100-reached.description")
-                        .setDefaultValue("Du hast dein Tagesziel erfolgreich gemeistert. Weiter so!");
+            .setName(GLOBAL_PROPERTY_PREFIX + "status-100-reached.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "status-100-reached.description")
+            .setDefaultValue("Du hast dein Tagesziel erfolgreich gemeistert. Weiter so!");
     protected static final Value<String> STATUS_75_PERCENT_REACHED = new StringTextValue("status-75-reached")
-                        .setName(GLOBAL_PROPERTY_PREFIX + "status-75-reached.name")
-                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-75-reached.description")
-                        .setDefaultValue("Dein Ziel ist zum greifen nah. Du hast es fast geschafft!");
+            .setName(GLOBAL_PROPERTY_PREFIX + "status-75-reached.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "status-75-reached.description")
+            .setDefaultValue("Dein Ziel ist zum greifen nah. Du hast es fast geschafft!");
     protected static final Value<String> STATUS_0_PERCENT_REACHED = new StringTextValue("status-not-reached")
-                        .setName(GLOBAL_PROPERTY_PREFIX + "status-not-reached.name")
-                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-not-reached.description")
-                        .setDefaultValue("Du bist auf den richtigen Weg. Behalte Dein Tagesziel im Auge.");
+            .setName(GLOBAL_PROPERTY_PREFIX + "status-not-reached.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "status-not-reached.description")
+            .setDefaultValue("Du bist auf den richtigen Weg. Behalte Dein Tagesziel im Auge.");
 
     protected static final Value<String> STATUS_NOT_CONSUMED = new StringTextValue("status-day-not-consumed")
-                        .setName(GLOBAL_PROPERTY_PREFIX + "status-day-not-consumed.name")
-                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-not-consumed.description")
-                        .setDefaultValue("Starker Tag! Du hast heute nichts konsumiert.");
+            .setName(GLOBAL_PROPERTY_PREFIX + "status-day-not-consumed.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-not-consumed.description")
+            .setDefaultValue("Starker Tag! Du hast heute nichts konsumiert.");
     protected static final Value<String> STATUS_UNDER_LIMIT = new StringTextValue("status-day-under-limit")
-                        .setName(GLOBAL_PROPERTY_PREFIX + "status-day-under-limit.name")
-                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-under-limit.description")
-                        .setDefaultValue("Du gemacht. Du bist im Ziel geblieben und hast die Kontrolle behalten. Weiter so!");
+            .setName(GLOBAL_PROPERTY_PREFIX + "status-day-under-limit.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-under-limit.description")
+            .setDefaultValue("Du gemacht. Du bist im Ziel geblieben und hast die Kontrolle behalten. Weiter so!");
     protected static final Value<String> STATUS_OVER_LIMIT = new StringTextValue("status-day-over-limit")
-                        .setName(GLOBAL_PROPERTY_PREFIX + "status-day-over-limit.name")
-                        .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-over-limit.description")
-                        .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser.");
+            .setName(GLOBAL_PROPERTY_PREFIX + "status-day-over-limit.name")
+            .setDescription(GLOBAL_PROPERTY_PREFIX + "status-day-over-limit.description")
+            .setDefaultValue("Du hast heute mehr konsumiert als ausgemacht. Bleib dran. Morgen geht es wieder besser.");
 
     /*
      * Self Report Properties

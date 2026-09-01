@@ -4,13 +4,13 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
+import io.redlink.more.studymanager.core.datavalidity.ObservationDataState;
 import io.redlink.more.studymanager.core.properties.OccurredObservationProperties;
 import io.redlink.more.studymanager.exception.BadRequestException;
-import io.redlink.more.studymanager.core.datavalidity.ObservationDataState;
 import io.redlink.more.studymanager.model.OccurredObservation;
 import io.redlink.more.studymanager.utils.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,7 +22,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -73,9 +72,9 @@ public class OccurredObservationRepository {
             """;
 
     private static String DELETE_BY_STUDY_ID = """
-            DELETE FROM occurred_observation oo
-            WHERE oo.study_id = :study_id
-    """;
+                    DELETE FROM occurred_observation oo
+                    WHERE oo.study_id = :study_id
+            """;
 
     private static final String DELETE_ALL = "DELETE FROM occurred_observation";
     private final JdbcTemplate template;
@@ -92,6 +91,7 @@ public class OccurredObservationRepository {
      * that other methods are used to update the state of observation occurrencies and this method is only used to create/update
      * occurrences. Changing the <code>end</code> timestamp may happen if a study was paused and reconfigured to change the
      * duration of an observation that already started.
+     *
      * @param occurredObservation
      * @return
      */
@@ -136,6 +136,7 @@ public class OccurredObservationRepository {
     ) {
         return listOccurredObservations(studyId, participantId, observationId, dataValid, dataStates, null, null);
     }
+
     public Stream<OccurredObservation> listOccurredObservations(
             Long studyId, Integer participantId, Integer observationId,
             Boolean dataValid,
@@ -224,6 +225,7 @@ public class OccurredObservationRepository {
                 RepositoryUtils.readInstant(rs, "modified")
         );
     }
+
     private static RowMapper<Instant> getInstantRowMapper(String field, boolean withTimezone) {
         return (rs, rowNum) -> withTimezone ? RepositoryUtils.readInstantUTC(rs, field) :
                 RepositoryUtils.readInstant(rs, field);

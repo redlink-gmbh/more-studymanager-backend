@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
@@ -165,7 +165,7 @@ class ParticipantRepositoryTest {
         Integer observationGroup1 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 1").setPurpose("Purpose 1")).getObservationGroupId();
         Integer observationGroup2 = observationGroupRepository.insert(new ObservationGroup().setStudyId(studyId).setTitle("Observation Group 2").setPurpose("Purpose 2")).getObservationGroupId();
 
-        Participant participant = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("TEST123").setObservationGroupIds(Set.of(observationGroup1,observationGroup2)));
+        Participant participant = participantRepository.insert(new Participant().setStudyId(studyId).setRegistrationToken("TEST123").setObservationGroupIds(Set.of(observationGroup1, observationGroup2)));
         assertThat(participant.getStatus()).isEqualTo(Participant.Status.NEW);
 
         participant = participantRepository.getByIds(studyId, participant.getParticipantId());

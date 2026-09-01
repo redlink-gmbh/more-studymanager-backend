@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -113,7 +113,7 @@ class ParticipantControllerTest {
                 .studyId(studyId)
                 .alias("participant x")
                 .studyGroupId(1)
-                .observationGroupIds(Set.of(1,2));
+                .observationGroupIds(Set.of(1, 2));
 
         ParticipantDTO[] participantDTOS = new ParticipantDTO[]{participantRequest};
 

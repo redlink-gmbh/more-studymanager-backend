@@ -4,13 +4,11 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
 import io.redlink.more.studymanager.model.EndpointToken;
-import java.util.List;
-import java.util.Optional;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,23 +17,26 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Optional;
+
 @Component
 public class IntegrationRepository {
     private static final String ADD_TOKEN =
             "INSERT INTO observation_api_tokens(study_id, observation_id, token_id, token_label, token) " +
-            "VALUES (:study_id, :observation_id, (SELECT COALESCE(MAX(token_id),0)+1 FROM observation_api_tokens WHERE study_id = :study_id AND observation_id = :observation_id), :token_label, :token) " +
-            "RETURNING *";
+                    "VALUES (:study_id, :observation_id, (SELECT COALESCE(MAX(token_id),0)+1 FROM observation_api_tokens WHERE study_id = :study_id AND observation_id = :observation_id), :token_label, :token) " +
+                    "RETURNING *";
     private static final String LIST_TOKENS =
             "SELECT token_id, token_label, created " +
-            "FROM observation_api_tokens " +
-            "WHERE study_id = ? AND observation_id = ?";
+                    "FROM observation_api_tokens " +
+                    "WHERE study_id = ? AND observation_id = ?";
     private static final String GET_TOKEN =
             "SELECT token_id, token_label, created " +
-            "FROM observation_api_tokens " +
-            "WHERE study_id = ? AND observation_id = ? AND token_id = ?";
+                    "FROM observation_api_tokens " +
+                    "WHERE study_id = ? AND observation_id = ? AND token_id = ?";
     private static final String DELETE_TOKEN =
             "DELETE FROM observation_api_tokens " +
-            "WHERE study_id = ? AND observation_id = ? AND token_id = ?";
+                    "WHERE study_id = ? AND observation_id = ? AND token_id = ?";
     private static final String DELETE_ALL = "DELETE FROM observation_api_tokens";
     private static final String UPDATE_TOKEN = """
             UPDATE observation_api_tokens
@@ -45,7 +46,7 @@ public class IntegrationRepository {
             """;
     private static final String DELETE_ALL_FOR_STUDY_ID =
             "DELETE FROM observation_api_tokens " +
-            "WHERE study_id = ?";
+                    "WHERE study_id = ?";
 
     private final JdbcTemplate template;
 
@@ -56,7 +57,9 @@ public class IntegrationRepository {
         this.namedTemplate = new NamedParameterJdbcTemplate(template);
     }
 
-    public void clear() { template.execute(DELETE_ALL);}
+    public void clear() {
+        template.execute(DELETE_ALL);
+    }
 
     public void clearForStudyId(long studyId) {
         template.update(DELETE_ALL_FOR_STUDY_ID, studyId);
@@ -71,7 +74,7 @@ public class IntegrationRepository {
                             .addValue("study_id", studyId)
                             .addValue("observation_id", observationId),
                     getHiddenTokenRowMapper()));
-        } catch(DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {
             return Optional.empty();
         }
     }
@@ -83,7 +86,7 @@ public class IntegrationRepository {
     public Optional<EndpointToken> getToken(Long studyId, Integer observationId, Integer tokenId) {
         try {
             return Optional.ofNullable(template.queryForObject(GET_TOKEN, getHiddenTokenRowMapper(), studyId, observationId, tokenId));
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }

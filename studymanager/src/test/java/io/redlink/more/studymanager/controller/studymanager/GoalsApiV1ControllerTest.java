@@ -4,14 +4,25 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.redlink.more.studymanager.api.v1.model.*;
-import io.redlink.more.studymanager.model.*;
-import io.redlink.more.studymanager.model.transformer.GoalV1Transformer;
+import io.redlink.more.studymanager.api.v1.model.AdherenceCheckScheduleEnumDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTemplateCategoriesDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTemplateDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTopicDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigConsentsDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigScheduleInnerDTO;
+import io.redlink.more.studymanager.model.AuthenticatedUser;
+import io.redlink.more.studymanager.model.GoalAdherenceCheck;
+import io.redlink.more.studymanager.model.GoalTemplate;
+import io.redlink.more.studymanager.model.GoalTopic;
+import io.redlink.more.studymanager.model.PlatformRole;
+import io.redlink.more.studymanager.model.Study;
+import io.redlink.more.studymanager.model.StudyGoalConfig;
 import io.redlink.more.studymanager.service.GoalService;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.service.StudyService;
@@ -25,17 +36,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalTime;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({GoalsApiV1Controller.class})
 @AutoConfigureMockMvc(addFilters = false)

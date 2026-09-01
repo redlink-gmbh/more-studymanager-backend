@@ -4,11 +4,9 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +25,7 @@ public class StudyImportExport {
     private List<Intervention> interventions = new ArrayList<>();
     private List<ParticipantInfo> participants = new ArrayList<>();
     private Map<Integer, Trigger> triggers = new HashMap<>();
-    private Map<Integer, List<Action>> actions =  new HashMap<>();
+    private Map<Integer, List<Action>> actions = new HashMap<>();
     private List<IntegrationInfo> integrations = new ArrayList<>();
     private StudyGoalConfigData studyGoalConfig = null;
     private List<GoalTemplate> goalTemplates = new ArrayList<>();
@@ -64,7 +62,7 @@ public class StudyImportExport {
     }
 
     public StudyImportExport setObservations(List<Observation> observations) {
-        this.observations = observations ==  null ? new ArrayList<>() : observations;
+        this.observations = observations == null ? new ArrayList<>() : observations;
         return this;
     }
 
@@ -142,7 +140,7 @@ public class StudyImportExport {
 
     public static class StudyGoalConfigData extends StudyGoalConfig {
 
-        private List<GoalTopic> topics =  new ArrayList<>();
+        private List<GoalTopic> topics = new ArrayList<>();
         private List<GoalAdherenceCheck> adherenceChecks = new ArrayList<>();
 
         public StudyGoalConfigData(long studyId) {

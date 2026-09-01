@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.action;
 
@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 public class PushNotificationAction extends Action<ActionProperties> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PushNotificationAction.class);
+
     protected PushNotificationAction(MoreActionSDK sdk, ActionProperties properties) throws ConfigurationValidationException {
         super(sdk, properties);
     }

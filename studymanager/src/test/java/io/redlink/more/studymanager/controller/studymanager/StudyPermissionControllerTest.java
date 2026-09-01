@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -15,12 +15,6 @@ import io.redlink.more.studymanager.model.StudyRole;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.service.StudyPermissionService;
 import io.redlink.more.studymanager.service.StudyService;
-
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +28,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.ArgumentMatchers.anyString;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -81,7 +78,7 @@ class StudyPermissionControllerTest {
     @Test
     @WithMockUser
     void testRoleChecksDenied() throws Exception {
-        when(studyPermissionService.hasAnyRole(anyLong(),anyString(),anySet())).thenReturn(false);
+        when(studyPermissionService.hasAnyRole(anyLong(), anyString(), anySet())).thenReturn(false);
         mvc.perform(get("/api/v1/studies/1/collaborators")
                         .content("testContent"))
                 .andDo(print())
@@ -92,8 +89,8 @@ class StudyPermissionControllerTest {
     @WithMockUser
     void testRoleChecksAccepted() throws Exception {
         when(authService.getCurrentUser()).thenReturn(authUser); //required by AuditLogging
-        when(studyPermissionService.hasAnyRole(anyLong(),anyString(),anySet())).thenReturn(true);
-        when(studyService.getACL(anyLong())).thenReturn(Map.of(new MoreUser("test","test","test","test"), Set.of(StudyRole.STUDY_VIEWER)));
+        when(studyPermissionService.hasAnyRole(anyLong(), anyString(), anySet())).thenReturn(true);
+        when(studyService.getACL(anyLong())).thenReturn(Map.of(new MoreUser("test", "test", "test", "test"), Set.of(StudyRole.STUDY_VIEWER)));
         mvc.perform(get("/api/v1/studies/1/collaborators")
                         .content("testContent"))
                 .andDo(print())

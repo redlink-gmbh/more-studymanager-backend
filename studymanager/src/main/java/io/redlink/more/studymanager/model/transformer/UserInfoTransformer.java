@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.transformer;
 
@@ -21,13 +21,15 @@ import io.redlink.more.studymanager.model.SearchResult;
 import io.redlink.more.studymanager.model.StudyRole;
 import io.redlink.more.studymanager.model.StudyUserRoles;
 import io.redlink.more.studymanager.model.User;
+
 import java.net.URI;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class UserInfoTransformer {
 
-    private UserInfoTransformer() {}
+    private UserInfoTransformer() {
+    }
 
     public static UserInfoDTO toUserInfoDTO(User user) {
         if (user == null) return null;

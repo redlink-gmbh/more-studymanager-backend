@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.transformer;
 
@@ -22,12 +22,13 @@ import java.util.HashSet;
 
 public final class StudyTransformer {
 
-    private StudyTransformer() {}
+    private StudyTransformer() {
+    }
 
     public static Study fromStudyDTO_V1(StudyDTO studyDTO) {
         //NOTE: status, start, end, created and modified are never set directly but by status update
         //TODO some assertions? which throws validation exception
-        if(studyDTO.getContact() == null)
+        if (studyDTO.getContact() == null)
             studyDTO.contact(new ContactDTO());
         return new Study()
                 .setStudyId(studyDTO.getStudyId())
@@ -44,7 +45,7 @@ public final class StudyTransformer {
     }
 
     public static StudyDTO toStudyDTO_V1(Study study) {
-        if(study.getContact() == null)
+        if (study.getContact() == null)
             study.setContact(new Contact());
         Instant instant = study.getModified();
         Instant instant1 = study.getCreated();

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation;
 
@@ -39,7 +39,7 @@ public class ExternalObservationFactory<C extends Observation<P>, P extends Obse
 
     @Override
     public ExternalObservation create(MoreObservationSDK sdk, ObservationProperties properties) throws ConfigurationValidationException {
-        return new ExternalObservation(sdk, validate((P)properties));
+        return new ExternalObservation(sdk, validate((P) properties));
     }
 
     @Override

@@ -4,22 +4,19 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
-import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
-import io.redlink.more.studymanager.core.validation.ConfigurationValidationReport;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ScheduledTriggerFactory extends TriggerFactory<ScheduledTrigger, TriggerProperties> {
 
@@ -29,7 +26,7 @@ public class ScheduledTriggerFactory extends TriggerFactory<ScheduledTrigger, Tr
         CronValue prop = new CronValue("cronSchedule");
 
         prop.setValidationFunction((String s) -> {
-            if(!QuartzCronExpressionValidator.validate(s)) {
+            if (!QuartzCronExpressionValidator.validate(s)) {
                 return ValidationIssue.error(prop, "Value is not a valid cronExpression");
             } else return ValidationIssue.NONE;
         });

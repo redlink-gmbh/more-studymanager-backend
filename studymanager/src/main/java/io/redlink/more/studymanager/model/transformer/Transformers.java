@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.transformer;
 
@@ -20,7 +20,8 @@ public final class Transformers {
 
     /**
      * Performs a null-safe conversion of {@code t} using the {@code transformer}.
-     * @param t the value to transform.
+     *
+     * @param t           the value to transform.
      * @param transformer the transformation-function. the argument passed to this function will never be {@code null}.
      * @return the result of {@code transformer.apply(t)} or {@code null}
      */

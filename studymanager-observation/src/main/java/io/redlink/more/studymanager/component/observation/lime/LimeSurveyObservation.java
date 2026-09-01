@@ -4,11 +4,10 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation.lime;
 
-import io.redlink.more.studymanager.component.observation.QuestionObservationFactory;
 import io.redlink.more.studymanager.component.observation.lime.model.ParticipantData;
 import io.redlink.more.studymanager.component.observation.utils.QuestionObservationUtils;
 import io.redlink.more.studymanager.core.component.Observation;
@@ -25,10 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.util.AbstractMap;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,27 +46,27 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
         this.limeSurveyRequestService = limeSurveyRequestService;
     }
 
-    private String getLimeSurveyUser(int participantId){
+    private String getLimeSurveyUser(int participantId) {
         return String.format(LIME_SURVEY_ID,
                 sdk.getStudyId(),
                 sdk.getObservationId(),
                 participantId);
     }
 
-    private Integer getParticipantId(ParticipantData limeSurveyParticipant){
-        if(limeSurveyParticipant == null || limeSurveyParticipant.firstname() == null){
+    private Integer getParticipantId(ParticipantData limeSurveyParticipant) {
+        if (limeSurveyParticipant == null || limeSurveyParticipant.firstname() == null) {
             return null;
         }
         //backward compatibility: in older Versions this used just the participantId as first name
         try {
             return Integer.parseInt(limeSurveyParticipant.firstname());
-        } catch (NumberFormatException e){/* ignore*/}
+        } catch (NumberFormatException e) {/* ignore*/}
         //the new syntax is
         //    firstname: `study_<study_id>-observation_<observation_id>-participant_<participant_id>`
         //    lastname: `more`
         String participantPrefix = String.format(LIME_SURVEY_USER_TEMPLATE, sdk.getStudyId(), sdk.getObservationId(), "");
-        if("more".equals(limeSurveyParticipant.lastname()) &&
-                limeSurveyParticipant.firstname().startsWith(participantPrefix)){
+        if ("more".equals(limeSurveyParticipant.lastname()) &&
+                limeSurveyParticipant.firstname().startsWith(participantPrefix)) {
             try {
                 return Integer.parseInt(limeSurveyParticipant.firstname().substring(participantPrefix.length()));
             } catch (NumberFormatException e) {
@@ -79,7 +76,7 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
         return null;
     }
 
-    private ParticipantData.ParticipantInfo toParticipantInfo(Integer participantId){
+    private ParticipantData.ParticipantInfo toParticipantInfo(Integer participantId) {
         return new ParticipantData.ParticipantInfo(
                 String.format(LIME_SURVEY_USER_TEMPLATE, sdk.getStudyId(), sdk.getObservationId(), participantId),
                 "more"
@@ -100,7 +97,7 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
         //NOTE: This should use paging and just return all participants, as one survey can be used by multiple
         //      studies/observations one can not really say how many participants are present
         //      If it selects not all this will create duplicate participants on every activation of the study!!
-        Integer limit = Math.max(1000, participantIds.size()*2);
+        Integer limit = Math.max(1000, participantIds.size() * 2);
         List<ParticipantData> limeParticipants = limeSurveyRequestService.listParticipants(surveyId, 0, limit);
 
         //look for Limesurvey survey participants that where created for this observation/study
@@ -207,8 +204,8 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
 
     @Override
     public ObservationValidationResult validateData(Instant start, Instant end, ObservationDataSummary observationDataSummary) {
-        if(observationDataSummary == null || observationDataSummary.measurements() == null) {
-            return  new ObservationValidationResult(false, ObservationDataState.MISSING);
+        if (observationDataSummary == null || observationDataSummary.measurements() == null) {
+            return new ObservationValidationResult(false, ObservationDataState.MISSING);
         }
         //(1) Use the default single Answer utility method
         var validationResult = QuestionObservationUtils.validateSingleAnswerObservation(
@@ -226,13 +223,13 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
                 && answerMeasurementSummary.getNumericResult().missing() == 0;
 
         //(3) Adapt the validation result where necessary
-        if(!validationResult.invalid() && validationResult.state() == ObservationDataState.COMPLETE && !hasId) {
+        if (!validationResult.invalid() && validationResult.state() == ObservationDataState.COMPLETE && !hasId) {
             //The required field seed is missing in the results!
             return new ObservationValidationResult(
                     true,
                     ObservationDataState.INCOMPLETE
             );
-        } else if(validationResult.state() == ObservationDataState.MISSING && hasId){
+        } else if (validationResult.state() == ObservationDataState.MISSING && hasId) {
             //if seed is missing, but ID is present ... return INCOMPLETE instead of MISSING as result
             return new ObservationValidationResult(validationResult.invalid(), ObservationDataState.INCOMPLETE);
         } else { //just return the original validation format

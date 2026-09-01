@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -177,7 +177,7 @@ public class StudyService {
         );
     }
 
-    public Set<StudyRole> getStudyRoles(Long studyId, String userId){
+    public Set<StudyRole> getStudyRoles(Long studyId, String userId) {
         return aclRepository.getRoles(studyId, userId);
     }
 
@@ -200,6 +200,7 @@ public class StudyService {
 
     /**
      * Provides a stream over all studies with the parsed states
+     *
      * @param states the states
      * @return the studies with the parsed states. An empty Stream is <code>null</code> was
      * parsed or no Studies with the requested states are present

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger;
 
@@ -41,8 +41,8 @@ public class ScheduledTrigger extends Trigger<TriggerProperties> {
     @Override
     public TriggerResult execute(Parameters parameters) {
         Set<Integer> participants = sdk.participantIds(MorePlatformSDK.ParticipantFilter.ACTIVE_ONLY);
-        if(participants.isEmpty()) {
-           return TriggerResult.NOOP;
+        if (participants.isEmpty()) {
+            return TriggerResult.NOOP;
         } else {
             return TriggerResult.withParams(
                     participants.stream().map(p -> new ActionParameter(sdk.getStudyId(), p)).collect(Collectors.toSet())

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
@@ -13,7 +13,9 @@ import io.redlink.more.studymanager.component.trigger.QuartzCronExpressionValida
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
-import io.redlink.more.studymanager.core.properties.model.*;
+import io.redlink.more.studymanager.core.properties.model.BooleanValue;
+import io.redlink.more.studymanager.core.properties.model.IntegerValue;
+import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
 
@@ -28,7 +30,7 @@ public class ScheduledDatacheckTriggerFactory extends TriggerFactory<ScheduledDa
         CronValue cronProp = new CronValue("cronSchedule");
 
         cronProp.setValidationFunction((String s) -> {
-            if(!QuartzCronExpressionValidator.validate(s)) {
+            if (!QuartzCronExpressionValidator.validate(s)) {
                 return ValidationIssue.error(cronProp, "Value is not a valid cronExpression");
             } else return ValidationIssue.NONE;
         });

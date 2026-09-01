@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
@@ -21,8 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Collections;
@@ -71,8 +69,9 @@ class StudyRepositoryTest {
         assertThat(studyResponse.getFinishText()).isEqualTo(study.getFinishText());
 
         assertTrue(studyRepository.exists(studyResponse.getStudyId()).get());
-        assertFalse(studyRepository.exists(studyResponse.getStudyId()+1).get());
+        assertFalse(studyRepository.exists(studyResponse.getStudyId() + 1).get());
     }
+
     @Test
     @DisplayName("Study is updated in database and returned")
     void testUpdate() {
@@ -182,7 +181,7 @@ class StudyRepositoryTest {
 
     @Test
     @DisplayName("Study state correctly asserted")
-    void testAssertState(){
+    void testAssertState() {
         Set<Study.Status> statusSet1 = Set.of(Study.Status.ACTIVE, Study.Status.DRAFT);
         Set<Study.Status> statusSet2 = Set.of(Study.Status.CLOSED);
         Set<Study.Status> statusSet3 = Collections.emptySet();
@@ -195,7 +194,7 @@ class StudyRepositoryTest {
 
     @Test
     @DisplayName("List Studies by States")
-    void testListStudiesByStates(){
+    void testListStudiesByStates() {
         Set<Study.Status> statusSet1 = Set.of(Study.Status.ACTIVE, Study.Status.DRAFT);
         Set<Study.Status> statusSet2 = Set.of(Study.Status.CLOSED);
         Set<Study.Status> statusSet3 = Collections.emptySet();
@@ -224,6 +223,7 @@ class StudyRepositoryTest {
         assertThat(t).isPresent();
         return t.get();
     }
+
     private <T> T assertPresent(Supplier<Optional<T>> supplier) {
         return assertPresent(supplier.get());
     }

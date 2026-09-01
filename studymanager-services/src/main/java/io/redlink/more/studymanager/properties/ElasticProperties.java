@@ -4,12 +4,13 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.properties;
 
-import java.net.URI;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.net.URI;
 
 @ConfigurationProperties(prefix = "elastic")
 public record ElasticProperties(
@@ -19,4 +20,5 @@ public record ElasticProperties(
         String username,
         String password,
         String numberOfShards
-) { }
+) {
+}

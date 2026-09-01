@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
@@ -33,12 +33,12 @@ public class StudyRepository {
     private static final String INSERT_STUDY =
             "INSERT INTO studies (title,purpose,participant_info,consent_info,finish_text,planned_start_date,planned_end_date,duration,institute,contact_person,contact_email,contact_phone,application_access) " +
                     "VALUES (:title,:purpose,:participant_info,:consent_info,:finish_text,:planned_start_date,:planned_end_date,:duration::jsonb,:institute,:contact_person,:contact_email,:contact_phone,:application_access) " +
-            "RETURNING *";
+                    "RETURNING *";
     private static final String GET_STUDY_BY_ID =
             "SELECT *, " +
-            "  (SELECT user_roles FROM study_roles_by_user WHERE study_roles_by_user.study_id = studies.study_id AND user_id = :userId) AS user_roles " +
-            "FROM studies " +
-            "WHERE study_id = :studyId";
+                    "  (SELECT user_roles FROM study_roles_by_user WHERE study_roles_by_user.study_id = studies.study_id AND user_id = :userId) AS user_roles " +
+                    "FROM studies " +
+                    "WHERE study_id = :studyId";
 
     private static final String COUNT_STUDY =
             "SELECT count(*) AS c " +
@@ -49,15 +49,15 @@ public class StudyRepository {
     private static final String LIST_STUDIES_BY_STATES = "SELECT * FROM studies WHERE status = ANY(?::study_state[])";
     private static final String LIST_STUDY_BY_ACL =
             "SELECT studies.*, acl.user_roles " +
-            "FROM studies " +
-            "    INNER JOIN (SELECT acl.study_id, array_agg(user_role) AS user_roles FROM study_acl acl WHERE acl.user_id = :userId AND acl.user_role IN (:roles) GROUP BY acl.study_id) acl " +
-            "    ON (studies.study_id = acl.study_id) " +
-            "ORDER BY modified DESC";
+                    "FROM studies " +
+                    "    INNER JOIN (SELECT acl.study_id, array_agg(user_role) AS user_roles FROM study_acl acl WHERE acl.user_id = :userId AND acl.user_role IN (:roles) GROUP BY acl.study_id) acl " +
+                    "    ON (studies.study_id = acl.study_id) " +
+                    "ORDER BY modified DESC";
     private static final String UPDATE_STUDY =
             "UPDATE studies SET title = :title, purpose = :purpose, participant_info = :participant_info, consent_info = :consent_info, finish_text = :finish_text, planned_start_date = :planned_start_date, " +
                     "planned_end_date = :planned_end_date, duration = :duration::jsonb, modified = now(), institute = :institute, contact_person = :contact_person, contact_email = :contact_email, contact_phone = :contact_phone, application_access = :application_access " +
-            "WHERE study_id = :study_id " +
-            "RETURNING *, (SELECT user_roles FROM study_roles_by_user WHERE study_roles_by_user.study_id = studies.study_id AND user_id = :userId) AS user_roles";
+                    "WHERE study_id = :study_id " +
+                    "RETURNING *, (SELECT user_roles FROM study_roles_by_user WHERE study_roles_by_user.study_id = studies.study_id AND user_id = :userId) AS user_roles";
 
     private static final String DELETE_BY_ID = "DELETE FROM studies WHERE study_id = ?";
     private static final String CLEAR_STUDIES = "DELETE FROM studies";
@@ -176,9 +176,9 @@ public class StudyRepository {
                 .setParticipantInfo(rs.getString("participant_info"))
                 .setConsentInfo(rs.getString("consent_info"))
                 .setPlannedStartDate(RepositoryUtils.readLocalDate(rs, "planned_start_date"))
-                .setPlannedEndDate(RepositoryUtils.readLocalDate(rs,"planned_end_date"))
-                .setStartDate(RepositoryUtils.readLocalDate(rs,"start_date"))
-                .setEndDate(RepositoryUtils.readLocalDate(rs,"end_date"))
+                .setPlannedEndDate(RepositoryUtils.readLocalDate(rs, "planned_end_date"))
+                .setStartDate(RepositoryUtils.readLocalDate(rs, "start_date"))
+                .setEndDate(RepositoryUtils.readLocalDate(rs, "end_date"))
                 .setDuration(MapperUtils.readValue(rs.getString("duration"), Duration.class))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"))
                 .setModified(RepositoryUtils.readInstant(rs, "modified"))
@@ -207,19 +207,20 @@ public class StudyRepository {
     public List<Study> listStudiesByStatus(Study.Status status) {
         return template.query(LIST_STUDIES_BY_STATUS, getStudyRowMapper(), status.getValue());
     }
+
     public Stream<Study> listStudiesByStates(Iterable<Study.Status> states) {
         return template.queryForStream(
                 LIST_STUDIES_BY_STATES,
                 getStudyRowMapper(),
                 //cast to object as this is no vararg but a single parameter that happens to be an array
-                (Object) StreamSupport.stream(states.spliterator(),false)
+                (Object) StreamSupport.stream(states.spliterator(), false)
                         .map(Study.Status::getValue).toArray(String[]::new));
     }
 
-    public boolean hasState(long studyId, Collection<Study.Status> allowedStates){
-        if(allowedStates.isEmpty())
+    public boolean hasState(long studyId, Collection<Study.Status> allowedStates) {
+        if (allowedStates.isEmpty())
             return false;
-        try(
+        try (
                 var stream = namedTemplate.queryForStream(STUDY_HAS_STATE,
                         new MapSqlParameterSource()
                                 .addValue("study_id", studyId)

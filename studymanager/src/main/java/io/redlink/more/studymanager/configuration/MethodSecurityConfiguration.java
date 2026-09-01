@@ -4,15 +4,13 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.configuration;
 
 import io.redlink.more.studymanager.controller.RequiresStudyRole;
 import io.redlink.more.studymanager.model.StudyRole;
 import io.redlink.more.studymanager.service.StudyPermissionService;
-import java.util.EnumSet;
-import java.util.Set;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.SecurityExpressionRoot;
@@ -23,13 +21,16 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.core.Authentication;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class MethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
 
     private final StudyPermissionService studyPermissionService;
 
-    public MethodSecurityConfiguration(StudyPermissionService studyPermissionService){
+    public MethodSecurityConfiguration(StudyPermissionService studyPermissionService) {
         this.studyPermissionService = studyPermissionService;
     }
 
@@ -41,9 +42,10 @@ public class MethodSecurityConfiguration extends GlobalMethodSecurityConfigurati
 
     static class MoreMethodSecurityExpressionHandler extends DefaultMethodSecurityExpressionHandler {
 
-        public MoreMethodSecurityExpressionHandler(StudyPermissionService studyPermissionService){
+        public MoreMethodSecurityExpressionHandler(StudyPermissionService studyPermissionService) {
             this.studyPermissionService = studyPermissionService;
         }
+
         private final StudyPermissionService studyPermissionService;
 
         @Override

@@ -4,12 +4,16 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
 import io.redlink.more.studymanager.core.component.Trigger;
-import io.redlink.more.studymanager.core.io.*;
+import io.redlink.more.studymanager.core.io.ActionParameter;
+import io.redlink.more.studymanager.core.io.Parameters;
+import io.redlink.more.studymanager.core.io.RelativeTimeFrame;
+import io.redlink.more.studymanager.core.io.TimeRange;
+import io.redlink.more.studymanager.core.io.TriggerResult;
 import io.redlink.more.studymanager.core.sdk.MorePlatformSDK;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.sdk.schedule.CronSchedule;
@@ -79,7 +83,7 @@ public class ScheduledDatacheckTrigger extends Trigger<ScheduledDatacheckTrigger
     }
 
     public boolean isParticipantActive(int participantId, boolean onlyOnce) {
-        if(!onlyOnce) {
+        if (!onlyOnce) {
             return false;
         } else {
             return sdk.getValue(participantId + "_active", Boolean.class).orElse(false);

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.scheduling;
 
@@ -36,7 +36,7 @@ public class SchedulingService {
         this.scheduler.start();
     }
 
-    public <T extends Job> String scheduleJob(String issuer, Map<String,Object> data, Schedule schedule, Class<T> type) {
+    public <T extends Job> String scheduleJob(String issuer, Map<String, Object> data, Schedule schedule, Class<T> type) {
         String id = UUID.randomUUID().toString();
 
         final JobDetail job = newJob().ofType(type)
@@ -69,13 +69,13 @@ public class SchedulingService {
 
     @PreDestroy
     public void preDestroy() throws SchedulerException {
-        if(this.scheduler != null) {
+        if (this.scheduler != null) {
             scheduler.shutdown();
         }
     }
 
     private ScheduleBuilder<? extends Trigger> getSchedulerBuilderFor(Schedule schedule) {
-        if(schedule instanceof CronSchedule) {
+        if (schedule instanceof CronSchedule) {
             return CronScheduleBuilder.cronSchedule(((CronSchedule) schedule).getCronExpression())
                     .inTimeZone(TimeZone.getTimeZone("Europe/Vienna")); //TODO make configurable per study
         } else {

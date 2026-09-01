@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -16,13 +16,13 @@ import io.redlink.more.studymanager.model.PushNotificationsToken;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.repository.NotificationRepository;
 import io.redlink.more.studymanager.repository.PushNotificationTokenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PushNotificationService {
@@ -51,13 +51,13 @@ public class PushNotificationService {
         if ("FCM".equals(serviceType)) {
             try {
                 String msgId = this.firebaseService.sendNotification(title, message, data, token.token());
-                if(msgId != null) {
+                if (msgId != null) {
                     LOG.info("Store Text Message (sid:{} pid:{}, mid:{})", studyID, participantId, msgId);
                     //TODO kind of workaround, data handling should be cleaned up
-                    Map<String,String> dataToStore = new HashMap<>();
+                    Map<String, String> dataToStore = new HashMap<>();
                     dataToStore.put("title", title);
                     dataToStore.put("body", message);
-                    if(data != null && data.containsKey("deepLink")) {
+                    if (data != null && data.containsKey("deepLink")) {
                         dataToStore.put("deepLink", data.get("deepLink"));
                     }
 

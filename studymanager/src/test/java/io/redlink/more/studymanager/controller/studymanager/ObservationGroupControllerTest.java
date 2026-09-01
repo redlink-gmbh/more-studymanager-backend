@@ -4,14 +4,15 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.redlink.more.studymanager.api.v1.model.EndpointTokenDTO;
 import io.redlink.more.studymanager.api.v1.model.ObservationGroupDTO;
-import io.redlink.more.studymanager.model.*;
+import io.redlink.more.studymanager.model.AuthenticatedUser;
+import io.redlink.more.studymanager.model.ObservationGroup;
+import io.redlink.more.studymanager.model.PlatformRole;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.service.ObservationGroupService;
 import org.assertj.core.api.Assertions;
@@ -28,7 +29,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
@@ -71,10 +74,10 @@ class ObservationGroupControllerTest {
     void testCreateObservationGroup() throws Exception {
         when(observationGroupService.createObservationGroup(any(ObservationGroup.class)))
                 .thenAnswer(invocationOnMock -> new ObservationGroup()
-                        .setStudyId(((ObservationGroup)invocationOnMock.getArgument(0)).getStudyId())
+                        .setStudyId(((ObservationGroup) invocationOnMock.getArgument(0)).getStudyId())
                         .setObservationGroupId(1)
-                        .setTitle(((ObservationGroup)invocationOnMock.getArgument(0)).getTitle())
-                        .setPurpose(((ObservationGroup)invocationOnMock.getArgument(0)).getPurpose())
+                        .setTitle(((ObservationGroup) invocationOnMock.getArgument(0)).getTitle())
+                        .setPurpose(((ObservationGroup) invocationOnMock.getArgument(0)).getPurpose())
                         .setCreated(Instant.ofEpochMilli(System.currentTimeMillis()))
                         .setModified(Instant.ofEpochMilli(System.currentTimeMillis())));
 
@@ -101,10 +104,10 @@ class ObservationGroupControllerTest {
     void testUpdateObservationGroup() throws Exception {
         when(observationGroupService.updateObservationGroup(any(ObservationGroup.class))).thenAnswer(invocationOnMock ->
                 new ObservationGroup()
-                        .setStudyId(((ObservationGroup)invocationOnMock.getArgument(0)).getStudyId())
-                        .setObservationGroupId(((ObservationGroup)invocationOnMock.getArgument(0)).getObservationGroupId())
-                        .setTitle(((ObservationGroup)invocationOnMock.getArgument(0)).getTitle())
-                        .setPurpose(((ObservationGroup)invocationOnMock.getArgument(0)).getPurpose())
+                        .setStudyId(((ObservationGroup) invocationOnMock.getArgument(0)).getStudyId())
+                        .setObservationGroupId(((ObservationGroup) invocationOnMock.getArgument(0)).getObservationGroupId())
+                        .setTitle(((ObservationGroup) invocationOnMock.getArgument(0)).getTitle())
+                        .setPurpose(((ObservationGroup) invocationOnMock.getArgument(0)).getPurpose())
                         .setCreated(Instant.now().minusSeconds(100))
                         .setModified(Instant.now().minusSeconds(50)));
 
@@ -157,7 +160,7 @@ class ObservationGroupControllerTest {
                             .setPurpose("purpose 3")
                             .setCreated(Instant.now().minusSeconds(6))
                             .setModified(Instant.now().minusSeconds(3))
-                    );
+            );
         });
 
         when(observationGroupService.countObservationsInGroup(anyLong(), anyInt())).thenAnswer(invocationOnMock -> {
@@ -204,8 +207,8 @@ class ObservationGroupControllerTest {
 
     @Test
     @DisplayName("Get Observation Group")
-    void testGetObservationGroup() throws Exception{
-        when(observationGroupService.getObservationGroup(any(Long.class),any(Integer.class))).thenAnswer(invocationOnMock -> {
+    void testGetObservationGroup() throws Exception {
+        when(observationGroupService.getObservationGroup(any(Long.class), any(Integer.class))).thenAnswer(invocationOnMock -> {
             Long studyId = ((Long) invocationOnMock.getArgument(0));
             Integer observationGroup = ((Integer) invocationOnMock.getArgument(1));
             return new ObservationGroup()
@@ -227,10 +230,11 @@ class ObservationGroupControllerTest {
                 .andExpect(jsonPath("$.created").exists())
                 .andExpect(jsonPath("$.modified").exists());
     }
+
     @Test
     @DisplayName("Delete Observation Group")
-    void testDeleteObservationGroup() throws Exception{
-        Mockito.doNothing().when(observationGroupService).deleteObservationGroup(any(Long.class),any(Integer.class));
+    void testDeleteObservationGroup() throws Exception {
+        Mockito.doNothing().when(observationGroupService).deleteObservationGroup(any(Long.class), any(Integer.class));
 
         mvc.perform(delete("/api/v1/studies/3/observationGroups/23"))
                 .andDo(print())

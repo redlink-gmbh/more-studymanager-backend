@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.properties.model;
 
@@ -18,7 +18,7 @@ import io.redlink.more.studymanager.core.validation.ValidationIssue;
 import java.util.Objects;
 import java.util.function.Function;
 
-public abstract class Value<T> implements Cloneable{
+public abstract class Value<T> implements Cloneable {
     private final String id;
     private String name;
     private String description;
@@ -39,8 +39,8 @@ public abstract class Value<T> implements Cloneable{
             }
         }
 
-        if(immutable) {
-            if(!Objects.equals(defaultValue, t)){
+        if (immutable) {
+            if (!Objects.equals(defaultValue, t)) {
                 return ValidationIssue.immutablePropertyChanged(this);
             }
         }
@@ -139,9 +139,10 @@ public abstract class Value<T> implements Cloneable{
 
     /**
      * Creates a copy of the current Value
+     *
      * @return
      */
-    public Value<T> copyOf(){
+    public Value<T> copyOf() {
         return this.clone();
     }
 

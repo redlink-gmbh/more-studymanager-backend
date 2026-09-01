@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation.lime;
 
@@ -31,8 +31,8 @@ public class LimeSurveyRequestServiceTest {
     @Test
     void parseRequestTest() throws JsonProcessingException {
         Assertions.assertEquals(service.parseRequest("get_session_key",
-                List.of("username",
-                        "password")),
+                        List.of("username",
+                                "password")),
                 """
                         {"method":"get_session_key","params":["username","password"],"id":1}""");
 

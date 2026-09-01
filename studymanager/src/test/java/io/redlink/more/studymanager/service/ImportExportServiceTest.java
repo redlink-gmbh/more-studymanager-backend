@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -17,7 +17,11 @@ import io.redlink.more.studymanager.model.scheduler.Event;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.ResourceUtils;
 
@@ -26,7 +30,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -227,7 +235,7 @@ public class ImportExportServiceTest {
                                 .setStudyGroupId(null)
                                 .setProperties(new ObservationProperties())
                                 .setSchedule(new Event())
-                                .setObservationGroupIds(Set.of(1,2))))
+                                .setObservationGroupIds(Set.of(1, 2))))
                 .setStudyGroups(List.of(
                         new StudyGroup()
                                 .setStudyGroupId(2)
@@ -267,7 +275,7 @@ public class ImportExportServiceTest {
                                 .setPurpose("intervention purpose")
                                 .setStudyGroupId(3)
                                 .setSchedule(new Event())
-                                .setObservationGroupIds(Set.of(1,2))))
+                                .setObservationGroupIds(Set.of(1, 2))))
                 .setTriggers(Map.of(3, new Trigger()
                         .setType("sth")
                         .setProperties(new TriggerProperties())))
@@ -277,10 +285,10 @@ public class ImportExportServiceTest {
                 .setParticipants(List.of(
                         new StudyImportExport.ParticipantInfo(0, null),
                         new StudyImportExport.ParticipantInfo(0, Set.of(1)),
-                        new StudyImportExport.ParticipantInfo(0, Set.of(1,2)),
+                        new StudyImportExport.ParticipantInfo(0, Set.of(1, 2)),
                         new StudyImportExport.ParticipantInfo(2, Set.of()),
                         new StudyImportExport.ParticipantInfo(2, Set.of(2)),
-                        new StudyImportExport.ParticipantInfo(2, Set.of(1,2)),
+                        new StudyImportExport.ParticipantInfo(2, Set.of(1, 2)),
                         new StudyImportExport.ParticipantInfo(4, Set.of(1)),
                         new StudyImportExport.ParticipantInfo(4, Set.of(2))
                 ))
@@ -349,9 +357,9 @@ public class ImportExportServiceTest {
         assertThat(interventionCaptor.getAllValues().get(2).getObservationGroupIds()).containsExactlyInAnyOrder(1, 2);
 
         assertThat(participantsCaptor.getAllValues().stream().map(Participant::getStudyId)).allMatch(Predicate.isEqual(1L));
-        assertThat(participantsCaptor.getAllValues().subList(0,3).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(0));
-        assertThat(participantsCaptor.getAllValues().subList(3,6).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(2));
-        assertThat(participantsCaptor.getAllValues().subList(6,8).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(4));
+        assertThat(participantsCaptor.getAllValues().subList(0, 3).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(0));
+        assertThat(participantsCaptor.getAllValues().subList(3, 6).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(2));
+        assertThat(participantsCaptor.getAllValues().subList(6, 8).stream().map(Participant::getStudyGroupId)).allMatch(Predicate.isEqual(4));
         assertThat(participantsCaptor.getAllValues().get(0).getObservationGroupIds()).isEmpty();
         assertThat(participantsCaptor.getAllValues().get(1).getObservationGroupIds()).containsExactlyInAnyOrder(1);
         assertThat(participantsCaptor.getAllValues().get(2).getObservationGroupIds()).containsExactlyInAnyOrder(1, 2);

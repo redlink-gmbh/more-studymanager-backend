@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -49,7 +49,7 @@ public class ObservationGroupApiV1Controller implements ObservationGroupsApi {
         );
         LOGGER.debug("ObservationGroup created: {}", observationGroup);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                ObservationGroupTransformer.toObservationGroupDTO_V1(observationGroup,0,0,0)
+                ObservationGroupTransformer.toObservationGroupDTO_V1(observationGroup, 0, 0, 0)
         );
     }
 
@@ -60,10 +60,10 @@ public class ObservationGroupApiV1Controller implements ObservationGroupsApi {
         return ResponseEntity.ok(
                 service.listObservationGroups(studyId).stream()
                         .map(og -> ObservationGroupTransformer.toObservationGroupDTO_V1(
-                            og,
-                            service.countObservationsInGroup(studyId, og.getObservationGroupId()),
-                            service.countInterventionsInGroup(studyId, og.getObservationGroupId()),
-                            service.countParticipantsInGroup(studyId, og.getObservationGroupId())))
+                                og,
+                                service.countObservationsInGroup(studyId, og.getObservationGroupId()),
+                                service.countInterventionsInGroup(studyId, og.getObservationGroupId()),
+                                service.countParticipantsInGroup(studyId, og.getObservationGroupId())))
                         .toList()
         );
     }
@@ -73,15 +73,15 @@ public class ObservationGroupApiV1Controller implements ObservationGroupsApi {
     @Audited
     public ResponseEntity<ObservationGroupDTO> getObservationGroup(Long studyId, Integer observationGroupId) {
         var og = service.getObservationGroup(studyId, observationGroupId);
-        if(og == null) {
+        if (og == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(
-            ObservationGroupTransformer.toObservationGroupDTO_V1(
-                og,
-                service.countObservationsInGroup(og.getStudyId(), og.getObservationGroupId()),
-                service.countInterventionsInGroup(og.getStudyId(), og.getObservationGroupId()),
-                service.countParticipantsInGroup(og.getStudyId(), og.getObservationGroupId())));
+                ObservationGroupTransformer.toObservationGroupDTO_V1(
+                        og,
+                        service.countObservationsInGroup(og.getStudyId(), og.getObservationGroupId()),
+                        service.countInterventionsInGroup(og.getStudyId(), og.getObservationGroupId()),
+                        service.countParticipantsInGroup(og.getStudyId(), og.getObservationGroupId())));
     }
 
     @Override

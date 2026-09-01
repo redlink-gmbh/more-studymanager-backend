@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -15,6 +15,9 @@ import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.StudyGroup;
 import io.redlink.more.studymanager.model.data.ParticipationData;
+import io.redlink.more.studymanager.model.data.SimpleDataPoint;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -23,11 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import io.redlink.more.studymanager.model.data.SimpleDataPoint;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
 
 @Service
 public class DataProcessingService {
@@ -43,16 +41,16 @@ public class DataProcessingService {
         this.elasticService = elasticService;
     }
 
-    public List<ParticipationData> getParticipationData(Long studyId){
+    public List<ParticipationData> getParticipationData(Long studyId) {
         List<Observation> observationList = observationService.listObservations(studyId);
         List<Participant> participantList = participantService.listParticipants(studyId);
         List<StudyGroup> studyGroupList = studyGroupService.listStudyGroups(studyId);
 
         Map<Observation, List<Participant>> participantsByObservation = new HashMap<>();
-        for(Observation observation : observationList) {
-            if(observation.getStudyGroupId() == null){
+        for (Observation observation : observationList) {
+            if (observation.getStudyGroupId() == null) {
                 participantsByObservation.put(observation, participantList);
-            }else{
+            } else {
                 participantsByObservation.put(observation, participantList
                         .stream().filter(p -> (observation.getStudyGroupId().equals(p.getStudyGroupId())))
                         .toList());
@@ -61,13 +59,13 @@ public class DataProcessingService {
         Map<Integer, Observation> observationById = new HashMap<>();
         Map<Integer, Participant> participantById = new HashMap<>();
         Map<Integer, StudyGroup> studyGroupById = new HashMap<>();
-        for(Observation observation : observationList){
+        for (Observation observation : observationList) {
             observationById.put(observation.getObservationId(), observation);
         }
-        for(Participant participant : participantList){
+        for (Participant participant : participantList) {
             participantById.put(participant.getParticipantId(), participant);
         }
-        for(StudyGroup studyGroup : studyGroupList){
+        for (StudyGroup studyGroup : studyGroupList) {
             studyGroupById.put(studyGroup.getStudyGroupId(), studyGroup);
         }
 
@@ -76,9 +74,9 @@ public class DataProcessingService {
         List<ParticipationData> participationDataList = new ArrayList<>();
 
         ParticipationData.NamedId studyGroup;
-        for(ParticipationData participationData : incompleteParticipationDataList){
+        for (ParticipationData participationData : incompleteParticipationDataList) {
             studyGroup = null;
-            if(participationData.studyGroupNamedId() != null)
+            if (participationData.studyGroupNamedId() != null)
                 studyGroup = new ParticipationData.NamedId(
                         participationData.studyGroupNamedId().id(),
                         studyGroupById.get(participationData.studyGroupNamedId().id()).getTitle());
@@ -92,9 +90,9 @@ public class DataProcessingService {
             ));
         }
 
-        for(Observation observation : participantsByObservation.keySet()){
-            for(Participant participant : participantsByObservation.get(observation)){
-                if(participationDataList.stream()
+        for (Observation observation : participantsByObservation.keySet()) {
+            for (Participant participant : participantsByObservation.get(observation)) {
+                if (participationDataList.stream()
                         .filter(p -> (
                                 p.observationNamedId().id() == (observation.getObservationId()) &&
                                         (p.studyGroupNamedId() != null
@@ -102,7 +100,7 @@ public class DataProcessingService {
                                                 : participant.getStudyGroupId() == null) &&
                                         p.participantNamedId().id() == (participant.getParticipantId()))).toList().isEmpty()) {
                     studyGroup = null;
-                    if(participant.getStudyGroupId() != null)
+                    if (participant.getStudyGroupId() != null)
                         studyGroup = new ParticipationData.NamedId(participant.getStudyGroupId(), studyGroupById.get(participant.getStudyGroupId()).getTitle());
                     participationDataList.add(new ParticipationData(
                             new ParticipationData.NamedId(observation.getObservationId(), observation.getTitle()),

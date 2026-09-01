@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.factory;
 
@@ -28,10 +28,12 @@ import java.util.stream.Collectors;
 
 public abstract class ComponentFactory<C extends Component, P extends ComponentProperties> {
     public ComponentFactoryProperties componentProperties;
-    public ComponentFactory<C,P> init(ComponentFactoryProperties componentProperties){
+
+    public ComponentFactory<C, P> init(ComponentFactoryProperties componentProperties) {
         this.componentProperties = componentProperties;
         return this;
     }
+
     public abstract String getId();
 
     public abstract String getTitle();
@@ -42,7 +44,7 @@ public abstract class ComponentFactory<C extends Component, P extends ComponentP
         return List.of();
     }
 
-    public abstract <P extends  ComponentProperties> Class<P> getPropertyClass();
+    public abstract <P extends ComponentProperties> Class<P> getPropertyClass();
 
     //TODO remove in a next step (as soon as interventions impl is done in FE for new props
     public Map<String, Object> getDefaultProperties() {
@@ -62,7 +64,7 @@ public abstract class ComponentFactory<C extends Component, P extends ComponentP
                             .collect(Collectors.toList())
             );
 
-            if(report.isValid()) {
+            if (report.isValid()) {
                 return values;
             } else {
                 throw new ConfigurationValidationException(report);
@@ -77,7 +79,9 @@ public abstract class ComponentFactory<C extends Component, P extends ComponentP
         }
     }
 
-    public P preImport(P values) { return values; }
+    public P preImport(P values) {
+        return values;
+    }
 
     public WebComponent getWebComponent() {
         return null;

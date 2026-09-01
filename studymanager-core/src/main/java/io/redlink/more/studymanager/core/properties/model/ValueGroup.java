@@ -4,25 +4,25 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.properties.model;
 
 /**
  * Marker for a Value group consisting out of all Values where the ID
  * starts with '<code>${valuegroup.id}.</code>`.
- *
+ * <p>
  * Example:
  * <code>
- *     Value&lt;Void&gt; group = new ValueGroup("group");
- *     Value&lt;Integer&gt; value = new InteverValue(group.getId() + ".value");
- *     Value&lt;String&gt; unit = new StringValue(group.getId() + ".unit");
+ * Value&lt;Void&gt; group = new ValueGroup("group");
+ * Value&lt;Integer&gt; value = new InteverValue(group.getId() + ".value");
+ * Value&lt;String&gt; unit = new StringValue(group.getId() + ".unit");
  * </code>
- *
+ * <p>
  * This will place the value and unit into the same row ordered from left to right
  * based on the order of the values in the property list. It does not contribute to the
  * configuration.
- *
+ * <p>
  * The ValueGroup property is always:
  * <ul>
  *     <li>{@link Value#isImmutable()} == true</li>

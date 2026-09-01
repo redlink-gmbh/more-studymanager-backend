@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.ui;
 
@@ -13,10 +13,10 @@ import java.util.List;
 /**
  * Represents the configuration of a data view.
  *
- * @param filters the list of filters applied to the data view
- * @param rowAggregation the aggregation method for rows. In most cases, this will be the data-legend in the view/chart.
+ * @param filters           the list of filters applied to the data view
+ * @param rowAggregation    the aggregation method for rows. In most cases, this will be the data-legend in the view/chart.
  * @param seriesAggregation the aggregation method for series. In most cases, this will result in the x-axis of the view/chart
- * @param operation the operation applied to the data
+ * @param operation         the operation applied to the data
  */
 public record ViewConfig(
         List<Filter> filters,
@@ -27,7 +27,8 @@ public record ViewConfig(
     /**
      * Represents a filter applied to the data view.
      */
-    public record Filter() { }
+    public record Filter() {
+    }
 
     /**
      * Enumeration of possible aggregation/grouping methods.
@@ -56,7 +57,7 @@ public record ViewConfig(
      * Represents an operation applied to the data.
      *
      * @param operator the operator to be used
-     * @param field the field to which the operation is applied
+     * @param field    the field to which the operation is applied
      */
     public record Operation(
             Operator operator,

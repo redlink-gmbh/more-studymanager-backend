@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.configuration;
 
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
@@ -57,12 +56,12 @@ public class ComponentFactoriesConfiguration implements BeanFactoryAware {
         initAndRegisterFactory(getFactoryImplementations(GoalTemplateFactory.class));
     }
 
-    private <T extends ComponentFactory<?,?>> void initAndRegisterFactory(Stream<Class<? extends T>> factories) {
+    private <T extends ComponentFactory<?, ?>> void initAndRegisterFactory(Stream<Class<? extends T>> factories) {
         factories
                 .map(this::instantiate)
                 .map(f -> f.init(componentFactoriesProperties.get(f.getId())))
                 .forEach(m -> {
-                    logger.trace("Registering ComponentFactory: {} [class:{}, properties:{}]", m.getId(),m.getClass().getName(), m.getProperties());
+                    logger.trace("Registering ComponentFactory: {} [class:{}, properties:{}]", m.getId(), m.getClass().getName(), m.getProperties());
                     beanFactory.registerSingleton(m.getId(), m);
                 });
     }
@@ -76,7 +75,8 @@ public class ComponentFactoriesConfiguration implements BeanFactoryAware {
     private <T> T instantiate(Class<? extends T> c) {
         try {
             return c.getConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

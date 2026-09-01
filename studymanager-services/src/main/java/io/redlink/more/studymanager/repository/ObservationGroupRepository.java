@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
@@ -33,38 +33,37 @@ public class ObservationGroupRepository {
     private static final String CLEAR_OBSERVATION_GROUPS = "DELETE FROM observation_groups";
 
     private static final String COUNT_OBSERVATIONS_IN_GROUP = """
-        SELECT COUNT(*) FROM observation_observation_groups
-        WHERE study_id = :study_id AND observation_group_id = :observation_group_id""";
+            SELECT COUNT(*) FROM observation_observation_groups
+            WHERE study_id = :study_id AND observation_group_id = :observation_group_id""";
     private static final String COUNT_INTERVENTIONS_IN_GROUP = """
-        SELECT COUNT(*) FROM intervention_observation_groups
-        WHERE study_id = :study_id AND observation_group_id = :observation_group_id""";
+            SELECT COUNT(*) FROM intervention_observation_groups
+            WHERE study_id = :study_id AND observation_group_id = :observation_group_id""";
     private static final String COUNT_PARTICIPANTS_IN_GROUP = """
-        SELECT COUNT(*) FROM participant_observation_groups
-        WHERE study_id = :study_id AND observation_group_id = :observation_group_id""";
+            SELECT COUNT(*) FROM participant_observation_groups
+            WHERE study_id = :study_id AND observation_group_id = :observation_group_id""";
     public static final String ADD_OBSERVATION_TO_OBSERVATION_GROUP = """
-        INSERT INTO observation_observation_groups (study_id, observation_id, observation_group_id)
-        VALUES (:study_id, :observation_id, :observation_group_id)
-        ON CONFLICT DO NOTHING""";
+            INSERT INTO observation_observation_groups (study_id, observation_id, observation_group_id)
+            VALUES (:study_id, :observation_id, :observation_group_id)
+            ON CONFLICT DO NOTHING""";
     private static final String REMOVE_OBSERVATION_FROM_GROUP = """
-        DELETE FROM observation_observation_groups
-        WHERE study_id = :study_id AND observation_id = :observation_id
-            AND observation_group_id = :observation_group_id""";
+            DELETE FROM observation_observation_groups
+            WHERE study_id = :study_id AND observation_id = :observation_id
+                AND observation_group_id = :observation_group_id""";
     private static final String ADD_INTERVENTION_TO_GROUP = """
-        INSERT INTO intervention_observation_groups (study_id, intervention_id, observation_group_id)
-        VALUES (:study_id, :intervention_id, :observation_group_id)
-        ON CONFLICT DO NOTHING""";
+            INSERT INTO intervention_observation_groups (study_id, intervention_id, observation_group_id)
+            VALUES (:study_id, :intervention_id, :observation_group_id)
+            ON CONFLICT DO NOTHING""";
     private static final String REMOVE_INTERVENTION_FROM_GROUP = """
-        DELETE FROM intervention_observation_groups
-        WHERE study_id = :study_id AND intervention_id = :intervention_id
-            AND observation_group_id = :observation_group_id""";
+            DELETE FROM intervention_observation_groups
+            WHERE study_id = :study_id AND intervention_id = :intervention_id
+                AND observation_group_id = :observation_group_id""";
     private static final String ADD_PARTICIPANT_TO_GROUP = """
-        INSERT INTO participant_observation_groups (study_id, participant_id, observation_group_id)
-        VALUES (:study_id, :participant_id, :observation_group_id)
-        ON CONFLICT DO NOTHING""";
+            INSERT INTO participant_observation_groups (study_id, participant_id, observation_group_id)
+            VALUES (:study_id, :participant_id, :observation_group_id)
+            ON CONFLICT DO NOTHING""";
     private static final String REMOVE_PARTICIPANT_FROM_GROUP = """
-        DELETE FROM participant_observation_groups
-        WHERE study_id = :study_id AND participant_id = :participant_id AND observation_group_id = :observation_group_id""";
-
+            DELETE FROM participant_observation_groups
+            WHERE study_id = :study_id AND participant_id = :participant_id AND observation_group_id = :observation_group_id""";
 
 
     private final JdbcTemplate template;
@@ -129,8 +128,8 @@ public class ObservationGroupRepository {
     /**
      * Add an observation to an observation group.
      *
-     * @param studyId the ID of the study
-     * @param observationId the ID of the observation
+     * @param studyId            the ID of the study
+     * @param observationId      the ID of the observation
      * @param observationGroupId the ID of the observation group
      */
     public void addObservationToGroup(long studyId, int observationId, int observationGroupId) {
@@ -143,8 +142,8 @@ public class ObservationGroupRepository {
     /**
      * Remove an observation from an observation group.
      *
-     * @param studyId the ID of the study
-     * @param observationId the ID of the observation
+     * @param studyId            the ID of the study
+     * @param observationId      the ID of the observation
      * @param observationGroupId the ID of the observation group
      */
     public void removeObservationFromGroup(long studyId, int observationId, int observationGroupId) {
@@ -157,8 +156,8 @@ public class ObservationGroupRepository {
     /**
      * Add an intervention to an observation group.
      *
-     * @param studyId the ID of the study
-     * @param interventionId the ID of the intervention
+     * @param studyId            the ID of the study
+     * @param interventionId     the ID of the intervention
      * @param observationGroupId the ID of the observation group
      */
     public void addInterventionToGroup(long studyId, int interventionId, int observationGroupId) {
@@ -171,8 +170,8 @@ public class ObservationGroupRepository {
     /**
      * Remove an intervention from an observation group.
      *
-     * @param studyId the ID of the study
-     * @param interventionId the ID of the intervention
+     * @param studyId            the ID of the study
+     * @param interventionId     the ID of the intervention
      * @param observationGroupId the ID of the observation group
      */
     public void removeInterventionFromGroup(long studyId, int interventionId, int observationGroupId) {
@@ -185,8 +184,8 @@ public class ObservationGroupRepository {
     /**
      * Add a participant to an observation group.
      *
-     * @param studyId the ID of the study
-     * @param participantId the ID of the participant
+     * @param studyId            the ID of the study
+     * @param participantId      the ID of the participant
      * @param observationGroupId the ID of the observation group
      */
     public void addParticipantToGroup(long studyId, int participantId, int observationGroupId) {
@@ -199,8 +198,8 @@ public class ObservationGroupRepository {
     /**
      * Remove a participant from an observation group.
      *
-     * @param studyId the ID of the study
-     * @param participantId the ID of the participant
+     * @param studyId            the ID of the study
+     * @param participantId      the ID of the participant
      * @param observationGroupId the ID of the observation group
      */
     public void removeParticipantFromGroup(long studyId, int participantId, int observationGroupId) {
@@ -213,7 +212,7 @@ public class ObservationGroupRepository {
     /**
      * Count the number of observations in an observation group.
      *
-     * @param studyId the ID of the study
+     * @param studyId            the ID of the study
      * @param observationGroupId the ID of the observation group
      * @return the count
      */
@@ -227,7 +226,7 @@ public class ObservationGroupRepository {
     /**
      * Count the number of interventions in an observation group.
      *
-     * @param studyId the ID of the study
+     * @param studyId            the ID of the study
      * @param observationGroupId the ID of the observation group
      * @return the count
      */
@@ -241,7 +240,7 @@ public class ObservationGroupRepository {
     /**
      * Count the number of participants in an observation group.
      *
-     * @param studyId the ID of the study
+     * @param studyId            the ID of the study
      * @param observationGroupId the ID of the observation group
      * @return the count
      */

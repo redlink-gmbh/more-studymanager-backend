@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation.measurement;
 
@@ -20,9 +20,9 @@ public class GenericMeasurementSets {
 
     public static MeasurementSet ACCELEROMETER = new MeasurementSet(
             "ACCELEROMETER", Set.of(
-                    new Measurement("x", Measurement.Type.DOUBLE),
-                    new Measurement("y", Measurement.Type.DOUBLE),
-                    new Measurement("z", Measurement.Type.DOUBLE))
+            new Measurement("x", Measurement.Type.DOUBLE),
+            new Measurement("y", Measurement.Type.DOUBLE),
+            new Measurement("z", Measurement.Type.DOUBLE))
     );
 
     public static MeasurementSet GEOLOCATION = new MeasurementSet(

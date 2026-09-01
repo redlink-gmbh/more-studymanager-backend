@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -14,7 +14,8 @@ import io.redlink.more.studymanager.repository.OccurredObservationRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -29,7 +30,7 @@ public class OccurredObservationService {
         this.repository = repository;
     }
 
-    public OccurredObservation upsert(long studyId, int observationId, int participantId, Instant start, Instant end){
+    public OccurredObservation upsert(long studyId, int observationId, int participantId, Instant start, Instant end) {
         return repository.upsert(new OccurredObservation(studyId, observationId, participantId, start, end));
     }
 
@@ -39,7 +40,8 @@ public class OccurredObservationService {
 
     /**
      * The latest start time of any {@link OccurredObservation} for the parst studyId
-     * @param studyId the study id
+     *
+     * @param studyId       the study id
      * @param participantId the participantId
      * @return the latest start time or <code>null</code> if no {@link OccurredObservation} is present for the study
      */
@@ -50,7 +52,8 @@ public class OccurredObservationService {
     /**
      * Stream over all occurred observations for a study, where data is still missing (not in
      * {@link ObservationDataState#COMPLETE})
-     * @param studyId the study id
+     *
+     * @param studyId        the study id
      * @param includeInvalid if occurred observations marked as having invalid data are included
      * @return a stream over all ongoing or occurred observations where data are still missing
      */
@@ -64,8 +67,9 @@ public class OccurredObservationService {
     /**
      * Stream over all occurred observations for a observation of a study, where data is still missing (not in
      * {@link ObservationDataState#COMPLETE})
-     * @param studyId the study id
-     * @param observationId the observation id
+     *
+     * @param studyId        the study id
+     * @param observationId  the observation id
      * @param includeInvalid if occurred observations marked as having invalid data are included
      * @return a stream over all ongoing or occurred observations where data are still missing
      */
@@ -79,8 +83,9 @@ public class OccurredObservationService {
     /**
      * Stream over all occurred observations for a participant of a study, where data is still missing (not in
      * {@link ObservationDataState#COMPLETE})
-     * @param studyId the study id
-     * @param participantId the participant id
+     *
+     * @param studyId        the study id
+     * @param participantId  the participant id
      * @param includeInvalid if occurred observations marked as having invalid data are included
      * @return a stream over all ongoing or occurred observations where data are still missing
      */
@@ -90,13 +95,15 @@ public class OccurredObservationService {
                 includeInvalid ? null : true,
                 ACTIVE_DATA_STATES);
     }
+
     /**
      * Stream over all occurred observations for a participant of a study, where data is still missing (not in
      * {@link ObservationDataState#COMPLETE})
-     * @param studyId the study id
-     * @param participantId the participant id or <code>null</code> as wildcard
-     * @param observationId the observation id  or <code>null</code> as wildcard
-     * @param includeInvalid if occurred observations marked as having invalid data are included
+     *
+     * @param studyId               the study id
+     * @param participantId         the participant id or <code>null</code> as wildcard
+     * @param observationId         the observation id  or <code>null</code> as wildcard
+     * @param includeInvalid        if occurred observations marked as having invalid data are included
      * @param observationDataStates the states to include or <code>null</code> to include all
      * @return a stream over all ongoing or occurred observations where data are still missing
      */
@@ -106,15 +113,17 @@ public class OccurredObservationService {
                 includeInvalid ? null : true,
                 observationDataStates == null ? EnumSet.allOf(ObservationDataState.class) : observationDataStates);
     }
+
     /**
      * Stream over all occurred observations for a participant of a study, where data is still missing (not in
      * {@link ObservationDataState#COMPLETE})
-     * @param studyId the study id
-     * @param participantId the participant id or <code>null</code> as wildcard
-     * @param observationId the observation id  or <code>null</code> as wildcard
-     * @param startTime if present the start of the occurred observation is &gt;= the parsed value
-     * @param endTime if present the end of the occurred observation is &lt;= the parsed value
-     * @param includeInvalid if occurred observations marked as having invalid data are included
+     *
+     * @param studyId               the study id
+     * @param participantId         the participant id or <code>null</code> as wildcard
+     * @param observationId         the observation id  or <code>null</code> as wildcard
+     * @param startTime             if present the start of the occurred observation is &gt;= the parsed value
+     * @param endTime               if present the end of the occurred observation is &lt;= the parsed value
+     * @param includeInvalid        if occurred observations marked as having invalid data are included
      * @param observationDataStates the states to include or <code>null</code> to include all
      * @return a stream over all ongoing or occurred observations where data are still missing
      */

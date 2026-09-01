@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.action;
 
@@ -21,7 +21,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -89,7 +88,7 @@ public class ActionService {
     private Optional<ActionFactory> factory(io.redlink.more.studymanager.model.Action action) {
         try {
             return Optional.of(applicationContext.getBean(action.getType(), ActionFactory.class));
-        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e) {
             return Optional.empty();
         }
     }

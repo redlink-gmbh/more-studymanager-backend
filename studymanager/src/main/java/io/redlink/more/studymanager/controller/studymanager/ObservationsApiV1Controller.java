@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -90,10 +90,12 @@ public class ObservationsApiV1Controller implements ObservationsApi {
     @RequiresStudyRole({StudyRole.STUDY_ADMIN, StudyRole.STUDY_OPERATOR})
     @Audited
     public ResponseEntity<EndpointTokenDTO> createToken(Long studyId, Integer observationId, EndpointTokenDTO token) {
-        if(token.getTokenLabel().isBlank()) { return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); }
+        if (token.getTokenLabel().isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Optional<EndpointToken> addedToken = integrationService.addToken(studyId, observationId, token.getTokenLabel());
-        if(addedToken.isEmpty()) {
+        if (addedToken.isEmpty()) {
             throw new BadRequestException("Token with given label already exists for given observation");
         }
 
@@ -121,7 +123,7 @@ public class ObservationsApiV1Controller implements ObservationsApi {
     public ResponseEntity<EndpointTokenDTO> getToken(Long studyId, Integer observationId, Integer tokenId) {
 
         Optional<EndpointToken> token = integrationService.getToken(studyId, observationId, tokenId);
-        if(token.isEmpty()) {
+        if (token.isEmpty()) {
             throw new BadRequestException("Token with given id doesn't exist for given observation");
         }
         return ResponseEntity.ok().body(
