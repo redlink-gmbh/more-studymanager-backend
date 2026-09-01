@@ -8,6 +8,7 @@
  */
 package io.redlink.more.studymanager.service;
 
+import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -59,6 +60,10 @@ public class FirebaseMessagingService {
     }
 
     public String sendNotification(String title, String body, Map<String, String> data, String token) throws FirebaseMessagingException {
+        return sendNotification(title, body, data, token, false);
+    }
+
+    public String sendNotification(String title, String body, Map<String, String> data, String token, boolean sendSilently) throws FirebaseMessagingException {
 
         String uuid = UUID.randomUUID().toString();
 
@@ -73,18 +78,26 @@ public class FirebaseMessagingService {
 
         Message.Builder messageBuilder = Message.builder();
 
-        messageBuilder
-                .putAllData(data)
-                .setToken(token)
-                .setApnsConfig(getApnsConfig(apsDataCategory, apnsPushType.ALERT, apnsPriority.MEDIUM));
+        messageBuilder.putAllData(data).setToken(token);
 
-        if (title != null && body != null) {
-            Notification notification = Notification
-                    .builder()
-                    .setTitle(title)
-                    .setBody(body)
-                    .build();
-            messageBuilder.setNotification(notification);
+        if (sendSilently) {
+            // Data-only message: no Notification payload, so Android never auto-displays a tray notification,
+            // and the APNs "background" push type with content-available delivers silently without an alert.
+            messageBuilder
+                    .setAndroidConfig(AndroidConfig.builder()
+                            .setPriority(AndroidConfig.Priority.HIGH)
+                            .build())
+                    .setApnsConfig(getSilentApnsConfig(apsDataCategory));
+        } else {
+            if (title != null && body != null) {
+                Notification notification = Notification
+                        .builder()
+                        .setTitle(title)
+                        .setBody(body)
+                        .build();
+                messageBuilder.setNotification(notification);
+            }
+            messageBuilder.setApnsConfig(getApnsConfig(apsDataCategory, apnsPushType.ALERT, apnsPriority.MEDIUM));
         }
 
         Message message = messageBuilder.build();
@@ -106,6 +119,20 @@ public class FirebaseMessagingService {
                 .putHeader(apnsPushTypeHeader, type.value)
                 .setAps(Aps.builder()
                         .setCategory(apsCategory)
+                        .setMutableContent(true)
+                        .build())
+                .build();
+    }
+
+    private static ApnsConfig getSilentApnsConfig(String apsCategory) {
+        // APNs rejects "background" push type with a priority other than 5 (MEDIUM).
+        return ApnsConfig
+                .builder()
+                .putHeader(apnsPriorityHeader, String.valueOf(apnsPriority.MEDIUM.value))
+                .putHeader(apnsPushTypeHeader, apnsPushType.BACKGROUND.value)
+                .setAps(Aps.builder()
+                        .setCategory(apsCategory)
+                        .setContentAvailable(true)
                         .setMutableContent(true)
                         .build())
                 .build();
