@@ -54,4 +54,11 @@ public class DataConstraintException extends RuntimeException {
         );
     }
 
+    public static DataConstraintException createMilestoneInUseByObservation(long studyId, int milestoneId) {
+        return new DataConstraintException(
+                "Can't delete milestone_%d from study_%d: An observation still references this milestone!"
+                        .formatted(milestoneId, studyId)
+        );
+    }
+
 }

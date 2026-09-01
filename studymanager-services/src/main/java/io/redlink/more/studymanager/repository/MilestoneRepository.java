@@ -27,7 +27,7 @@ public class MilestoneRepository {
             VALUES (:study_id,
                     (SELECT COALESCE(MAX(milestone_id),0)+1 FROM milestones WHERE study_id = :study_id),
                     :name,
-                    (SELECT COALESCE(MAX(order_index),0)+1 FROM milestones WHERE study_id = :study_id))
+                    (SELECT COALESCE(MAX(order_index)+1,0) FROM milestones WHERE study_id = :study_id))
             RETURNING *""";
     private static final String GET_MILESTONE_BY_IDS = "SELECT * FROM milestones WHERE study_id = ? AND milestone_id = ?";
     private static final String LIST_MILESTONES_ORDER_BY_ORDER_INDEX = "SELECT * FROM milestones WHERE study_id = ? ORDER BY order_index";
@@ -47,6 +47,9 @@ public class MilestoneRepository {
             SELECT COUNT(*) FROM participant_milestones pm
             JOIN participants p ON p.study_id = pm.study_id AND p.participant_id = pm.participant_id
             WHERE pm.study_id = :study_id AND pm.milestone_id = :milestone_id AND p.status = 'active'""";
+    private static final String COUNT_OBSERVATIONS_USING_MILESTONE = """
+            SELECT COUNT(*) FROM observations
+            WHERE study_id = :study_id AND milestone_id = :milestone_id""";
     private static final String CLEAR_MILESTONES = "DELETE FROM milestones";
 
     private final JdbcTemplate template;
@@ -128,6 +131,15 @@ public class MilestoneRepository {
     public int countActiveParticipantMilestones(long studyId, int milestoneId) {
         return namedTemplate.queryForObject(
                 COUNT_ACTIVE_PARTICIPANT_MILESTONES,
+                new MapSqlParameterSource()
+                        .addValue("study_id", studyId)
+                        .addValue("milestone_id", milestoneId),
+                Integer.class);
+    }
+
+    public int countObservationsUsingMilestone(long studyId, int milestoneId) {
+        return namedTemplate.queryForObject(
+                COUNT_OBSERVATIONS_USING_MILESTONE,
                 new MapSqlParameterSource()
                         .addValue("study_id", studyId)
                         .addValue("milestone_id", milestoneId),

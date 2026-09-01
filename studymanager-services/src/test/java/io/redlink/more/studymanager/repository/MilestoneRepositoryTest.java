@@ -9,8 +9,10 @@
 package io.redlink.more.studymanager.repository;
 
 import io.redlink.more.studymanager.configuration.JPAConfiguration;
+import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.model.Contact;
 import io.redlink.more.studymanager.model.Milestone;
+import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.ParticipantMilestone;
 import io.redlink.more.studymanager.model.Study;
@@ -35,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EnableAutoConfiguration
 @ContextConfiguration(classes = {
         MilestoneRepository.class, ParticipantMilestoneRepository.class,
-        StudyRepository.class, ParticipantRepository.class,
+        StudyRepository.class, ParticipantRepository.class, ObservationRepository.class,
         JPAConfiguration.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -54,8 +56,12 @@ class MilestoneRepositoryTest {
     @Autowired
     private ParticipantRepository participantRepository;
 
+    @Autowired
+    private ObservationRepository observationRepository;
+
     @BeforeEach
     void deleteAll() {
+        observationRepository.clear();
         participantMilestoneRepository.clear();
         milestoneRepository.clear();
         participantRepository.clear();
@@ -71,11 +77,11 @@ class MilestoneRepositoryTest {
         Milestone m3 = milestoneRepository.insert(new Milestone().setStudyId(studyId).setName("End"));
 
         assertThat(m1.getMilestoneId()).isEqualTo(1);
-        assertThat(m1.getOrderIndex()).isEqualTo(1);
+        assertThat(m1.getOrderIndex()).isEqualTo(0);
         assertThat(m2.getMilestoneId()).isEqualTo(2);
-        assertThat(m2.getOrderIndex()).isEqualTo(2);
+        assertThat(m2.getOrderIndex()).isEqualTo(1);
         assertThat(m3.getMilestoneId()).isEqualTo(3);
-        assertThat(m3.getOrderIndex()).isEqualTo(3);
+        assertThat(m3.getOrderIndex()).isEqualTo(2);
         assertThat(m1.getCreated()).isNotNull();
 
         assertThat(milestoneRepository.listMilestonesOrderedByOrderIndexAsc(studyId))
@@ -84,15 +90,15 @@ class MilestoneRepositoryTest {
 
         Milestone updated = milestoneRepository.update(new Milestone().setStudyId(studyId).setMilestoneId(2).setName("Mid-study"));
         assertThat(updated.getName()).isEqualTo("Mid-study");
-        assertThat(updated.getOrderIndex()).isEqualTo(2);
+        assertThat(updated.getOrderIndex()).isEqualTo(1);
 
         // deleting the middle milestone and decrementing trailing order indices
         milestoneRepository.deleteById(studyId, 2);
-        milestoneRepository.decrementOrderIndexAbove(studyId, 2);
+        milestoneRepository.decrementOrderIndexAbove(studyId, 1);
 
         List<Milestone> remaining = milestoneRepository.listMilestonesOrderedByOrderIndexAsc(studyId);
         assertThat(remaining).extracting(Milestone::getMilestoneId).containsExactly(1, 3);
-        assertThat(remaining).extracting(Milestone::getOrderIndex).containsExactly(1, 2);
+        assertThat(remaining).extracting(Milestone::getOrderIndex).containsExactly(0, 1);
     }
 
     @Test
@@ -105,13 +111,13 @@ class MilestoneRepositoryTest {
 
         assertThat(milestoneRepository.countByStudyId(studyId)).isEqualTo(3);
 
-        // move m1 (orderIndex 1) to the last position (orderIndex 3): m2 and m3 shift down by one
-        milestoneRepository.shiftOrderIndexRange(studyId, 2, 3, -1);
-        milestoneRepository.setOrderIndex(studyId, m1.getMilestoneId(), 3);
+        // move m1 (orderIndex 0) to the last position (orderIndex 2): m2 and m3 shift down by one
+        milestoneRepository.shiftOrderIndexRange(studyId, 1, 2, -1);
+        milestoneRepository.setOrderIndex(studyId, m1.getMilestoneId(), 2);
 
         List<Milestone> reordered = milestoneRepository.listMilestonesOrderedByOrderIndexAsc(studyId);
         assertThat(reordered).extracting(Milestone::getMilestoneId).containsExactly(m2.getMilestoneId(), m3.getMilestoneId(), m1.getMilestoneId());
-        assertThat(reordered).extracting(Milestone::getOrderIndex).containsExactly(1, 2, 3);
+        assertThat(reordered).extracting(Milestone::getOrderIndex).containsExactly(0, 1, 2);
     }
 
     @Test
@@ -137,6 +143,28 @@ class MilestoneRepositoryTest {
         participantRepository.setStatusByIds(studyId, participant.getParticipantId(), Participant.Status.ACTIVE);
 
         assertThat(milestoneRepository.countActiveParticipantMilestones(studyId, milestone.getMilestoneId())).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Observations referencing a milestone are counted for the delete-guard")
+    void testCountObservationsUsingMilestone() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        Milestone milestone = milestoneRepository.insert(new Milestone().setStudyId(studyId).setName("Baseline"));
+
+        assertThat(milestoneRepository.countObservationsUsingMilestone(studyId, milestone.getMilestoneId())).isZero();
+
+        observationRepository.insert(new Observation()
+                .setStudyId(studyId)
+                .setTitle("Test Observation")
+                .setPurpose("Test Purpose")
+                .setParticipantInfo("Info")
+                .setType("questionnaire")
+                .setHidden(false)
+                .setProperties(new ObservationProperties())
+                .setSchedule(null)
+                .setMilestoneId(milestone.getMilestoneId()));
+
+        assertThat(milestoneRepository.countObservationsUsingMilestone(studyId, milestone.getMilestoneId())).isEqualTo(1);
     }
 
     @Test

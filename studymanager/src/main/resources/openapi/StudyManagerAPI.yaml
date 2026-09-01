@@ -1667,7 +1667,7 @@ paths:
         '404':
           description: not found
         '409':
-          description: milestone could not be deleted because it is still referenced by existing participant milestones
+          description: milestone could not be deleted because it is still referenced by an active participant milestone or by an observation
         '500':
           description: Error
 
