@@ -2955,6 +2955,10 @@ components:
           $ref: '#/components/schemas/Id'
         milestoneId:
           $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          readOnly: true
+          description: The name of the referenced Milestone
         createdAt:
           type: string
           format: date-time
@@ -2971,6 +2975,7 @@ components:
         - studyId
         - participantId
         - milestoneId
+        - name
         - dateTime
 
     UserSearchResultList:
