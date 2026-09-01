@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -14,38 +14,12 @@ import io.redlink.more.studymanager.core.properties.ActionProperties;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
-import io.redlink.more.studymanager.model.Action;
-import io.redlink.more.studymanager.model.AuthenticatedUser;
-import io.redlink.more.studymanager.model.GoalAdherenceCheck;
-import io.redlink.more.studymanager.model.GoalTemplate;
-import io.redlink.more.studymanager.model.GoalTopic;
-import io.redlink.more.studymanager.model.Intervention;
-import io.redlink.more.studymanager.model.Observation;
-import io.redlink.more.studymanager.model.ObservationGroup;
-import io.redlink.more.studymanager.model.PlatformRole;
-import io.redlink.more.studymanager.model.Study;
-import io.redlink.more.studymanager.model.StudyGroup;
-import io.redlink.more.studymanager.model.StudyImportExport;
-import io.redlink.more.studymanager.model.Trigger;
+import io.redlink.more.studymanager.model.*;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.model.scheduler.RecurrenceRule;
 import io.redlink.more.studymanager.repository.DownloadTokenRepository;
 import io.redlink.more.studymanager.service.ImportExportService;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +31,17 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
+
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -230,8 +214,7 @@ class ImportExportControllerTest {
                 .setStudyGroupId(group.getStudyGroupId())
                 .setObservationGroupIds(Set.of(observationGroup1.getObservationGroupId()))
                 .setTitle("Obst Essen")
-                .setProperties(new GoalTemplateProperties(Map.of("property", "new value")))
-                                ;
+                .setProperties(new GoalTemplateProperties(Map.of("property", "new value")));
 
         StudyImportExport studyImportExport = new StudyImportExport()
                 .setStudy(study)
@@ -475,8 +458,8 @@ class ImportExportControllerTest {
 
 
         mvc.perform(
-                multipart("/api/v1/studies/import/study")
-                        .file("file", resultExport.getResponse().getContentAsByteArray()))
+                        multipart("/api/v1/studies/import/study")
+                                .file("file", resultExport.getResponse().getContentAsByteArray()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value(study.getTitle()))
                 .andExpect(jsonPath("$.studyId").value(2L))

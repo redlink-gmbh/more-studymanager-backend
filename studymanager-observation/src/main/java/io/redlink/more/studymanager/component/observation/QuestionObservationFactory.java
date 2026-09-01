@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation;
 
@@ -25,17 +25,17 @@ import java.util.Set;
 public class QuestionObservationFactory<C extends Observation<P>, P extends ObservationProperties>
         extends ObservationFactory<C, P> {
 
-    public static final String FIELD_ANSWER =  "answer";
+    public static final String FIELD_ANSWER = "answer";
 
     private static final MeasurementSet measurements = new MeasurementSet(
             "SIMPLE_ANSWER", Set.of(new Measurement(FIELD_ANSWER, Measurement.Type.STRING))
     );
 
     private static List<Value> properties = List.of(
-        new StringValue("question")
-                .setName("observation.factory.simpleQuestion.configProps.questionName")
-                .setDescription("observation.factory.simpleQuestion.configProps.questionDesc")
-                .setRequired(true),
+            new StringValue("question")
+                    .setName("observation.factory.simpleQuestion.configProps.questionName")
+                    .setDescription("observation.factory.simpleQuestion.configProps.questionDesc")
+                    .setRequired(true),
             new StringListValue("answers")
                     .setMinSize(2)
                     .setMaxSize(10)
@@ -68,7 +68,7 @@ public class QuestionObservationFactory<C extends Observation<P>, P extends Obse
 
     @Override
     public QuestionObservation create(MoreObservationSDK sdk, ObservationProperties properties) throws ConfigurationValidationException {
-        return new QuestionObservation(sdk, validate((P)properties));
+        return new QuestionObservation(sdk, validate((P) properties));
     }
 
     @Override

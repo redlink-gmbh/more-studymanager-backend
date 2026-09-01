@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -21,9 +21,6 @@ import io.redlink.more.studymanager.service.IntegrationService;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.service.ObservationService;
 import io.redlink.more.studymanager.utils.MapperUtils;
-import java.time.Instant;
-import java.util.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,14 +31,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import java.time.Instant;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -81,14 +81,14 @@ class ObservationControllerTest {
     void testAddObservation() throws Exception {
         when(observationService.addObservation(any(Observation.class)))
                 .thenAnswer(invocationOnMock -> new Observation()
-                        .setStudyId(((Observation)invocationOnMock.getArgument(0)).getStudyId())
-                        .setObservationId(((Observation)invocationOnMock.getArgument(0)).getObservationId())
-                        .setTitle(((Observation)invocationOnMock.getArgument(0)).getTitle())
-                        .setPurpose(((Observation)invocationOnMock.getArgument(0)).getPurpose())
-                        .setParticipantInfo(((Observation)invocationOnMock.getArgument(0)).getParticipantInfo())
-                        .setType(((Observation)invocationOnMock.getArgument(0)).getType())
-                        .setProperties(((Observation)invocationOnMock.getArgument(0)).getProperties())
-                        .setStudyGroupId(((Observation)invocationOnMock.getArgument(0)).getStudyGroupId())
+                        .setStudyId(((Observation) invocationOnMock.getArgument(0)).getStudyId())
+                        .setObservationId(((Observation) invocationOnMock.getArgument(0)).getObservationId())
+                        .setTitle(((Observation) invocationOnMock.getArgument(0)).getTitle())
+                        .setPurpose(((Observation) invocationOnMock.getArgument(0)).getPurpose())
+                        .setParticipantInfo(((Observation) invocationOnMock.getArgument(0)).getParticipantInfo())
+                        .setType(((Observation) invocationOnMock.getArgument(0)).getType())
+                        .setProperties(((Observation) invocationOnMock.getArgument(0)).getProperties())
+                        .setStudyGroupId(((Observation) invocationOnMock.getArgument(0)).getStudyGroupId())
                         .setCreated(Instant.ofEpochMilli(System.currentTimeMillis()))
                         .setModified(Instant.ofEpochMilli(System.currentTimeMillis()))
                         .setHidden(((Observation) invocationOnMock.getArgument(0)).getHidden())
@@ -123,7 +123,7 @@ class ObservationControllerTest {
     @Test
     @DisplayName("Update observation should return similar values")
     void testUpdateStudy() throws Exception {
-        when(observationService.updateObservation(any(Observation.class))).thenAnswer(invocationOnMock -> ((Observation)invocationOnMock.getArgument(0))
+        when(observationService.updateObservation(any(Observation.class))).thenAnswer(invocationOnMock -> ((Observation) invocationOnMock.getArgument(0))
                 .setTitle("title")
                 .setCreated(Instant.ofEpochMilli(0))
                 .setModified(Instant.ofEpochMilli(0)));
@@ -147,7 +147,7 @@ class ObservationControllerTest {
     @Test
     @DisplayName("Schedule with empty value should not throw error")
     void testEmptySchedule() throws Exception {
-        when(observationService.addObservation(any(Observation.class))).thenAnswer(invocationOnMock -> ((Observation)invocationOnMock.getArgument(0))
+        when(observationService.addObservation(any(Observation.class))).thenAnswer(invocationOnMock -> ((Observation) invocationOnMock.getArgument(0))
                 .setTitle("title")
                 .setSchedule(new Event().setDateEnd(null).setDateStart(null).setRRule(null))
                 .setCreated(Instant.ofEpochMilli(0))
@@ -173,7 +173,7 @@ class ObservationControllerTest {
 
     @Test
     @DisplayName("Add token should create and return token with id, label, timestamp and secret set, only if label is valid")
-    void testAddToken() throws Exception{
+    void testAddToken() throws Exception {
         EndpointTokenDTO token = new EndpointTokenDTO(
                 1,
                 "testLabel",

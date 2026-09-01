@@ -4,14 +4,16 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
 import io.redlink.more.studymanager.api.v1.model.OccurredObservationDTO;
 import io.redlink.more.studymanager.api.v1.webservices.OccurredObservationsApi;
 import io.redlink.more.studymanager.exception.BadRequestException;
-import io.redlink.more.studymanager.model.*;
+import io.redlink.more.studymanager.model.Observation;
+import io.redlink.more.studymanager.model.OccurredObservation;
+import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.transformer.OccurredObservationTransformer;
 import io.redlink.more.studymanager.properties.GatewayProperties;
 import io.redlink.more.studymanager.service.ObservationService;
@@ -56,16 +58,16 @@ public class OccurredObservationsApiV1Controller implements OccurredObservations
 
     @Override
     public ResponseEntity<List<OccurredObservationDTO>> listOccurredObservations(Long studyId, Integer participant, Integer observation, Instant from, Instant to) {
-        if(studyId == null) {
+        if (studyId == null) {
             throw new BadRequestException("studyId is required");
         }
-        if(participant == null && observation == null) {
+        if (participant == null && observation == null) {
             throw new BadRequestException("either participant or observation is required");
         }
         List<OccurredObservation> occurredObservations;
-        try(var ooStream = ooService.streamOccurredObservations(studyId, participant, observation, true, null)) {
+        try (var ooStream = ooService.streamOccurredObservations(studyId, participant, observation, true, null)) {
             occurredObservations = ooStream.filter(it -> (from == null || it.start().equals(from) || it.start().isAfter(from)) &&
-                    (to == null || it.end().equals(to) || it.end().isBefore(to)))
+                            (to == null || it.end().equals(to) || it.end().isBefore(to)))
                     //sort for start DESC and end ASC ... this means that the most current OccirredObservations are listed first
                     .sorted(Comparator.comparing(OccurredObservation::start).reversed().thenComparing(OccurredObservation::end))
                     .toList();
@@ -76,30 +78,31 @@ public class OccurredObservationsApiV1Controller implements OccurredObservations
         var referencedParticipants = occurredObservations.stream()
                 .map(OccurredObservation::participantId)
                 .collect(Collectors.toSet()).stream()
-                .map(participantId -> participantService.getParticipant(studyId,participantId))
+                .map(participantId -> participantService.getParticipant(studyId, participantId))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toMap(p -> p.getParticipantId(), Function.identity()));
         var referencedObservations = occurredObservations.stream()
                 .map(OccurredObservation::observationId)
                 .collect(Collectors.toSet()).stream()
-                .map(participantId -> observationService.getObservation(studyId,participantId))
+                .map(participantId -> observationService.getObservation(studyId, participantId))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toMap(o -> o.getObservationId(), Function.identity()));
 
         //Convert the data and send the response
-        return ResponseEntity.ok(occurredObservations.stream().map( it ->
-                new OccurredObservationData(
-                        it,
-                        referencedParticipants.get(it.participantId()),
-                        referencedObservations.get(it.observationId())
-                ))
+        return ResponseEntity.ok(occurredObservations.stream().map(it ->
+                        new OccurredObservationData(
+                                it,
+                                referencedParticipants.get(it.participantId()),
+                                referencedObservations.get(it.observationId())
+                        ))
                 .map(it -> OccurredObservationTransformer.toOccurredObservationDTO_V1(it, gatewayProperties))
                 .toList());
     }
 
     /**
      * Record that holds data requried to serialize {@link OccurredObservation} as defined in the API
+     *
      * @param occurredObservation
      * @param participant
      * @param observation
@@ -108,5 +111,6 @@ public class OccurredObservationsApiV1Controller implements OccurredObservations
             OccurredObservation occurredObservation,
             Participant participant,
             Observation observation
-    ){ }
+    ) {
+    }
 }

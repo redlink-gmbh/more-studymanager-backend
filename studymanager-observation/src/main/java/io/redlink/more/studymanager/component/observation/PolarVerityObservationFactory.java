@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation;
 
@@ -35,7 +35,7 @@ public class PolarVerityObservationFactory<C extends Observation<P>, P extends O
 
     @Override
     public PolarVerityObservation create(MoreObservationSDK sdk, ObservationProperties properties) throws ConfigurationValidationException {
-        return new PolarVerityObservation(sdk, validate((P)properties));
+        return new PolarVerityObservation(sdk, validate((P) properties));
     }
 
     @Override

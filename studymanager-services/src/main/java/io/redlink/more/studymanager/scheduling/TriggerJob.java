@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.scheduling;
 
@@ -18,8 +18,6 @@ import io.redlink.more.studymanager.model.Trigger;
 import io.redlink.more.studymanager.sdk.MoreSDK;
 import io.redlink.more.studymanager.service.InterventionService;
 import io.redlink.more.studymanager.utils.LoggingUtils;
-import java.util.Map;
-import java.util.Optional;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -27,9 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+
+import java.util.Map;
+import java.util.Optional;
 
 public class TriggerJob implements Job {
 
@@ -77,7 +76,7 @@ public class TriggerJob implements Job {
 
             TriggerResult result = factory.create(sdk, trigger.getProperties()).execute(parameters);
 
-            if(result.proceed()) {
+            if (result.proceed()) {
                 actionService.execute(studyId, studyGroupId, interventionId, result.getActionParameters());
             } else {
                 LOGGER.debug("Skipping Action execution, trigger did not fire");
@@ -91,7 +90,7 @@ public class TriggerJob implements Job {
     private Optional<TriggerFactory> factory(Trigger trigger) {
         try {
             return Optional.of(applicationContext.getBean(trigger.getType(), TriggerFactory.class));
-        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e) {
             return Optional.empty();
         }
     }

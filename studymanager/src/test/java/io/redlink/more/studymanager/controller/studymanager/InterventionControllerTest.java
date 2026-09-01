@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -23,12 +23,6 @@ import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.service.InterventionService;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.utils.MapperUtils;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -40,14 +34,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest({InterventionsApiV1Controller.class})
 @AutoConfigureMockMvc(addFilters = false)
@@ -85,15 +84,15 @@ class InterventionControllerTest {
 
         when(interventionService.addIntervention(any(Intervention.class)))
                 .thenAnswer(invocationOnMock -> new Intervention()
-                        .setStudyId(((Intervention)invocationOnMock.getArgument(0)).getStudyId())
-                        .setInterventionId(((Intervention)invocationOnMock.getArgument(0)).getInterventionId())
-                        .setTitle(((Intervention)invocationOnMock.getArgument(0)).getTitle())
-                        .setPurpose(((Intervention)invocationOnMock.getArgument(0)).getPurpose())
-                        .setStudyGroupId(((Intervention)invocationOnMock.getArgument(0)).getStudyGroupId())
+                        .setStudyId(((Intervention) invocationOnMock.getArgument(0)).getStudyId())
+                        .setInterventionId(((Intervention) invocationOnMock.getArgument(0)).getInterventionId())
+                        .setTitle(((Intervention) invocationOnMock.getArgument(0)).getTitle())
+                        .setPurpose(((Intervention) invocationOnMock.getArgument(0)).getPurpose())
+                        .setStudyGroupId(((Intervention) invocationOnMock.getArgument(0)).getStudyGroupId())
                         .setSchedule(new Event()
                                 .setDateStart(dateStart)
                                 .setDateEnd(dateEnd))
-                        .setObservationGroupIds(((Intervention)invocationOnMock.getArgument(0)).getObservationGroupIds())
+                        .setObservationGroupIds(((Intervention) invocationOnMock.getArgument(0)).getObservationGroupIds())
                         .setCreated(Instant.now())
                         .setModified(Instant.now()));
 
@@ -129,17 +128,17 @@ class InterventionControllerTest {
         Instant dateEnd = dateStart.plus(2, ChronoUnit.HOURS);
 
         when(interventionService.updateIntervention(any(Intervention.class))).thenAnswer(invocationOnMock ->
-                ((Intervention)invocationOnMock.getArgument(0))
-                .setStudyId(1L)
-                .setInterventionId(1)
-                .setStudyGroupId(1)
-                .setPurpose("some updated purpose")
-                .setTitle("a title")
-                .setSchedule(new Event()
-                        .setDateStart(dateStart)
-                        .setDateEnd(dateEnd))
-                .setCreated(Instant.now())
-                .setModified(Instant.now()));
+                ((Intervention) invocationOnMock.getArgument(0))
+                        .setStudyId(1L)
+                        .setInterventionId(1)
+                        .setStudyGroupId(1)
+                        .setPurpose("some updated purpose")
+                        .setTitle("a title")
+                        .setSchedule(new Event()
+                                .setDateStart(dateStart)
+                                .setDateEnd(dateEnd))
+                        .setCreated(Instant.now())
+                        .setModified(Instant.now()));
 
         InterventionDTO interventionRequest = new InterventionDTO()
                 .studyId(1L)
@@ -170,11 +169,11 @@ class InterventionControllerTest {
     @DisplayName("A trigger can be updated")
     void testUpdateAndGetTrigger() throws Exception {
         when(interventionService.updateTrigger(any(Long.class), any(Integer.class), any(Trigger.class)))
-                .thenAnswer(invocationOnMock -> ((Trigger)invocationOnMock.getArgument(2))
-                .setType("my-type")
-                .setProperties(MapperUtils.MAPPER.convertValue(Map.of("name", "value"), TriggerProperties.class))
-                .setCreated(Instant.now())
-                .setModified(Instant.now()));
+                .thenAnswer(invocationOnMock -> ((Trigger) invocationOnMock.getArgument(2))
+                        .setType("my-type")
+                        .setProperties(MapperUtils.MAPPER.convertValue(Map.of("name", "value"), TriggerProperties.class))
+                        .setCreated(Instant.now())
+                        .setModified(Instant.now()));
 
         TriggerDTO triggerRequest = new TriggerDTO()
                 .properties(Map.of("name", "value"))
@@ -195,8 +194,8 @@ class InterventionControllerTest {
     void testPostAndPutOfAction() throws Exception {
         when(interventionService.createAction(any(Long.class), any(Integer.class), any(Action.class)))
                 .thenAnswer(invocationOnMock -> new Action()
-                        .setActionId(((Action)invocationOnMock.getArgument(2)).getActionId())
-                        .setType(((Action)invocationOnMock.getArgument(2)).getType())
+                        .setActionId(((Action) invocationOnMock.getArgument(2)).getActionId())
+                        .setType(((Action) invocationOnMock.getArgument(2)).getType())
                         .setProperties(((Action) invocationOnMock.getArgument(2)).getProperties())
                         .setCreated(Instant.now())
                         .setModified(Instant.now()));

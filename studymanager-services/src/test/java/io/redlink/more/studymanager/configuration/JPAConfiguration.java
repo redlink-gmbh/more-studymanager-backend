@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.configuration;
 
@@ -19,8 +19,7 @@ import javax.sql.DataSource;
 public class JPAConfiguration {
     @Bean
     @Profile("test-containers-flyway")
-    public DataSource dataSource()
-    {
+    public DataSource dataSource() {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.url("jdbc:tc:postgresql:15-alpine:///test_database");
         dataSourceBuilder.username("user");

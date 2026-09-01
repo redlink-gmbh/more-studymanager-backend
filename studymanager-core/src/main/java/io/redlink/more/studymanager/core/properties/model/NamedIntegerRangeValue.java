@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.properties.model;
 
@@ -31,13 +31,13 @@ public class NamedIntegerRangeValue extends Value<NamedIntegerRange> {
 
     @Override
     public ValidationIssue doValidate(NamedIntegerRange namedRange) {
-        if(namedRange != null && namedRange.getName() == null || namedRange.getName().isBlank()) {
+        if (namedRange != null && namedRange.getName() == null || namedRange.getName().isBlank()) {
             return ValidationIssue.error(this, "The name of the RangeValue MUST NOT be blank");
         }
-        if(namedRange != null && namedRange.getLower() > namedRange.getUpper()) {
+        if (namedRange != null && namedRange.getLower() > namedRange.getUpper()) {
             return ValidationIssue.error(this, "Lower bound of RangeValue MUST NOT be higer as the upper bound (lower:" + namedRange.getLower() + ",  upper: " + namedRange.getUpper() + ")");
         }
-        if (namedRange != null && (namedRange.getLower() < getMin() || namedRange.getUpper() > getMax()) ) {
+        if (namedRange != null && (namedRange.getLower() < getMin() || namedRange.getUpper() > getMax())) {
             return ValidationIssue.error(this, "Value must between " + getMin() + " and " + getMax());
         }
         return ValidationIssue.NONE;

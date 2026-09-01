@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -59,7 +59,7 @@ public class StudyStateService {
     }
 
     public Long assertStudyState(Long studyId, Collection<Study.Status> states) {
-        if(hasStudyState(studyId, states)){
+        if (hasStudyState(studyId, states)) {
             return studyId;
         }
         throw BadStudyStateException.state();

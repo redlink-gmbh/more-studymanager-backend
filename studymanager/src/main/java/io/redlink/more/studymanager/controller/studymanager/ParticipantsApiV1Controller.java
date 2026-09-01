@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -56,23 +56,24 @@ public class ParticipantsApiV1Controller implements ParticipantsApi {
     private ParticipantDTO toParticipantDTO(Participant p) {
         return ParticipantTransformer.toParticipantDTO_V1(p, gatewayProperties);
     }
+
     private ParticipantDTO.DataHealthIndicatorEnum getDataHealthIndicator(long studyId, int participantId) {
         var now = Instant.now();
         try (Stream<OccurredObservation> ooStream = occurredObservationService.streamOccurredObservations(
                 studyId, participantId, null,
                 true, //we need to know about invalid observations
-                EnumSet.complementOf(EnumSet.of(ObservationDataState.COMPLETE)))){ //Do not list COMPLETED Observations as those are GREEN anyways
+                EnumSet.complementOf(EnumSet.of(ObservationDataState.COMPLETE)))) { //Do not list COMPLETED Observations as those are GREEN anyways
             var oos = ooStream.toList();
             log.debug("data health for participant {} of study {}: {}", participantId, studyId, oos);
-            if(oos.stream().anyMatch(it -> it.dataValid() == Boolean.FALSE || //Observations with invalid data trigger ORANGE
+            if (oos.stream().anyMatch(it -> it.dataValid() == Boolean.FALSE || //Observations with invalid data trigger ORANGE
                     now.isAfter(it.end()) || //if the observation occurrence is already in the past ony state other than completed triggers a ORANGE
-                    it.dataState() != ObservationDataState.INCOMPLETE)){ //for ongoing observations INCOMPLETE is considered GREEN
+                    it.dataState() != ObservationDataState.INCOMPLETE)) { //for ongoing observations INCOMPLETE is considered GREEN
                 return ParticipantDTO.DataHealthIndicatorEnum.ORANGE;
             } else {
                 return ParticipantDTO.DataHealthIndicatorEnum.GREEN;
             }
         }
-   }
+    }
 
     @Override
     @RequiresStudyRole({StudyRole.STUDY_ADMIN, StudyRole.STUDY_OPERATOR})

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.data;
 
@@ -13,11 +13,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+
 import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public record ElasticActionDataPoint (
+public record ElasticActionDataPoint(
         @JsonProperty("datapoint_id")
         String datapointId,
         @JsonProperty("participant_id")

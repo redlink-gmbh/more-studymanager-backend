@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -29,16 +29,18 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest({AuditLogAPIV1Controller.class})
 @AutoConfigureMockMvc(addFilters = false)
@@ -90,11 +92,11 @@ class AuditLogControllerTest {
 
         Action detailsAction = new Action()
                 .setType("test")
-                .setProperties(new ActionProperties(Map.of("test","dummy")))
+                .setProperties(new ActionProperties(Map.of("test", "dummy")))
                 .setCreated(Instant.now().minusSeconds(60))
                 .setModified(Instant.now());
 
-        Map<String,Object> details = Map.of(
+        Map<String, Object> details = Map.of(
                 "user_roles", List.of("admin", "viewer"),
                 "study_roles", List.of("STUDY_VIEWER", "STUDY_OPERATOR"),
                 "detail_state", Boolean.TRUE,

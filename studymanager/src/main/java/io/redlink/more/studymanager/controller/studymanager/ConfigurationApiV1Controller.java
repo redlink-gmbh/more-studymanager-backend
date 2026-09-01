@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -13,12 +13,13 @@ import io.redlink.more.studymanager.api.v1.model.FrontendConfigurationDTO;
 import io.redlink.more.studymanager.api.v1.model.KeycloakSettingsDTO;
 import io.redlink.more.studymanager.api.v1.webservices.ConfigurationApi;
 import io.redlink.more.studymanager.properties.FrontendConfigurationProperties;
-import java.time.Instant;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Instant;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)

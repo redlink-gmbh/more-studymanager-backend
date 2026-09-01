@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -22,14 +22,20 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Service
@@ -180,18 +186,18 @@ public class ImportExportService {
         //Goals
         var goalConfData = studyImport.getStudyGoalConfig();
         StudyGoalConfig goalConfig = new StudyGoalConfig()
-            .setStudyId(studyId)
-            .setAchievability(goalConfData.getAchievability())
-            .setCommitment(goalConfData.getCommitment())
-            .setUnderstandability(goalConfData.getUnderstandability());
-        if(goalConfig.getAchievability() != null || goalConfig.getCommitment() != null || goalConfig.getUnderstandability() != null) {
+                .setStudyId(studyId)
+                .setAchievability(goalConfData.getAchievability())
+                .setCommitment(goalConfData.getCommitment())
+                .setUnderstandability(goalConfData.getUnderstandability());
+        if (goalConfig.getAchievability() != null || goalConfig.getCommitment() != null || goalConfig.getUnderstandability() != null) {
             goalService.setGoalConfig(goalConfig);
         } //else if all values are null we do not need to set a config as this is the default
         goalService.importGoalTopics(studyId, goalConfData.getTopics());
         goalService.importAdherenceChecks(studyId, goalConfData.getAdherenceChecks());
         studyImport.getGoalTemplates().stream()
-            .filter(Objects::nonNull)
-            .forEach(gt -> goalService.importGoalTemplate(studyId, gt));
+                .filter(Objects::nonNull)
+                .forEach(gt -> goalService.importGoalTemplate(studyId, gt));
 
         return newStudy;
     }
@@ -199,11 +205,11 @@ public class ImportExportService {
     public void exportStudyData(OutputStream outputStream, Long studyId, List<Integer> studyGroupId, List<Integer> observationGroupId, List<Integer> participantId, List<Integer> observationId, Instant from, Instant to) {
         if (studyService.existsStudy(studyId).orElse(false)) {
             Collection<Integer> selectedObservationIds;
-            if(observationGroupId != null && !observationGroupId.isEmpty()){
-                selectedObservationIds = observationService.listObservationsForGroup(studyId, null,observationGroupId)
+            if (observationGroupId != null && !observationGroupId.isEmpty()) {
+                selectedObservationIds = observationService.listObservationsForGroup(studyId, null, observationGroupId)
                         .stream().map(Observation::getObservationId).collect(Collectors.toSet());
                 LOGGER.debug("Selected observation ids for parsed ObservationGroups: {}", selectedObservationIds);
-                if(observationId != null){
+                if (observationId != null) {
                     selectedObservationIds.addAll(observationId);
                 }
             } else {
@@ -231,7 +237,7 @@ public class ImportExportService {
     private StudyImportExport.@NonNull StudyGoalConfigData getGoalConfigData(Long studyId) {
         var goalConfig = goalService.getGoalConfig(studyId);
         var goalConfigData = goalConfig == null ? new StudyImportExport.StudyGoalConfigData(studyId) :
-            new StudyImportExport.StudyGoalConfigData(goalConfig);
+                new StudyImportExport.StudyGoalConfigData(goalConfig);
         goalConfigData.setTopics(goalService.getGoalTopics(studyId));
         goalConfigData.setAdherenceChecks(goalService.getGoalAdherenceChecks(studyId));
         return goalConfigData;

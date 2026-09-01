@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
@@ -12,7 +12,12 @@ import io.redlink.more.studymanager.configuration.JPAConfiguration;
 import io.redlink.more.studymanager.core.datavalidity.ObservationDataState;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.properties.OccurredObservationProperties;
-import io.redlink.more.studymanager.model.*;
+import io.redlink.more.studymanager.model.Contact;
+import io.redlink.more.studymanager.model.Observation;
+import io.redlink.more.studymanager.model.OccurredObservation;
+import io.redlink.more.studymanager.model.Participant;
+import io.redlink.more.studymanager.model.Study;
+import io.redlink.more.studymanager.model.StudyGroup;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.model.scheduler.RecurrenceRule;
 import org.junit.jupiter.api.BeforeEach;
@@ -316,7 +321,7 @@ class OccurredObservationRepositoryTest {
         var lastStartTimeStudy = occurredObservationRepository.getLatestStartTime(studyId, null, null, null, null);
         assertThat(lastStartTimeStudy).isNotNull();
         assertThat(lastStartTimeStudy).isEqualTo(startTime);
-        var lastStartTimeStateP2StateComplete =  occurredObservationRepository.getLatestStartTime(studyId, participant2.getParticipantId(), null, null, EnumSet.of(ObservationDataState.COMPLETE));
+        var lastStartTimeStateP2StateComplete = occurredObservationRepository.getLatestStartTime(studyId, participant2.getParticipantId(), null, null, EnumSet.of(ObservationDataState.COMPLETE));
         assertThat(lastStartTimeStateP2StateComplete).isNotNull();
         assertThat(lastStartTimeStateP2StateComplete).isEqualTo(startTime2.minus(1, ChronoUnit.DAYS));
         //validate that searching for a combination with no entry returns null

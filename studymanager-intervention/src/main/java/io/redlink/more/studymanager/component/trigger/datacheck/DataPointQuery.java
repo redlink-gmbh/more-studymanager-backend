@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
@@ -44,11 +44,11 @@ public class DataPointQuery {
     }
 
     private String getDataSelector() {
-        if("=".equals(operator) || "==".equals(operator)) {
+        if ("=".equals(operator) || "==".equals(operator)) {
             return "data_" + observationProperty + ":" + getSanitizedPropertyValue();
-        } else if("!=".equals(operator)) {
+        } else if ("!=".equals(operator)) {
             return "NOT data_" + observationProperty + ":" + getSanitizedPropertyValue();
-        } else if("<".equals(operator) || ">".equals(operator) || "<=".equals(operator) || ">=".equals(operator)) {
+        } else if ("<".equals(operator) || ">".equals(operator) || "<=".equals(operator) || ">=".equals(operator)) {
             return "data_" + observationProperty + ":" + operator + propertyValue;
         } else {
             throw new UnsupportedOperationException();
@@ -56,7 +56,7 @@ public class DataPointQuery {
     }
 
     private Object getSanitizedPropertyValue() {
-        if(this.propertyValue instanceof String p) {
+        if (this.propertyValue instanceof String p) {
             return p.contains(" ") && !p.contains("\"") ?
                     "\"" + p.trim() + "\"" :
                     p.trim();

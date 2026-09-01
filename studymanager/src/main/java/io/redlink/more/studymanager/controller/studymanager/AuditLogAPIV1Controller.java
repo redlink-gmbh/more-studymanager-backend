@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -92,24 +92,25 @@ public class AuditLogAPIV1Controller implements AuditLogApi {
 
     /**
      * Prepare the auditlog for streaming it to the export
+     *
      * @param outputStream outputStream for exported auditlog entries
-     * @param studyId corresponding studyId of the auditlogs
+     * @param studyId      corresponding studyId of the auditlogs
      */
     private void prepareExportAuditLog(OutputStream outputStream, Long studyId) {
-        try(Stream<AuditLog> auditlogEntries = service.getAuditLogs(studyId)) {
+        try (Stream<AuditLog> auditlogEntries = service.getAuditLogs(studyId)) {
             var generator = MapperUtils.MAPPER.getFactory().createGenerator(outputStream, JsonEncoding.UTF8);
             generator.writeStartArray();
             // stream rausposten
             auditlogEntries.forEach(auditlogEntry -> {
                 try {
                     MapperUtils.MAPPER.writeValue(generator, AuditlogTransformer.toAuditlogEntryDTO_V1(auditlogEntry));
-                } catch(IOException e) {
+                } catch (IOException e) {
                     throw new UncheckedIOException("Error exporting auditlogs for study " + studyId, e);
                 }
             });
             generator.writeEndArray();
             generator.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new UncheckedIOException("Error exporting auditlogs for study " + studyId, e);
         }
     }

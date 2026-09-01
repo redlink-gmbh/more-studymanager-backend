@@ -4,21 +4,11 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.transformer;
 
-import io.redlink.more.studymanager.api.v1.model.AdherenceCheckScheduleEnumDTO;
-import io.redlink.more.studymanager.api.v1.model.GoalAdherenceCheckDTO;
-import io.redlink.more.studymanager.api.v1.model.GoalConfigurationDTO;
-import io.redlink.more.studymanager.api.v1.model.GoalConsentDTO;
-import io.redlink.more.studymanager.api.v1.model.GoalTemplateCategoriesDTO;
-import io.redlink.more.studymanager.api.v1.model.GoalTemplateDTO;
-import io.redlink.more.studymanager.api.v1.model.GoalTopicDTO;
-import io.redlink.more.studymanager.api.v1.model.IntegrationInfoDTO;
-import io.redlink.more.studymanager.api.v1.model.InterventionDTO;
-import io.redlink.more.studymanager.api.v1.model.ParticipantInfoDTO;
-import io.redlink.more.studymanager.api.v1.model.StudyImportExportDTO;
+import io.redlink.more.studymanager.api.v1.model.*;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.model.GoalAdherenceCheck;
 import io.redlink.more.studymanager.model.GoalTemplate;
@@ -39,7 +29,8 @@ public final class ImportExportTransformer {
 
     private static final Logger log = LoggerFactory.getLogger(ImportExportTransformer.class);
 
-    private ImportExportTransformer() {}
+    private ImportExportTransformer() {
+    }
 
     public static StudyImportExport fromStudyImportExportDTO_V1(StudyImportExportDTO dto) {
         return new StudyImportExport()
@@ -119,18 +110,18 @@ public final class ImportExportTransformer {
                 .observationGroups(transform(studyImportExport.getObservationGroups(), ObservationGroupTransformer::toObservationGroupDTO_V1))
                 .observations(transform(studyImportExport.getObservations(), ObservationTransformer::toObservationDTO_V1))
                 .interventions(transform(studyImportExport.getInterventions(), intervention ->
-                    InterventionTransformer.toInterventionDTO_V1(intervention)
-                            .trigger(
-                                    TriggerTransformer.toTriggerDTO_V1(
-                                            studyImportExport.getTriggers().get(intervention.getInterventionId())
-                                    )
-                            )
-                            .actions(
-                                    transform(
-                                            studyImportExport.getActions().get(intervention.getInterventionId()),
-                                            ActionTransformer::toActionDTO_V1
-                                    )
-                            )
+                        InterventionTransformer.toInterventionDTO_V1(intervention)
+                                .trigger(
+                                        TriggerTransformer.toTriggerDTO_V1(
+                                                studyImportExport.getTriggers().get(intervention.getInterventionId())
+                                        )
+                                )
+                                .actions(
+                                        transform(
+                                                studyImportExport.getActions().get(intervention.getInterventionId()),
+                                                ActionTransformer::toActionDTO_V1
+                                        )
+                                )
                 ))
                 .participants(transform(studyImportExport.getParticipants(), ImportExportTransformer::toParticipantDTO_V1))
                 .integrations(transform(studyImportExport.getIntegrations(), ImportExportTransformer::toIntegrationInfoDTO_V1))
@@ -138,7 +129,7 @@ public final class ImportExportTransformer {
                 .goalTemplates(transform(studyImportExport.getGoalTemplates(), ImportExportTransformer::toGoalTemplateDTO_V1));
     }
 
-    private static GoalConfigurationDTO toGoalConfigurationDTO_V1(StudyImportExport.StudyGoalConfigData goalConfig){
+    private static GoalConfigurationDTO toGoalConfigurationDTO_V1(StudyImportExport.StudyGoalConfigData goalConfig) {
         return new GoalConfigurationDTO()
                 .consent(new GoalConsentDTO()
                         .achievability(goalConfig.getAchievability())
@@ -148,14 +139,14 @@ public final class ImportExportTransformer {
                 .adherenceChecks(transform(goalConfig.getAdherenceChecks(), ImportExportTransformer::goalAdherenceCheckDTO_V1));
     }
 
-    private static GoalTopicDTO toGoalTopicDTO_V1(GoalTopic goalTopic){
+    private static GoalTopicDTO toGoalTopicDTO_V1(GoalTopic goalTopic) {
         return new GoalTopicDTO()
                 .title(goalTopic.getTitle())
                 .key(goalTopic.getKey())
                 .description(goalTopic.getDescription());
     }
 
-    private static GoalTemplateDTO toGoalTemplateDTO_V1(GoalTemplate goalTemplate){
+    private static GoalTemplateDTO toGoalTemplateDTO_V1(GoalTemplate goalTemplate) {
         return new GoalTemplateDTO()
                 .studyId(goalTemplate.getStudyId())
                 .title(goalTemplate.getTitle())
@@ -170,17 +161,17 @@ public final class ImportExportTransformer {
                 .properties(goalTemplate.getProperties());
     }
 
-    private static GoalTemplateCategoriesDTO toGoalTemplateCategoriesDTO_V1(GoalTemplate goalTemplate){
+    private static GoalTemplateCategoriesDTO toGoalTemplateCategoriesDTO_V1(GoalTemplate goalTemplate) {
         return new GoalTemplateCategoriesDTO()
                 .kind(GoalTemplateCategoriesDTO.KindEnum.fromValue(goalTemplate.getKind()))
                 .topics(goalTemplate.getTopicKeys() == null ? null : List.copyOf(goalTemplate.getTopicKeys()));
     }
 
-    private static AdherenceCheckScheduleEnumDTO toAdherenceCheckEnumDTO_V1(Integer adherenceCheckId){
+    private static AdherenceCheckScheduleEnumDTO toAdherenceCheckEnumDTO_V1(Integer adherenceCheckId) {
         return AdherenceCheckScheduleEnumDTO.values()[adherenceCheckId];
     }
 
-    private static GoalAdherenceCheckDTO goalAdherenceCheckDTO_V1(GoalAdherenceCheck goalAdherenceCheck){
+    private static GoalAdherenceCheckDTO goalAdherenceCheckDTO_V1(GoalAdherenceCheck goalAdherenceCheck) {
         return new GoalAdherenceCheckDTO()
                 .check(AdherenceCheckScheduleEnumDTO.values()[goalAdherenceCheck.getCheckId()]) //we store the ordinal as checkID
                 .time(goalAdherenceCheck.getTime());
@@ -199,7 +190,9 @@ public final class ImportExportTransformer {
     }
 
     private static <S, T> List<T> transform(Collection<S> elements, Function<S, T> transformer) {
-        if (elements == null) { return List.of(); }
+        if (elements == null) {
+            return List.of();
+        }
         return elements.stream().map(transformer).toList();
     }
 

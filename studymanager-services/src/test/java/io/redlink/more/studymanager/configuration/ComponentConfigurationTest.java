@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.configuration;
 
@@ -18,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE,
         args = {
-        "--more.components.lime-survey-observation.url=https://testurl",
+                "--more.components.lime-survey-observation.url=https://testurl",
                 "--more.components.lime-survey-observation.username=testUsername",
                 "--more.components.lime-survey-observation.password=testPassword"})
 @ContextConfiguration(classes = ComponentFactoriesConfiguration.class)

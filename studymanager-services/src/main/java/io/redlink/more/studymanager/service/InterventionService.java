@@ -4,18 +4,17 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
-import io.redlink.more.studymanager.core.factory.ObservationFactory;
-import io.redlink.more.studymanager.event.StudyStateChangedEvent;
 import io.redlink.more.studymanager.core.component.Component;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.ActionFactory;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.properties.ActionProperties;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
+import io.redlink.more.studymanager.event.StudyStateChangedEvent;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.Action;
@@ -26,9 +25,6 @@ import io.redlink.more.studymanager.repository.InterventionRepository;
 import io.redlink.more.studymanager.repository.StudyRepository;
 import io.redlink.more.studymanager.sdk.MoreSDK;
 import io.redlink.more.studymanager.utils.LoggingUtils;
-import java.text.ParseException;
-import java.util.*;
-
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +35,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class InterventionService {
@@ -171,7 +173,7 @@ public class InterventionService {
 
     public void activateInterventionsFor(Study study) {
         listTriggersFor(study).forEach((Component component) -> {
-            try(var ctx = LoggingUtils.createContext(study)) {
+            try (var ctx = LoggingUtils.createContext(study)) {
                 component.activate();
                 LOGGER.info("Component {} activated", component);
             } catch (RuntimeException e) {
@@ -191,8 +193,8 @@ public class InterventionService {
                         .map(trigger -> factory(trigger)
                                 .orElseThrow(() -> NotFoundException.TriggerFactory(trigger.getType()))
                                 .create(
-                                    sdk.scopedTriggerSDK(intervention.getStudyId(), intervention.getStudyGroupId(), intervention.getInterventionId()),
-                                    trigger.getProperties()
+                                        sdk.scopedTriggerSDK(intervention.getStudyId(), intervention.getStudyGroupId(), intervention.getInterventionId()),
+                                        trigger.getProperties()
                                 )
                         ).orElse(null))
                 .filter(Objects::nonNull)
@@ -215,7 +217,7 @@ public class InterventionService {
             factory(trigger)
                     .orElseThrow(() -> NotFoundException.TriggerFactory(trigger.getType()))
                     .validate(trigger.getProperties());
-            if(trigger.getProperties().containsKey("cronSchedule")) {
+            if (trigger.getProperties().containsKey("cronSchedule")) {
                 try {
                     CronExpression.validateExpression(trigger.getProperties().get("cronSchedule").toString());
                 } catch (ParseException e) {
@@ -231,7 +233,7 @@ public class InterventionService {
     private Optional<TriggerFactory> factory(Trigger trigger) {
         try {
             return Optional.of(applicationContext.getBean(trigger.getType(), TriggerFactory.class));
-        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e) {
             return Optional.empty();
         }
     }
@@ -239,7 +241,7 @@ public class InterventionService {
     private Optional<ActionFactory> factory(Action action) {
         try {
             return Optional.of(applicationContext.getBean(action.getType(), ActionFactory.class));
-        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e) {
             return Optional.empty();
         }
     }

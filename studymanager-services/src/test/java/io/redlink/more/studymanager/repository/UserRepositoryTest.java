@@ -4,16 +4,13 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
 import io.redlink.more.studymanager.configuration.JPAConfiguration;
 import io.redlink.more.studymanager.model.MoreUser;
 import io.redlink.more.studymanager.model.SearchResult;
-import java.time.Instant;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,9 +21,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,13 +46,13 @@ class UserRepositoryTest {
     private JdbcTemplate template;
 
     @BeforeEach
-    void deleteAll(){
+    void deleteAll() {
         template.update("DELETE FROM users");
     }
 
     @Test
     @DisplayName("User is inserted in database and returned")
-    void testInsert(){
+    void testInsert() {
         MoreUser user = new MoreUser("123", "name", "inst", "123", Instant.now(), Instant.now());
         MoreUser userResponse = userRepository.save(user);
 
@@ -64,7 +63,7 @@ class UserRepositoryTest {
 
     @Test
     @DisplayName("User is updated in database and returned")
-    void testUpdate(){
+    void testUpdate() {
         MoreUser user = new MoreUser("123", "name", "inst", "123", Instant.now(), Instant.now());
         MoreUser userResponse = userRepository.save(user);
 

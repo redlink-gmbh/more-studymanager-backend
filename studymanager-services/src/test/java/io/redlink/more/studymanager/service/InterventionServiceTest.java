@@ -4,22 +4,18 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
+import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.validation.ConfigurationValidationReport;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
-import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
 import io.redlink.more.studymanager.model.PlatformRole;
-import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.Trigger;
-import java.util.EnumSet;
-import java.util.UUID;
-
 import io.redlink.more.studymanager.repository.InterventionRepository;
 import io.redlink.more.studymanager.repository.StudyRepository;
 import org.junit.jupiter.api.Assertions;
@@ -31,7 +27,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
-import java.util.Map;
+import java.util.EnumSet;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

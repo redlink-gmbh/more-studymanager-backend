@@ -4,14 +4,14 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
 import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.Participant;
-import io.redlink.more.studymanager.model.data.ParticipationData;
 import io.redlink.more.studymanager.model.StudyGroup;
+import io.redlink.more.studymanager.model.data.ParticipationData;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -25,9 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -54,7 +54,7 @@ public class DataProcessingServiceTest {
                                        List<Observation> observations,
                                        List<StudyGroup> studyGroups,
                                        List<ParticipationData> participationsGiven,
-                                       List<ParticipationData> participationsExpected){
+                                       List<ParticipationData> participationsExpected) {
 
         when(observationService.listObservations(anyLong())).thenReturn(observations);
         when(participantService.listParticipants(anyLong())).thenReturn(participants);
@@ -65,7 +65,7 @@ public class DataProcessingServiceTest {
                 .isEqualTo(participationsExpected);
     }
 
-    private static Stream<Arguments> provideParticipationArguments(){
+    private static Stream<Arguments> provideParticipationArguments() {
         Participant participant1 = new Participant()
                 .setParticipantId(1)
                 .setAlias("1")
@@ -142,35 +142,35 @@ public class DataProcessingServiceTest {
                         Instant.parse("2019-02-06T10:03:00.00Z"));
 
         ParticipationData missingParticipation1 = new ParticipationData(
-                new ParticipationData.NamedId(1,"1"),
+                new ParticipationData.NamedId(1, "1"),
                 "type1",
-                new ParticipationData.NamedId(1,"1"),
-                new ParticipationData.NamedId(1,"1"),
-                false,null);
+                new ParticipationData.NamedId(1, "1"),
+                new ParticipationData.NamedId(1, "1"),
+                false, null);
         ParticipationData missingParticipation2 = new ParticipationData(
-                new ParticipationData.NamedId(1,"1"),
+                new ParticipationData.NamedId(1, "1"),
                 "type1",
-                new ParticipationData.NamedId(2,"2"),
-                new ParticipationData.NamedId(1,"1"),
-                false,null);
+                new ParticipationData.NamedId(2, "2"),
+                new ParticipationData.NamedId(1, "1"),
+                false, null);
         ParticipationData missingParticipation3 = new ParticipationData(
-                new ParticipationData.NamedId(2,"2"),
+                new ParticipationData.NamedId(2, "2"),
                 "type1",
-                new ParticipationData.NamedId(1,"1"),
-                new ParticipationData.NamedId(1,"1"),
-                false,null);
+                new ParticipationData.NamedId(1, "1"),
+                new ParticipationData.NamedId(1, "1"),
+                false, null);
         ParticipationData missingParticipation4 = new ParticipationData(
-                new ParticipationData.NamedId(2,"2"),
+                new ParticipationData.NamedId(2, "2"),
                 "type1",
-                new ParticipationData.NamedId(2,"2"),
-                new ParticipationData.NamedId(1,"1"),
-                false,null);
+                new ParticipationData.NamedId(2, "2"),
+                new ParticipationData.NamedId(1, "1"),
+                false, null);
         ParticipationData missingParticipation5 = new ParticipationData(
-                new ParticipationData.NamedId(2,"2"),
+                new ParticipationData.NamedId(2, "2"),
                 "type1",
-                new ParticipationData.NamedId(3,"3"),
-                new ParticipationData.NamedId(2,"2"),
-                false,null);
+                new ParticipationData.NamedId(3, "3"),
+                new ParticipationData.NamedId(2, "2"),
+                false, null);
 
         List<Observation> observations = List.of(observation1, observation2);
         List<Participant> participants = List.of(participant1, participant2, participant3);

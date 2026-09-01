@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
@@ -13,7 +13,6 @@ import io.redlink.more.studymanager.core.properties.TriggerProperties;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ScheduledDatacheckTriggerProperties extends TriggerProperties {
@@ -25,7 +24,10 @@ public class ScheduledDatacheckTriggerProperties extends TriggerProperties {
         return Optional.ofNullable(this.getString("cronSchedule"));
     }
 
-    public Optional<List<QueryObject>> getQueryObject() {return this.getObject("queryObject", new TypeReference<>() {});}
+    public Optional<List<QueryObject>> getQueryObject() {
+        return this.getObject("queryObject", new TypeReference<>() {
+        });
+    }
 
     public Optional<Long> getWindow() {
         return Optional.ofNullable(this.getLong("window"));

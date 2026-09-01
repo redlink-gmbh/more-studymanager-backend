@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager;
 
@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles({"test", "test-containers-flyway"})
 public class ApplicationTest {
 
-	@Test
-	void contextLoads() {
-		assertThat(this).isNotNull();
-	}
+    @Test
+    void contextLoads() {
+        assertThat(this).isNotNull();
+    }
 }

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.ui;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * Represents the data in a data view.
  *
  * @param labels the labels for the data
- * @param rows the rows of data
+ * @param rows   the rows of data
  */
 public record DataViewData(
         List<String> labels,

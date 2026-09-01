@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Oesterreichische Vereinigung zur
  * Foerderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.auth.token.configuration;
 
@@ -20,6 +20,7 @@ public class AuthenticationFacade {
 
     /**
      * Retrieve the current authentication context.
+     *
      * @return the {@link Authentication authentication context}.
      */
     public Authentication getAuthentication() {
@@ -28,10 +29,11 @@ public class AuthenticationFacade {
 
     /**
      * Asserts that hte current authentication context contains the provided authority ("role").
+     *
      * @param authority the required authority
      * @return the authentication principal as {@link TokenAuthUserDetails}.
      * @throws IllegalArgumentException if authority is {@code null}
-     * @throws AccessDeniedException if not authentication context is available or the required authority is not present.
+     * @throws AccessDeniedException    if not authentication context is available or the required authority is not present.
      */
     public TokenAuthUserDetails assertAuthority(String authority) {
         if (authority == null) throw new IllegalArgumentException("authority must not be null");

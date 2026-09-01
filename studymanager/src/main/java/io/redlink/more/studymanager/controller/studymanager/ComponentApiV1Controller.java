@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -28,11 +28,6 @@ import io.redlink.more.studymanager.core.webcomponent.WebComponent;
 import io.redlink.more.studymanager.model.transformer.ValidationReportTransformer;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.utils.MapperUtils;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
@@ -40,6 +35,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,10 +64,12 @@ public class ComponentApiV1Controller implements ComponentsApi {
     @Override
     public ResponseEntity<List<ComponentFactoryDTO>> listComponents(String componentType) {
         return switch (componentType) {
-            case "observation" -> ResponseEntity.ok(observationFactoryProvider.stream().map(this::toComponentDTO).toList());
+            case "observation" ->
+                    ResponseEntity.ok(observationFactoryProvider.stream().map(this::toComponentDTO).toList());
             case "trigger" -> ResponseEntity.ok(triggerFactoryProvider.stream().map(this::toComponentDTO).toList());
             case "action" -> ResponseEntity.ok(actionFactoryProvider.stream().map(this::toComponentDTO).toList());
-            case "goalTemplate" -> ResponseEntity.ok(goalTemplateFactoryProvider.stream().map(this::toComponentDTO).toList());
+            case "goalTemplate" ->
+                    ResponseEntity.ok(goalTemplateFactoryProvider.stream().map(this::toComponentDTO).toList());
             default -> ResponseEntity.notFound().build();
         };
     }
@@ -128,7 +129,7 @@ public class ComponentApiV1Controller implements ComponentsApi {
     }
 
     private ResponseEntity<String> getWebComponentScript(ComponentFactory factory, String componentId) {
-        if(factory.hasWebComponent()) {
+        if (factory.hasWebComponent()) {
             return ResponseEntity.ok(
                     toScript(componentId, factory.getWebComponent())
             );
@@ -155,7 +156,7 @@ public class ComponentApiV1Controller implements ComponentsApi {
                 .defaultProperties(factory.getDefaultProperties())
                 .description(factory.getDescription())
                 .hasWebComponent(factory.hasWebComponent());
-        if(ObservationFactory.class.isAssignableFrom(factory.getClass())) {
+        if (ObservationFactory.class.isAssignableFrom(factory.getClass())) {
             c.hidden(((ObservationFactory) factory).getHidden());
             c.visibility(toVisibilityDTO(((ObservationFactory) factory).getVisibility()));
         }
@@ -169,7 +170,7 @@ public class ComponentApiV1Controller implements ComponentsApi {
     }
 
     private List<ComponentFactoryMeasurementsInnerDTO> getMeasurements(ComponentFactory factory) {
-        if(ObservationFactory.class.isAssignableFrom(factory.getClass())) {
+        if (ObservationFactory.class.isAssignableFrom(factory.getClass())) {
             return ((ObservationFactory) factory).getMeasurementSet().values()
                     .stream().map(m -> new ComponentFactoryMeasurementsInnerDTO()
                             .id(m.getId()).type(m.getType().name()))

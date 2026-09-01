@@ -4,14 +4,13 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
 import io.redlink.more.studymanager.model.MoreUser;
 import io.redlink.more.studymanager.model.SearchResult;
 import io.redlink.more.studymanager.model.User;
-import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,23 +18,25 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Component
 public class UserRepository {
 
     private static final String INSERT_USER =
             "INSERT INTO users (user_id,name,institution,email) " +
-            "VALUES (:user_id,:name,:institution,:email) " +
-            "ON CONFLICT (user_id) DO UPDATE SET name = excluded.name, institution = excluded.institution, email = excluded.email, updated = now() " +
-            "RETURNING *";
+                    "VALUES (:user_id,:name,:institution,:email) " +
+                    "ON CONFLICT (user_id) DO UPDATE SET name = excluded.name, institution = excluded.institution, email = excluded.email, updated = now() " +
+                    "RETURNING *";
     private static final String GET_USER_BY_ID = "SELECT * FROM users WHERE user_id = :user_id";
     private static final String DELETE_BY_ID = "DELETE FROM users WHERE user_id = :user_id";
     private static final String FIND_USERS =
             "SELECT * FROM users " +
-            "WHERE LOWER(name) LIKE LOWER(:query) OR LOWER(email) LIKE LOWER(:query) " +
-            "LIMIT :limit OFFSET :skip";
+                    "WHERE LOWER(name) LIKE LOWER(:query) OR LOWER(email) LIKE LOWER(:query) " +
+                    "LIMIT :limit OFFSET :skip";
     private static final String COUNT_USERS =
             "SELECT count(*) as count FROM users " +
-            "WHERE LOWER(name) LIKE LOWER(:query) OR LOWER(email) LIKE LOWER(:query)";
+                    "WHERE LOWER(name) LIKE LOWER(:query) OR LOWER(email) LIKE LOWER(:query)";
 
     private final NamedParameterJdbcTemplate namedTemplate;
 

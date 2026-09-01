@@ -4,18 +4,18 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.properties.model;
 
 /**
  * A ConfigSection is a marker property that allows to goup different parts of the
  * configuration.
- *
+ * <p>
  * It defines a title and an optional description and visually group all Values until the
  * next ConfigSection in the configuration dialog. It does not contribute to the
  * configuration.
- *
+ * <p>
  * The ConfigSection property is always:
  * <ul>
  *     <li>{@link Value#isImmutable()} == true</li>

@@ -4,11 +4,10 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
-import io.redlink.more.studymanager.event.StudyStateChangedEvent;
 import io.redlink.more.studymanager.core.component.Component;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.ObservationFactory;
@@ -17,6 +16,7 @@ import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.ui.DataView;
 import io.redlink.more.studymanager.core.ui.DataViewInfo;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
+import io.redlink.more.studymanager.event.StudyStateChangedEvent;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.Observation;
@@ -29,16 +29,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -145,8 +142,8 @@ public class ObservationService {
 
         for (Observation observation : observations) {
             result.add(factory(observation).create(
-                sdk.scopedObservationSDK(observation.getStudyId(), observation.getStudyGroupId(), observation.getObservationId()),
-                observation.getProperties()));
+                    sdk.scopedObservationSDK(observation.getStudyId(), observation.getStudyGroupId(), observation.getObservationId()),
+                    observation.getProperties()));
         }
 
         return result;
@@ -175,13 +172,14 @@ public class ObservationService {
     public Optional<ObservationFactory> getObservationFactory(Observation observation) {
         try {
             return Optional.of(applicationContext.getBean(observation.getType(), ObservationFactory.class));
-        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e){
+        } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e) {
             return Optional.empty();
         }
     }
 
     /**
      * Ensures the observationFactory for the parsed Observation
+     *
      * @param observation
      * @return the factory
      * @throws NotFoundException if the {@link ObservationFactory} for the parsed observation is not present

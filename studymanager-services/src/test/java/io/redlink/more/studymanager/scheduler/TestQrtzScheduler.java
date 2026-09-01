@@ -4,18 +4,12 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.scheduler;
 
 import io.redlink.more.studymanager.configuration.JPAConfiguration;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.junit.jupiter.api.Test;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -26,26 +20,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
@@ -82,7 +73,7 @@ public class TestQrtzScheduler {
         JobDetail job2 = jobDetail("2");
         scheduler.start();
 
-        Trigger t1 = trigger(job1,"1");
+        Trigger t1 = trigger(job1, "1");
         System.out.println();
 
         scheduler.scheduleJob(job1, t1);
@@ -110,7 +101,7 @@ public class TestQrtzScheduler {
         return newJob().ofType(TestJob.class)
                 .storeDurably()
                 .withIdentity(id)
-                .usingJobData("issuer", "issuer"+id )
+                .usingJobData("issuer", "issuer" + id)
                 .build();
     }
 
@@ -124,10 +115,10 @@ public class TestQrtzScheduler {
         TimeUnit.MILLISECONDS.sleep(500);
         scheduler.unscheduleJob(new TriggerKey(triggerId));
         scheduler.deleteJob(job.getKey());
-        verify(moreSDK, atLeast(2)).getValue(any(),any());
+        verify(moreSDK, atLeast(2)).getValue(any(), any());
         reset(moreSDK);
         TimeUnit.MILLISECONDS.sleep(200);
-        verify(moreSDK, never()).getValue(any(),any());
+        verify(moreSDK, never()).getValue(any(), any());
         scheduler.shutdown();
     }
 

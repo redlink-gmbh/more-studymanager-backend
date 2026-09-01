@@ -4,21 +4,24 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.transformer;
 
-import io.redlink.more.studymanager.api.v1.model.*;
+import io.redlink.more.studymanager.api.v1.model.AdherenceCheckScheduleEnumDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTemplateCategoriesDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTemplateDTO;
+import io.redlink.more.studymanager.api.v1.model.GoalTopicDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigConsentsDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigDataDTO;
+import io.redlink.more.studymanager.api.v1.model.StudyGoalConfigScheduleInnerDTO;
 import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.model.GoalAdherenceCheck;
 import io.redlink.more.studymanager.model.GoalTemplate;
 import io.redlink.more.studymanager.model.GoalTopic;
 import io.redlink.more.studymanager.model.StudyGoalConfig;
 
-import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +32,8 @@ import java.util.stream.Collectors;
 
 public final class GoalV1Transformer {
 
-    private GoalV1Transformer() {}
+    private GoalV1Transformer() {
+    }
 
 // ========================== MODEL → DTO ==========================
 
@@ -217,6 +221,7 @@ public final class GoalV1Transformer {
     private static String mapScheduleEnumToTitle(AdherenceCheckScheduleEnumDTO enumValue) {
         return enumValue != null ? enumValue.getValue() : null;
     }
+
     private static String mapKindEnumToString(GoalTemplateCategoriesDTO.KindEnum kindEnum) {
         return kindEnum != null ? kindEnum.getValue() : null;
     }

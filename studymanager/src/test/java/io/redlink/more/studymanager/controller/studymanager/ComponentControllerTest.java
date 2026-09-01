@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.controller.studymanager;
 
@@ -25,40 +25,26 @@ import io.redlink.more.studymanager.core.properties.model.StringTextValue;
 import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
-import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({ComponentApiV1Controller.class})
@@ -84,7 +70,7 @@ class ComponentControllerTest {
         ActionFactory actionFactory;
         GoalTemplateFactory goalTemplateFactory;
 
-        public TestComponentConfig(){
+        public TestComponentConfig() {
             this.observationFactory = mock(ObservationFactory.class);
             when(observationFactory.getId()).thenReturn("my-test-observation");
             when(observationFactory.getPropertyClass()).thenReturn(ObservationProperties.class);
@@ -115,7 +101,7 @@ class ComponentControllerTest {
                             .setName("Range Value Test")
                             .setRequired(true)
                             .setImmutable(false)
-                            .setDefaultValue(new IntegerRange(1,50))
+                            .setDefaultValue(new IntegerRange(1, 50))
             ));
 
             this.triggerFactory = mock(TriggerFactory.class);
@@ -158,7 +144,7 @@ class ComponentControllerTest {
     @Test
     void testComponentSpecificEndpointExists() throws Exception {
 
-        AuthenticatedUser user = new AuthenticatedUser("user1", "", "","", Set.of());
+        AuthenticatedUser user = new AuthenticatedUser("user1", "", "", "", Set.of());
         when(authenticationService.getCurrentUser()).thenReturn(user);
 
         mvc.perform(MockMvcRequestBuilders.post("/api/v1/components/observation/my-test-observation/api/my-test-slug")
@@ -226,14 +212,14 @@ class ComponentControllerTest {
     @Test
     public void testComponentProperties() throws Exception {
 
-        Map<String,Object> properties = new HashMap<>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("test-boolean", true);
         properties.put("test-integer", 1);
         properties.put("test-string", "test");
         properties.put("test-text", "test\nmultiline");
         properties.put("test-range", Map.of("lower", 1, "upper", 10));
         String content = MAPPER.writeValueAsString(properties);
-        AuthenticatedUser user = new AuthenticatedUser("user1", "", "","", Set.of());
+        AuthenticatedUser user = new AuthenticatedUser("user1", "", "", "", Set.of());
         when(authenticationService.getCurrentUser()).thenReturn(user);
         mvc.perform(MockMvcRequestBuilders.post("/api/v1/components/observation/my-test-observation/validate")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)

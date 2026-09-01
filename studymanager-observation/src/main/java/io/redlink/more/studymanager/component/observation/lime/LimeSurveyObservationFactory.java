@@ -4,12 +4,11 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation.lime;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.redlink.more.studymanager.component.observation.measurement.GenericMeasurementSets;
 import io.redlink.more.studymanager.core.exception.ApiCallException;
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.factory.ComponentFactoryProperties;
@@ -21,6 +20,7 @@ import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.properties.model.StringValue;
 import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -54,7 +54,8 @@ public class LimeSurveyObservationFactory<C extends LimeSurveyObservation<P>, P 
 
     private LimeSurveyRequestService limeSurveyRequestService;
 
-    public LimeSurveyObservationFactory() {}
+    public LimeSurveyObservationFactory() {
+    }
 
     //FIXME: Try to get rid of constructors only used by UnitTests to Mock the LimeSurveyRequestService
     LimeSurveyObservationFactory(
@@ -64,7 +65,7 @@ public class LimeSurveyObservationFactory<C extends LimeSurveyObservation<P>, P 
     }
 
     @Override
-    public LimeSurveyObservationFactory<C, P> init(ComponentFactoryProperties componentProperties){
+    public LimeSurveyObservationFactory<C, P> init(ComponentFactoryProperties componentProperties) {
         this.componentProperties = componentProperties;
         limeSurveyRequestService = new LimeSurveyRequestService(componentProperties);
         return this;
@@ -92,7 +93,7 @@ public class LimeSurveyObservationFactory<C extends LimeSurveyObservation<P>, P 
 
     @Override
     public LimeSurveyObservation<ObservationProperties> create(MoreObservationSDK sdk, ObservationProperties properties) throws ConfigurationValidationException {
-        return new LimeSurveyObservation(sdk, validate((P)properties), limeSurveyRequestService);
+        return new LimeSurveyObservation(sdk, validate((P) properties), limeSurveyRequestService);
     }
 
     @Override

@@ -4,12 +4,13 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.sdk;
 
 
 public interface MoreActionSDK extends MorePlatformSDK {
     void sendPushNotification(String title, String message);
+
     void triggerObservation(String title, String message, String factoryId, int observationId);
 }

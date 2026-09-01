@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.sdk;
 
@@ -12,7 +12,6 @@ import io.redlink.more.studymanager.core.datavalidity.ObservationDataSummary;
 import io.redlink.more.studymanager.core.io.SimpleParticipant;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
-import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.sdk.MoreActionSDK;
 import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
@@ -20,15 +19,12 @@ import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.sdk.schedule.Schedule;
 import io.redlink.more.studymanager.core.ui.DataViewData;
 import io.redlink.more.studymanager.core.ui.ViewConfig;
-import io.redlink.more.studymanager.model.Goal;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.data.ElasticActionDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticObservationDataPoint;
 import io.redlink.more.studymanager.repository.NameValuePairRepository;
 import io.redlink.more.studymanager.repository.ObservationRepository;
-import io.redlink.more.studymanager.repository.goals.GoalRepository;
-import io.redlink.more.studymanager.repository.goals.GoalTemplateRepository;
 import io.redlink.more.studymanager.scheduling.SchedulingService;
 import io.redlink.more.studymanager.scheduling.TriggerJob;
 import io.redlink.more.studymanager.sdk.scoped.MoreActionSDKImpl;
@@ -139,7 +135,6 @@ public class MoreSDK {
     }
 
 
-
     public boolean sendPushNotification(long studyId, int participantId, String title, String message, Map<String, String> data) {
         LOGGER.debug("Sending message to participant (sid:{}, pid:{}): {} -- {}", studyId, participantId, title, message);
         return pushNotificationService.sendPushNotification(studyId, participantId, title, message, data);
@@ -203,6 +198,7 @@ public class MoreSDK {
             return null;
         }
     }
+
     public ObservationDataSummary validateData(long studyId, Integer studyGroupId, int observationId, int participantId, TimeRange timerange, MeasurementSet measurementSet) {
         try {
             return elasticDataService.validateObservationData(studyId, studyGroupId, observationId, participantId, timerange, measurementSet);

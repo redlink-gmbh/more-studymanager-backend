@@ -4,23 +4,14 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.sdk.scoped;
 
-import io.redlink.more.studymanager.core.io.TimeRange;
-import io.redlink.more.studymanager.core.properties.GoalTemplateProperties;
-import io.redlink.more.studymanager.core.properties.ObservationProperties;
-import io.redlink.more.studymanager.core.sdk.MoreGoalSDK;
 import io.redlink.more.studymanager.core.sdk.MoreGoalTemplateSDK;
-import io.redlink.more.studymanager.core.ui.DataViewData;
-import io.redlink.more.studymanager.core.ui.ViewConfig;
-import io.redlink.more.studymanager.model.data.ElasticDataPoint;
 import io.redlink.more.studymanager.sdk.MoreSDK;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.util.Map;
 import java.util.Optional;
 
 public class MoreGoalTemplateSDKImpl extends MorePlatformSDKImpl implements MoreGoalTemplateSDK {

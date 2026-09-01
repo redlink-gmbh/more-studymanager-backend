@@ -4,17 +4,17 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model;
 
 import java.time.Instant;
 
 public record EndpointToken(
-    Integer tokenId,
-    String tokenLabel,
-    Instant created,
-    String token
+        Integer tokenId,
+        String tokenLabel,
+        Instant created,
+        String token
 ) {
 
 

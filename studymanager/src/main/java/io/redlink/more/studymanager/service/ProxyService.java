@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -42,8 +42,8 @@ public class ProxyService {
 
     //maybe add some retry
     public ResponseEntity<Resource> processProxyRequest(HttpServletRequest request,
-                                                      URI basePath,
-                                                      String path) {
+                                                        URI basePath,
+                                                        String path) {
 
         // replacing context path form urI to match actual gateway URI
         URI uri = UriComponentsBuilder.fromUri(basePath)

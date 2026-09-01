@@ -4,10 +4,11 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.component.observation;
 
+import io.redlink.more.studymanager.component.observation.utils.QuestionObservationUtils;
 import io.redlink.more.studymanager.core.component.Observation;
 import io.redlink.more.studymanager.core.datavalidity.ObservationDataSummary;
 import io.redlink.more.studymanager.core.datavalidity.ObservationValidationResult;
@@ -15,8 +16,9 @@ import io.redlink.more.studymanager.core.exception.ConfigurationValidationExcept
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
-import io.redlink.more.studymanager.core.ui.*;
-import io.redlink.more.studymanager.component.observation.utils.QuestionObservationUtils;
+import io.redlink.more.studymanager.core.ui.DataView;
+import io.redlink.more.studymanager.core.ui.DataViewData;
+import io.redlink.more.studymanager.core.ui.DataViewInfo;
 
 import java.time.Instant;
 import java.util.List;
@@ -57,6 +59,7 @@ public class QuestionObservation<C extends ObservationProperties> extends Observ
                 allPossibleAnswerOptions
         );
     }
+
     @Override
     public ObservationValidationResult validateData(Instant start, Instant end, ObservationDataSummary observationDataSummary) {
         return QuestionObservationUtils.validateSingleAnswerObservation(

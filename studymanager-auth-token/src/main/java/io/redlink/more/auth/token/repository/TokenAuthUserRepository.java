@@ -4,12 +4,12 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Oesterreichische Vereinigung zur
  * Foerderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.auth.token.repository;
 
-import io.redlink.more.auth.token.model.TokenAuthUserDetails;
 import io.redlink.more.auth.model.RoutingInfo;
+import io.redlink.more.auth.token.model.TokenAuthUserDetails;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -94,13 +94,13 @@ class ParticipantServiceTest {
 
         when(participantRepository.listParticipants(1L)).thenReturn(Collections.singletonList(new Participant().setParticipantId(100)));
 
-        participantService.handleStudyStateChange(new StudyStateChangedEvent(this,study, Study.Status.DRAFT ));
+        participantService.handleStudyStateChange(new StudyStateChangedEvent(this, study, Study.Status.DRAFT));
         Mockito.verify(participantRepository, Mockito.never()).resetParticipants(anyLong(), any());
         Mockito.verify(participantRepository, Mockito.never()).cleanupParticipants(anyLong());
 
         //validate participants are reset if study goes to DRAFT state
         study.setStudyState(Study.Status.DRAFT);
-        participantService.handleStudyStateChange(new StudyStateChangedEvent(this,study, Study.Status.PREVIEW ));
+        participantService.handleStudyStateChange(new StudyStateChangedEvent(this, study, Study.Status.PREVIEW));
         Mockito.verify(participantRepository, Mockito.times(1)).resetParticipants(eq(study.getStudyId()), any());
         Mockito.verify(participantRepository, Mockito.never()).cleanupParticipants(anyLong());
 
@@ -108,7 +108,7 @@ class ParticipantServiceTest {
 
         //validate participants are cleaned if study goes to CLOSED state
         study.setStudyState(Study.Status.CLOSED);
-        participantService.handleStudyStateChange(new StudyStateChangedEvent(this,study, Study.Status.ACTIVE ));
+        participantService.handleStudyStateChange(new StudyStateChangedEvent(this, study, Study.Status.ACTIVE));
         Mockito.verify(participantRepository, Mockito.times(1)).cleanupParticipants(eq(study.getStudyId()));
         Mockito.verify(participantRepository, Mockito.never()).resetParticipants(anyLong(), any());
 

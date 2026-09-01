@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.core.properties;
 
@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +19,7 @@ import java.util.Optional;
 public class ComponentProperties extends HashMap<String, Object> {
     private static final ObjectMapper _MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     public ComponentProperties() {
         super();
     }
@@ -30,31 +30,31 @@ public class ComponentProperties extends HashMap<String, Object> {
 
     public String getString(String name) {
         Object o = get(name);
-        if(o == null) return null;
-        if(o instanceof String) return (String) o;
+        if (o == null) return null;
+        if (o instanceof String) return (String) o;
         else throw new ClassCastException();
     }
 
     public Boolean getBoolean(String name) {
         Object o = get(name);
-        if(o == null) return null;
-        if(o instanceof Boolean) return (Boolean) o;
+        if (o == null) return null;
+        if (o instanceof Boolean) return (Boolean) o;
         else throw new ClassCastException();
     }
 
     public Integer getInt(String name) {
         Object o = get(name);
-        if(o == null) return null;
-        if(o instanceof Integer) return (Integer) o;
-        if(o instanceof Long) return ((Long)o).intValue();
+        if (o == null) return null;
+        if (o instanceof Integer) return (Integer) o;
+        if (o instanceof Long) return ((Long) o).intValue();
         else throw new ClassCastException();
     }
 
     public Long getLong(String name) {
         Object o = get(name);
-        if(o == null) return null;
-        if(o instanceof Long) return (Long) o;
-        if(o instanceof Integer) return ((Integer)o).longValue();
+        if (o == null) return null;
+        if (o instanceof Long) return (Long) o;
+        if (o instanceof Integer) return ((Integer) o).longValue();
         else throw new ClassCastException();
     }
 

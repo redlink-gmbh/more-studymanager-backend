@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.repository;
 
@@ -17,19 +17,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,12 +57,12 @@ class AuditLogRepositoryTest {
         Instant timestamp = Instant.now().minusSeconds(10).truncatedTo(ChronoUnit.SECONDS);
         Action detailsAction = new Action()
                 .setType("test")
-                .setProperties(new ActionProperties(Map.of("test","dummy")))
+                .setProperties(new ActionProperties(Map.of("test", "dummy")))
                 .setCreated(timestamp.minusSeconds(5))
                 .setModified(timestamp);
 
         Instant detailsTimestamp = timestamp.minusSeconds(10);
-        Map<String,Object> details = Map.of(
+        Map<String, Object> details = Map.of(
                 "user_roles", Arrays.asList("test-role1", "test-role2"),
                 "detail_state", Boolean.TRUE,
                 "detail_integer", 42,
@@ -111,9 +108,9 @@ class AuditLogRepositoryTest {
         //Validate Details
         //NOTE: class information is lost. So the returned AuditLog will contain the information as Map<String,Object>
         assertThat(auditLogResonse.getDetails().get("detail_bean")).isInstanceOf(Map.class);
-        Map<String,Object> detailsBean = (Map<String,Object>) auditLogResonse.getDetails().get("detail_bean");
+        Map<String, Object> detailsBean = (Map<String, Object>) auditLogResonse.getDetails().get("detail_bean");
         assertThat(detailsBean.get("type")).isEqualTo("test");
-        assertThat(detailsBean.get("properties")).isEqualTo(Map.of("test","dummy"));
+        assertThat(detailsBean.get("properties")).isEqualTo(Map.of("test", "dummy"));
         //NOTE: Date/Time and Instant values are written as UTC date/time strings
         assertThat(detailsBean.get("created")).isEqualTo(detailsAction.getCreated().toString());
         assertThat(detailsBean.get("modified")).isEqualTo(detailsAction.getModified().toString());
@@ -126,11 +123,11 @@ class AuditLogRepositoryTest {
 
         Action detailsAction = new Action()
                 .setType("test")
-                .setProperties(new ActionProperties(Map.of("test","dummy")))
+                .setProperties(new ActionProperties(Map.of("test", "dummy")))
                 .setCreated(Instant.now().minusSeconds(60))
                 .setModified(Instant.now());
 
-        Map<String,Object> details = Map.of(
+        Map<String, Object> details = Map.of(
                 "detail_state", Boolean.TRUE,
                 "detail_integer", 42,
                 "detail_number", 3.1415,

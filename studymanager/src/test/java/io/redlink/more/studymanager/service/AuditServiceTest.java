@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -22,12 +22,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AuditServiceTest {
@@ -59,12 +64,12 @@ class AuditServiceTest {
                 "test-action",
                 Instant.now().minusSeconds(10))
                 .setActionState(AuditLog.ActionState.success)
-                .setDetails(Map.of("test","dummy"));
+                .setDetails(Map.of("test", "dummy"));
 
         when(auditLogRepository.insert(any(AuditLog.class)))
                 .thenAnswer(invocationOnMock -> {
                     var al = (AuditLog) invocationOnMock.getArguments()[0];
-                    return new AuditLog(1L,Instant.now(), al.getUserId(), al.getStudyId(), al.getAction(),al.getTimestamp())
+                    return new AuditLog(1L, Instant.now(), al.getUserId(), al.getStudyId(), al.getAction(), al.getTimestamp())
                             .setActionState(al.getActionState())
                             .setDetails(al.getDetails())
                             .setResource(al.getResource());
@@ -92,17 +97,17 @@ class AuditServiceTest {
                 "test-action",
                 Instant.now().minusSeconds(10))
                 .setActionState(AuditLog.ActionState.success)
-                .setDetails(Map.of("test","dummy"));
+                .setDetails(Map.of("test", "dummy"));
 
         when(auditLogRepository.insert(any(AuditLog.class)))
                 .thenAnswer(invocationOnMock -> {
                     var al = (AuditLog) invocationOnMock.getArguments()[0];
-                    return new AuditLog(1L,Instant.now(), al.getUserId(), al.getStudyId(), al.getAction(),al.getTimestamp())
+                    return new AuditLog(1L, Instant.now(), al.getUserId(), al.getStudyId(), al.getAction(), al.getTimestamp())
                             .setActionState(al.getActionState())
                             .setDetails(al.getDetails())
                             .setResource(al.getResource());
                 });
-        Collection<Study.Status> activeStudyStates = EnumSet.of(Study.Status.PAUSED,Study.Status.ACTIVE);
+        Collection<Study.Status> activeStudyStates = EnumSet.of(Study.Status.PAUSED, Study.Status.ACTIVE);
         //test a not auditing study statefirst
         when(studyStateService.hasStudyState(any(), eq(activeStudyStates))).thenReturn(false);
 

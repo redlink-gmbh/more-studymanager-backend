@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
@@ -43,7 +43,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -58,7 +63,9 @@ public class ElasticService {
 
     private final ElasticsearchClient client;
 
-    public ElasticService(ElasticsearchClient client) { this.client = client; }
+    public ElasticService(ElasticsearchClient client) {
+        this.client = client;
+    }
 
     public List<Integer> participantsThatMapQuery(Long studyId, Integer studyGroupId, String query, TimeRange timerange) {
         SearchRequest.Builder builder = new SearchRequest.Builder();
@@ -79,7 +86,7 @@ public class ElasticService {
                 );
 
         try {
-            if(indexExists(studyId)) {
+            if (indexExists(studyId)) {
                 return client.search(builder.build(), Map.class)
                         .aggregations().get("participant_ids").sterms().buckets().array().stream()
                         .map(StringTermsBucket::key)
@@ -111,21 +118,21 @@ public class ElasticService {
 
     static List<Query> getFilters(Long studyId, Integer observationId, Integer studyGroupId, Integer participantId, String dataType, TimeRange timerange) {
         List<Query> filters = new ArrayList<>();
-        if(studyId == null) {
+        if (studyId == null) {
             throw new IllegalArgumentException("studyId cannot be null");
         }
         filters.add(getStudyFilter(studyId));
-        if(observationId != null) {
+        if (observationId != null) {
             filters.add(getObservationFilter(observationId));
         }
 
         if (participantId != null) {
             filters.add(getParticipantFilter(participantId));
-        } else if(studyGroupId != null) {
+        } else if (studyGroupId != null) {
             filters.add(getStudyGroupFilter(studyGroupId));
         }
 
-        if(dataType != null) {
+        if (dataType != null) {
             filters.add(getDataTypeFilter(dataType));
         }
 
@@ -222,7 +229,9 @@ public class ElasticService {
     }
 
     public void removeDataForParticipant(Long studyId, Integer participantId) {
-        if (!indexExists(studyId)) { return; }
+        if (!indexExists(studyId)) {
+            return;
+        }
         try {
             DeleteByQueryRequest deleteByQueryRequest = new DeleteByQueryRequest.Builder()
                     .index(getStudyIdString(studyId))
@@ -266,7 +275,7 @@ public class ElasticService {
         }
     }
 
-    public List<ParticipationData> getParticipationData(Long studyId){
+    public List<ParticipationData> getParticipationData(Long studyId) {
         SearchRequest.Builder builder = new SearchRequest.Builder();
         builder.index(getStudyIdString(studyId))
                 .size(0)
@@ -288,23 +297,23 @@ public class ElasticService {
                                                 )
                                 )
                 );
-        try{
+        try {
             List<ParticipationData> participationDataList = new ArrayList<>();
 
-            List<StringTermsBucket> observationBuckets =  client.search(builder.build(), Map.class)
+            List<StringTermsBucket> observationBuckets = client.search(builder.build(), Map.class)
                     .aggregations()
                     .get("observation_ids")
                     .sterms()
                     .buckets()
                     .array();
-            for(StringTermsBucket observation : observationBuckets){
+            for (StringTermsBucket observation : observationBuckets) {
                 List<StringTermsBucket> participantBuckets = observation
                         .aggregations()
                         .get("participant_ids")
                         .sterms()
                         .buckets()
                         .array();
-                for(StringTermsBucket participant : participantBuckets){
+                for (StringTermsBucket participant : participantBuckets) {
                     String lastDataReceived = participant
                             .aggregations()
                             .get("latest_data")
@@ -317,13 +326,13 @@ public class ElasticService {
                             .buckets()
                             .array();
                     ParticipationData.NamedId studyGroup = null;
-                    if(studyGroupBuckets.size() > 0)
-                             studyGroup = new ParticipationData.NamedId(Integer.parseInt(
-                                     studyGroupBuckets
-                                     .get(0)
-                                     .key()
-                                     .stringValue()
-                                     .substring(12)), null);
+                    if (studyGroupBuckets.size() > 0)
+                        studyGroup = new ParticipationData.NamedId(Integer.parseInt(
+                                studyGroupBuckets
+                                        .get(0)
+                                        .key()
+                                        .stringValue()
+                                        .substring(12)), null);
                     assert lastDataReceived != null;
                     participationDataList.add(new ParticipationData(
                             new ParticipationData.NamedId(Integer.parseInt(observation.key().stringValue().replaceAll("observation_", "")), null),
@@ -335,7 +344,7 @@ public class ElasticService {
                 }
             }
             return participationDataList;
-        }catch (IOException | ElasticsearchException e) {
+        } catch (IOException | ElasticsearchException e) {
             if (isElasticIndexNotFound(e)) {
                 return List.of();
             }
@@ -347,7 +356,7 @@ public class ElasticService {
     public void exportData(OutputStream outputStream, Long studyId, Collection<Integer> studyGroupId, Collection<Integer> participantId, Collection<Integer> observationId, Instant from, Instant to) throws IOException {
         String index = getStudyIdString(studyId);
 
-        if(!client.indices().exists(e -> e.index(index)).value()) {
+        if (!client.indices().exists(e -> e.index(index)).value()) {
             return;
         }
 
@@ -417,8 +426,8 @@ public class ElasticService {
     public List<SimpleDataPoint> listDataPoints(
             Long studyId, Integer participantId, Integer observationId, String isoDate, int size) throws IOException {
         SearchRequest.Builder builder = new SearchRequest.Builder();
-        builder.query(q -> q.bool(b ->b.must(m ->
-                        m.term(t -> t.field("study_id").value("study_" + studyId)))
+        builder.query(q -> q.bool(b -> b.must(m ->
+                                m.term(t -> t.field("study_id").value("study_" + studyId)))
                         .filter(getFilters(participantId, observationId, isoDate))))
                 .sort(s -> s.field(f -> f.field("effective_time_frame").order(SortOrder.Desc)))
                 .size(size);
@@ -434,17 +443,17 @@ public class ElasticService {
 
     private List<Query> getFilters(Integer participantId, Integer observationId, String isoDate) {
         List<Query> filters = new ArrayList<>();
-        if(participantId != null) {
+        if (participantId != null) {
             filters.add(Query.of(q -> q.term(t -> t.field("participant_id").value("participant_" + participantId))));
         }
 
-        if(observationId != null) {
+        if (observationId != null) {
             filters.add(Query.of(q -> q.term(t -> t.field("observation_id").value(observationId))));
         } else {
             filters.add(Query.of(q -> q.exists(e -> e.field("observation_id"))));
         }
 
-        if(isoDate != null) {
+        if (isoDate != null) {
             filters.add(Query.of(f -> f.
                     range(r -> r.
                             field("effective_time_frame").

@@ -4,11 +4,16 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
-import com.google.firebase.messaging.*;
+import com.google.firebase.messaging.ApnsConfig;
+import com.google.firebase.messaging.Aps;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import io.redlink.more.studymanager.utils.MapperUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +24,14 @@ import java.util.UUID;
 
 public class FirebaseMessagingService {
     private final FirebaseMessaging firebaseMessaging;
-    private enum apnsPriority{
+
+    private enum apnsPriority {
         LOW(1),
         MEDIUM(5),
         HIGH(10);
 
         public final int value;
+
         apnsPriority(int value) {
             this.value = value;
         }
@@ -40,6 +47,7 @@ public class FirebaseMessagingService {
             this.value = value;
         }
     }
+
     private static final String apnsPriorityHeader = "apns-priority";
     private static final String apsDataCategory = "DATA_CATEGORY";
     private static final String apnsPushTypeHeader = "apns-push-type";
@@ -56,7 +64,7 @@ public class FirebaseMessagingService {
 
         log.info("Send data: {}", MapperUtils.writeValueAsString(data));
 
-        if(data == null) {
+        if (data == null) {
             data = Map.of("MSG_ID", uuid);
         } else {
             data = new HashMap<>(data);
@@ -70,7 +78,7 @@ public class FirebaseMessagingService {
                 .setToken(token)
                 .setApnsConfig(getApnsConfig(apsDataCategory, apnsPushType.ALERT, apnsPriority.MEDIUM));
 
-        if(title != null && body != null) {
+        if (title != null && body != null) {
             Notification notification = Notification
                     .builder()
                     .setTitle(title)

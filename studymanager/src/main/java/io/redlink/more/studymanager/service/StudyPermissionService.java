@@ -4,16 +4,17 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.service;
 
 import io.redlink.more.studymanager.exception.AccessDeniedException;
 import io.redlink.more.studymanager.model.StudyRole;
 import io.redlink.more.studymanager.repository.StudyAclRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.EnumSet;
 import java.util.Set;
-import org.springframework.stereotype.Service;
 
 @Service
 public class StudyPermissionService {
@@ -42,7 +43,7 @@ public class StudyPermissionService {
         return studyId;
     }
 
-    public boolean currentUserHasRole(long studyId,  StudyRole role) {
+    public boolean currentUserHasRole(long studyId, StudyRole role) {
         return hasRole(studyId, currentUserId(), role);
     }
 
@@ -66,7 +67,7 @@ public class StudyPermissionService {
         return hasAnyRole(studyId, userId, EnumSet.allOf(StudyRole.class));
     }
 
-    public long assertCurrentUserHasAnyRole(final long studyId,  StudyRole... roles) {
+    public long assertCurrentUserHasAnyRole(final long studyId, StudyRole... roles) {
         return assertAnyRole(studyId, currentUserId(), roles);
     }
 
@@ -74,7 +75,7 @@ public class StudyPermissionService {
         return assertAnyRole(studyId, userId, Set.of(roles));
     }
 
-    public boolean currentUserHasAnyRole(long studyId,  StudyRole... roles) {
+    public boolean currentUserHasAnyRole(long studyId, StudyRole... roles) {
         return hasAnyRole(studyId, currentUserId(), roles);
     }
 
@@ -82,7 +83,7 @@ public class StudyPermissionService {
         return hasAnyRole(studyId, userId, Set.of(roles));
     }
 
-    public long assertCurrentUserHasAnyRole(final long studyId,  Set<StudyRole> roles) {
+    public long assertCurrentUserHasAnyRole(final long studyId, Set<StudyRole> roles) {
         return assertAnyRole(studyId, currentUserId(), roles);
     }
 
@@ -96,7 +97,7 @@ public class StudyPermissionService {
         return studyId;
     }
 
-    public boolean currentUserHasAnyRole(long studyId,  Set<StudyRole> roles) {
+    public boolean currentUserHasAnyRole(long studyId, Set<StudyRole> roles) {
         return hasAnyRole(studyId, currentUserId(), roles);
     }
 
@@ -120,7 +121,7 @@ public class StudyPermissionService {
         return hasAllRoles(studyId, userId, EnumSet.allOf(StudyRole.class));
     }
 
-    public long assertCurrentUserHasAllRoles(final long studyId,  StudyRole... roles) {
+    public long assertCurrentUserHasAllRoles(final long studyId, StudyRole... roles) {
         return assertAllRoles(studyId, currentUserId(), roles);
     }
 
@@ -128,7 +129,7 @@ public class StudyPermissionService {
         return assertAllRoles(studyId, userId, Set.of(roles));
     }
 
-    public boolean currentUserHasAllRoles(long studyId,  StudyRole... roles) {
+    public boolean currentUserHasAllRoles(long studyId, StudyRole... roles) {
         return hasAllRoles(studyId, currentUserId(), roles);
     }
 
@@ -136,7 +137,7 @@ public class StudyPermissionService {
         return hasAllRoles(studyId, userId, Set.of(roles));
     }
 
-    public long assertCurrentUserHasAllRoles(final long studyId,  Set<StudyRole> roles) {
+    public long assertCurrentUserHasAllRoles(final long studyId, Set<StudyRole> roles) {
         return assertAllRoles(studyId, currentUserId(), roles);
     }
 
@@ -150,7 +151,7 @@ public class StudyPermissionService {
         return studyId;
     }
 
-    public boolean currentUserHasAllRoles(long studyId,  Set<StudyRole> roles) {
+    public boolean currentUserHasAllRoles(long studyId, Set<StudyRole> roles) {
         return hasAllRoles(studyId, currentUserId(), roles);
     }
 

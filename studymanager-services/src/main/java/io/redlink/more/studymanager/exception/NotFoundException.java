@@ -4,7 +4,7 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.exception;
 
@@ -21,6 +21,7 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(String type, Object id) {
         super(String.format("%s with id %s cannot be found", type, id.toString()));
     }
+
     public static NotFoundException Study(long id) {
         return new NotFoundException("Study", id);
     }
@@ -28,6 +29,7 @@ public class NotFoundException extends RuntimeException {
     public static NotFoundException StudyGroup(long studyId, int studyGroupId) {
         return new NotFoundException("StudyGroup", studyId + "/" + studyGroupId);
     }
+
     public static NotFoundException ObservationGroup(long studyId, int observationGroupId) {
         return new NotFoundException("ObservationGroup", studyId + "/" + observationGroupId);
     }

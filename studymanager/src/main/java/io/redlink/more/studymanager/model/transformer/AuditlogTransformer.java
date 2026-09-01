@@ -4,35 +4,41 @@
  * for Digital Health and Prevention -- A research institute of the
  * Ludwig Boltzmann Gesellschaft, Österreichische Vereinigung zur
  * Förderung der wissenschaftlichen Forschung).
- * Licensed under the Elastic License 2.0.
+ * Licensed under the Apache License, Version 2.0.
  */
 package io.redlink.more.studymanager.model.transformer;
 
-import io.redlink.more.studymanager.api.v1.model.*;
+import io.redlink.more.studymanager.api.v1.model.AuditLogEntryDTO;
+import io.redlink.more.studymanager.api.v1.model.AuditLogMetadataDTO;
 import io.redlink.more.studymanager.model.audit.AuditLog;
 import io.redlink.more.studymanager.model.data.AuditLogMetadata;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public final class AuditlogTransformer {
 
-    private AuditlogTransformer(){}
+    private AuditlogTransformer() {
+    }
 
     public static AuditLogEntryDTO toAuditlogEntryDTO_V1(AuditLog auditLog) {
-        Map<String,Object> details = new HashMap<>(auditLog.getDetails());
+        Map<String, Object> details = new HashMap<>(auditLog.getDetails());
         //Both user_roles and study_roles are stored in the details, but exposed as special attribute in the DTO
         List<String> userRoles = Optional.ofNullable(
-                details.remove("user_roles"))
+                        details.remove("user_roles"))
                 .filter(it -> it instanceof List)
                 .map(List.class::cast)
                 .map(it -> it.stream().map(Objects::toString).toList()
-            ).orElse(null);
+                ).orElse(null);
         List<String> studyRoles = Optional.ofNullable(
                         details.remove("study_roles"))
                 .filter(it -> it instanceof List)
                 .map(List.class::cast)
                 .map(it -> it.stream().map(Objects::toString).toList()
-            ).orElse(null);
+                ).orElse(null);
         var auditLogEntry = new AuditLogEntryDTO()
                 .id(auditLog.getId())
                 .created(auditLog.getCreated())
@@ -45,7 +51,7 @@ public final class AuditlogTransformer {
                 .action(auditLog.getAction())
                 .actionState(AuditLogEntryDTO.ActionStateEnum.valueOf(auditLog.getActionState().name().toUpperCase()));
 
-        details.forEach((s, o) -> auditLogEntry.putAdditionalProperty(s,o));
+        details.forEach((s, o) -> auditLogEntry.putAdditionalProperty(s, o));
 
         return auditLogEntry;
     }
