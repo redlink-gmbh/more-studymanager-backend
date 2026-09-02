@@ -32,7 +32,7 @@ public class LimeSurveyObservationFactory<C extends LimeSurveyObservation<P>, P 
             .setName("observation.factory.limeSurvey.configProps.idName")
             .setDescription("observation.factory.limeSurvey.configProps.idDesc")
             .setRequired(true)
-            .setImmutable(true);
+            .setImmutable(false);
 
     private static final List<Value> properties = List.of(
             limeSurveyId
