@@ -39,6 +39,10 @@ public class MilestoneService {
         return repository.insert(new Milestone().setStudyId(studyId).setName(name));
     }
 
+    public Milestone importMilestone(Long studyId, Milestone milestone) {
+        return repository.doImport(studyId, milestone);
+    }
+
     public Milestone getMilestone(long studyId, int milestoneId) {
         return Optional.ofNullable(repository.getByIds(studyId, milestoneId))
                 .orElseThrow(() -> NotFoundException.Milestone(studyId, milestoneId));

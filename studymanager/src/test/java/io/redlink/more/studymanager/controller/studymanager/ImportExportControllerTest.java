@@ -216,15 +216,28 @@ class ImportExportControllerTest {
                 .setTitle("Obst Essen")
                 .setProperties(new GoalTemplateProperties(Map.of("property", "new value")));
 
+        Milestone milestone = new Milestone()
+                .setStudyId(study.getStudyId())
+                .setMilestoneId(1)
+                .setName("Baseline")
+                .setOrderIndex(0)
+                .setCreated(Instant.now());
+
+        StudyImportExport.ParticipantInfo participantInfo = new StudyImportExport.ParticipantInfo(
+                group.getStudyGroupId(),
+                Set.of(),
+                List.of(new ParticipantMilestoneInfo(milestone.getMilestoneId(), Instant.parse("2026-03-01T09:00:00Z"))));
+
         StudyImportExport studyImportExport = new StudyImportExport()
                 .setStudy(study)
                 .setStudyGroups(List.of(group))
                 .setObservationGroups(List.of(observationGroup1, observationGroup2))
                 .setObservations(List.of(observation))
                 .setInterventions(List.of(intervention))
+                .setMilestones(List.of(milestone))
                 .setTriggers(Map.of(intervention.getInterventionId(), trigger))
                 .setActions(Map.of(intervention.getInterventionId(), List.of(action)))
-                .setParticipants(new ArrayList<>())
+                .setParticipants(List.of(participantInfo))
                 .setIntegrations(new ArrayList<>())
                 .setStudyGoalConfig(goalConfig)
                 .setGoalTemplates(List.of(goalTemplate));
@@ -283,6 +296,16 @@ class ImportExportControllerTest {
                     assertThat(data.getGoalTemplates().get(0).getProperties().get("property")).isEqualTo("new value");
                     assertThat(data.getGoalTemplates().get(0).getStudyGroupId()).isEqualTo(group.getStudyGroupId());
                     assertThat(data.getGoalTemplates().get(0).getObservationGroupIds()).containsExactlyInAnyOrder(observationGroup1.getObservationGroupId());
+
+                    assertThat(data.getMilestones()).hasSize(1);
+                    assertThat(data.getMilestones().get(0).getMilestoneId()).isEqualTo(milestone.getMilestoneId());
+                    assertThat(data.getMilestones().get(0).getName()).isEqualTo(milestone.getName());
+                    assertThat(data.getMilestones().get(0).getOrderIndex()).isEqualTo(milestone.getOrderIndex());
+
+                    assertThat(data.getParticipants()).hasSize(1);
+                    assertThat(data.getParticipants().get(0).groupId()).isEqualTo(group.getStudyGroupId());
+                    assertThat(data.getParticipants().get(0).milestones()).containsExactly(
+                            new ParticipantMilestoneInfo(milestone.getMilestoneId(), Instant.parse("2026-03-01T09:00:00Z")));
 
                     return data
                             .getStudy()
@@ -411,8 +434,19 @@ class ImportExportControllerTest {
                 .andExpect(jsonPath("$.interventions[0].observationGroupIds[0]").value(2))
                 .andExpect(jsonPath("$.interventions[0].created").exists())
                 .andExpect(jsonPath("$.interventions[0].modified").exists())
+                .andExpect(jsonPath("$.milestones").isArray())
+                .andExpect(jsonPath("$.milestones.length()").value(1))
+                .andExpect(jsonPath("$.milestones[0].milestoneId").value(1))
+                .andExpect(jsonPath("$.milestones[0].studyId").value(1))
+                .andExpect(jsonPath("$.milestones[0].name").value("Baseline"))
+                .andExpect(jsonPath("$.milestones[0].orderIndex").value(0))
                 .andExpect(jsonPath("$.participants").isArray())
-                .andExpect(jsonPath("$.participants.length()").value(0))
+                .andExpect(jsonPath("$.participants.length()").value(1))
+                .andExpect(jsonPath("$.participants[0].studyGroup").value(group.getStudyGroupId()))
+                .andExpect(jsonPath("$.participants[0].milestones").isArray())
+                .andExpect(jsonPath("$.participants[0].milestones.length()").value(1))
+                .andExpect(jsonPath("$.participants[0].milestones[0].milestoneId").value(1))
+                .andExpect(jsonPath("$.participants[0].milestones[0].dateTime").value("2026-03-01T09:00:00Z"))
                 .andExpect(jsonPath("$.integrations").isArray())
                 .andExpect(jsonPath("$.integrations.length()").value(0))
                 .andExpect(jsonPath("$.goalConfiguration").exists())

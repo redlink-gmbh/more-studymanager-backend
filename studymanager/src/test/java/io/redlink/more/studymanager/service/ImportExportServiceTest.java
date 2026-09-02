@@ -28,11 +28,13 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -69,6 +71,12 @@ public class ImportExportServiceTest {
 
     @Spy
     private GoalService goalService = mock(GoalService.class);
+
+    @Spy
+    private MilestoneService milestoneService = mock(MilestoneService.class);
+
+    @Spy
+    private ParticipantMilestoneService participantMilestoneService = mock(ParticipantMilestoneService.class);
 
     @InjectMocks
     ImportExportService importExportService;
@@ -108,6 +116,9 @@ public class ImportExportServiceTest {
 
     @Captor
     private ArgumentCaptor<GoalTemplate> goalTemplateCaptor;
+
+    @Captor
+    private ArgumentCaptor<Milestone> milestoneCaptor;
 
     private final AuthenticatedUser currentUser = new AuthenticatedUser(
             UUID.randomUUID().toString(),
@@ -282,6 +293,9 @@ public class ImportExportServiceTest {
                 .setActions(Map.of(2, List.of(new Action()
                         .setType("sth")
                         .setProperties(new ActionProperties()))))
+                .setMilestones(List.of(
+                        new Milestone().setMilestoneId(1).setName("Milestone 1").setOrderIndex(0),
+                        new Milestone().setMilestoneId(2).setName("Milestone 2").setOrderIndex(1)))
                 .setParticipants(List.of(
                         new StudyImportExport.ParticipantInfo(0, null),
                         new StudyImportExport.ParticipantInfo(0, Set.of(1)),
@@ -290,7 +304,8 @@ public class ImportExportServiceTest {
                         new StudyImportExport.ParticipantInfo(2, Set.of(2)),
                         new StudyImportExport.ParticipantInfo(2, Set.of(1, 2)),
                         new StudyImportExport.ParticipantInfo(4, Set.of(1)),
-                        new StudyImportExport.ParticipantInfo(4, Set.of(2))
+                        new StudyImportExport.ParticipantInfo(4, Set.of(2),
+                                List.of(new ParticipantMilestoneInfo(2, Instant.parse("2026-01-15T10:00:00Z"))))
                 ))
                 .setIntegrations(List.of(
                         new IntegrationInfo("Integration 1", 1),
@@ -308,8 +323,18 @@ public class ImportExportServiceTest {
         when(interventionService.importIntervention(any(), any(), any(), any()))
                 .thenAnswer(invocationOnMock ->
                         ((Intervention) invocationOnMock.getArgument(1)).setStudyId(studyId));
+        when(participantService.createParticipant(any()))
+                .thenAnswer(invocationOnMock ->
+                        ((Participant) invocationOnMock.getArgument(0)).setParticipantId(42));
 
         importExportService.importStudy(studyImport, currentUser);
+
+        verify(milestoneService, times(2)).importMilestone(idLongCaptor.capture(), milestoneCaptor.capture());
+        assertThat(milestoneCaptor.getAllValues().get(0).getMilestoneId()).isEqualTo(1);
+        assertThat(milestoneCaptor.getAllValues().get(1).getMilestoneId()).isEqualTo(2);
+
+        verify(participantMilestoneService).createParticipantMilestone(
+                eq(studyId), eq(42), eq(2), eq(Instant.parse("2026-01-15T10:00:00Z")));
 
         ArgumentCaptor<StudyGroup> studyGroupCaptor = ArgumentCaptor.forClass(StudyGroup.class);
         verify(studyGroupService, times(2)).importStudyGroup(idLongCaptor.capture(), studyGroupCaptor.capture());
@@ -409,6 +434,33 @@ public class ImportExportServiceTest {
         assertThat(goalTemplateCaptor.getAllValues().get(2).getObservationGroupIds()).containsExactlyInAnyOrder(1, 2);
         assertThat(goalTemplateCaptor.getAllValues().get(2).getTopicKeys()).containsExactlyInAnyOrder("topic-key-2");
         assertThat(goalTemplateCaptor.getAllValues().get(2).getAdherenceCheckIds()).containsExactlyInAnyOrder(20);
+    }
+
+    @Test
+    @DisplayName("Study export should include Milestones and per-participant ParticipantMilestones")
+    void testExportStudy() {
+        Long studyId = 1L;
+
+        when(studyService.getStudy(eq(studyId), any()))
+                .thenReturn(Optional.of(new Study().setStudyId(studyId)));
+
+        Milestone milestone1 = new Milestone().setMilestoneId(1).setName("Milestone 1").setOrderIndex(0);
+        Milestone milestone2 = new Milestone().setMilestoneId(2).setName("Milestone 2").setOrderIndex(1);
+        when(milestoneService.listMilestones(studyId)).thenReturn(List.of(milestone1, milestone2));
+
+        Participant participant = new Participant().setStudyId(studyId).setParticipantId(5).setStudyGroupId(2);
+        when(participantService.listParticipants(studyId)).thenReturn(List.of(participant));
+
+        Instant milestoneDateTime = Instant.parse("2026-01-15T10:00:00Z");
+        when(participantMilestoneService.listParticipantMilestones(studyId, 5)).thenReturn(List.of(
+                new ParticipantMilestone().setStudyId(studyId).setParticipantId(5).setMilestoneId(2).setDateTime(milestoneDateTime)));
+
+        StudyImportExport export = importExportService.exportStudy(studyId, currentUser);
+
+        assertThat(export.getMilestones()).containsExactly(milestone1, milestone2);
+        assertThat(export.getParticipants()).hasSize(1);
+        assertThat(export.getParticipants().get(0).milestones()).containsExactly(
+                new ParticipantMilestoneInfo(2, milestoneDateTime));
     }
 
 }

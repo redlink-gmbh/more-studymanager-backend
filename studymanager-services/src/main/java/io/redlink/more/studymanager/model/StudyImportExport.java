@@ -23,6 +23,7 @@ public class StudyImportExport {
     private List<ObservationGroup> observationGroups = new ArrayList<>();
     private List<Observation> observations = new ArrayList<>();
     private List<Intervention> interventions = new ArrayList<>();
+    private List<Milestone> milestones = new ArrayList<>();
     private List<ParticipantInfo> participants = new ArrayList<>();
     private Map<Integer, Trigger> triggers = new HashMap<>();
     private Map<Integer, List<Action>> actions = new HashMap<>();
@@ -72,6 +73,15 @@ public class StudyImportExport {
 
     public StudyImportExport setInterventions(List<Intervention> interventions) {
         this.interventions = interventions == null ? new ArrayList<>() : interventions;
+        return this;
+    }
+
+    public List<Milestone> getMilestones() {
+        return milestones;
+    }
+
+    public StudyImportExport setMilestones(List<Milestone> milestones) {
+        this.milestones = milestones == null ? new ArrayList<>() : milestones;
         return this;
     }
 
@@ -131,10 +141,16 @@ public class StudyImportExport {
 
     public record ParticipantInfo(
             Integer groupId,
-            Set<Integer> observationGroupIds
+            Set<Integer> observationGroupIds,
+            List<ParticipantMilestoneInfo> milestones
     ) {
         public ParticipantInfo {
             observationGroupIds = observationGroupIds == null ? Collections.emptySet() : observationGroupIds;
+            milestones = milestones == null ? Collections.emptyList() : milestones;
+        }
+
+        public ParticipantInfo(Integer groupId, Set<Integer> observationGroupIds) {
+            this(groupId, observationGroupIds, null);
         }
     }
 
