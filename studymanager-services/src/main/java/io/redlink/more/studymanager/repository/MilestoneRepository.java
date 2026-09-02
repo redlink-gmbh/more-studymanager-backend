@@ -29,6 +29,10 @@ public class MilestoneRepository {
                     :name,
                     (SELECT COALESCE(MAX(order_index)+1,0) FROM milestones WHERE study_id = :study_id))
             RETURNING *""";
+    private static final String IMPORT_MILESTONE = """
+            INSERT INTO milestones (study_id, milestone_id, name, order_index)
+            VALUES (:study_id, :milestone_id, :name, :order_index)
+            RETURNING *""";
     private static final String GET_MILESTONE_BY_IDS = "SELECT * FROM milestones WHERE study_id = ? AND milestone_id = ?";
     private static final String LIST_MILESTONES_ORDER_BY_ORDER_INDEX = "SELECT * FROM milestones WHERE study_id = ? ORDER BY order_index";
     private static final String UPDATE_MILESTONE = "UPDATE milestones SET name = :name WHERE study_id = :study_id AND milestone_id = :milestone_id";
@@ -65,6 +69,24 @@ public class MilestoneRepository {
             return namedTemplate.queryForObject(INSERT_MILESTONE, toParams(milestone), getMilestoneRowMapper());
         } catch (DataIntegrityViolationException e) {
             throw new BadRequestException("Study " + milestone.getStudyId() + " does not exist");
+        }
+    }
+
+    public Milestone doImport(Long studyId, Milestone milestone) {
+        try {
+            return namedTemplate.queryForObject(
+                    IMPORT_MILESTONE,
+                    toParams(milestone)
+                            .addValue("study_id", studyId)
+                            .addValue("milestone_id", milestone.getMilestoneId())
+                            .addValue("order_index", milestone.getOrderIndex()),
+                    getMilestoneRowMapper()
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException(
+                    "Error during import of milestone " + milestone.getMilestoneId() +
+                            " for study " + studyId
+            );
         }
     }
 

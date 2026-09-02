@@ -51,6 +51,8 @@ public class ImportExportService {
     private final ObservationGroupService observationGroupService;
     private final IntegrationService integrationService;
     private final GoalService goalService;
+    private final MilestoneService milestoneService;
+    private final ParticipantMilestoneService participantMilestoneService;
 
     private final ElasticService elasticService;
     private final GatewayProperties gatewayProperties;
@@ -60,6 +62,8 @@ public class ImportExportService {
                                ObservationGroupService observationGroupService,
                                IntegrationService integrationService,
                                GoalService goalService,
+                               MilestoneService milestoneService,
+                               ParticipantMilestoneService participantMilestoneService,
                                ElasticService elasticService, GatewayProperties gatewayProperties) {
         this.participantService = participantService;
         this.studyService = studyService;
@@ -70,6 +74,8 @@ public class ImportExportService {
         this.observationGroupService = observationGroupService;
         this.integrationService = integrationService;
         this.goalService = goalService;
+        this.milestoneService = milestoneService;
+        this.participantMilestoneService = participantMilestoneService;
         this.elasticService = elasticService;
         this.gatewayProperties = gatewayProperties;
     }
@@ -114,6 +120,7 @@ public class ImportExportService {
                 .setObservationGroups(observationGroupService.listObservationGroups(studyId))
                 .setObservations(observationService.listObservations(studyId))
                 .setInterventions(interventionService.listInterventions(studyId))
+                .setMilestones(milestoneService.listMilestones(studyId))
                 .setActions(new HashMap<>())
                 .setTriggers(new HashMap<>())
                 .setParticipants(new ArrayList<>())
@@ -124,7 +131,11 @@ public class ImportExportService {
                 .sorted(Comparator.comparing(Participant::getParticipantId))
                 .map(participant -> new StudyImportExport.ParticipantInfo(
                         participant.getStudyGroupId(),
-                        participant.getObservationGroupIds()))
+                        participant.getObservationGroupIds(),
+                        participantMilestoneService.listParticipantMilestones(studyId, participant.getParticipantId())
+                                .stream()
+                                .map(pm -> new ParticipantMilestoneInfo(pm.getMilestoneId(), pm.getDateTime()))
+                                .toList()))
                 .toList()
         );
 
@@ -159,6 +170,9 @@ public class ImportExportService {
         studyImport.getStudyGroups().forEach(studyGroup ->
                 studyGroupService.importStudyGroup(studyId, studyGroup));
 
+        studyImport.getMilestones().forEach(milestone ->
+                milestoneService.importMilestone(studyId, milestone));
+
         studyImport.getObservationGroups().forEach(observationGroup ->
                 observationGroupService.importObservationGroup(studyId, observationGroup));
 
@@ -172,13 +186,17 @@ public class ImportExportService {
                         studyImport.getTriggers().get(intervention.getInterventionId()),
                         studyImport.getActions().getOrDefault(intervention.getInterventionId(), Collections.emptyList())));
 
-        studyImport.getParticipants().forEach(participant ->
-                participantService.createParticipant(
-                        new Participant()
-                                .setStudyId(studyId)
-                                .setAlias("Participant")
-                                .setStudyGroupId(participant.groupId())
-                                .setObservationGroupIds(participant.observationGroupIds())));
+        studyImport.getParticipants().forEach(participant -> {
+            Participant newParticipant = participantService.createParticipant(
+                    new Participant()
+                            .setStudyId(studyId)
+                            .setAlias("Participant")
+                            .setStudyGroupId(participant.groupId())
+                            .setObservationGroupIds(participant.observationGroupIds()));
+            participant.milestones().forEach(milestone ->
+                    participantMilestoneService.createParticipantMilestone(
+                            studyId, newParticipant.getParticipantId(), milestone.milestoneId(), milestone.dateTime()));
+        });
 
         studyImport.getIntegrations().forEach(integration ->
                 integrationService.addToken(studyId, integration.observationId(), integration.name()));
