@@ -40,4 +40,25 @@ public class DataConstraintException extends RuntimeException {
                 StringUtils.isNotBlank(reason) ? "%s (reason: %s)".formatted(msg, reason) : msg);
     }
 
+    public static DataConstraintException createMilestoneInUseByActiveParticipant(long studyId, int milestoneId) {
+        return new DataConstraintException(
+                "Can't delete milestone_%d from study_%d: An active participant has this milestone set!"
+                        .formatted(milestoneId, studyId)
+        );
+    }
+
+    public static DataConstraintException createParticipantMilestoneAlreadyExists(long studyId, int participantId, int milestoneId) {
+        return new DataConstraintException(
+                "A participant milestone for milestone_%d already exists for participant_%d in study_%d"
+                        .formatted(milestoneId, participantId, studyId)
+        );
+    }
+
+    public static DataConstraintException createMilestoneInUseByObservation(long studyId, int milestoneId) {
+        return new DataConstraintException(
+                "Can't delete milestone_%d from study_%d: An observation still references this milestone!"
+                        .formatted(milestoneId, studyId)
+        );
+    }
+
 }

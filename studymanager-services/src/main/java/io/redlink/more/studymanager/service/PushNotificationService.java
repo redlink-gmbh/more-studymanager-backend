@@ -40,6 +40,10 @@ public class PushNotificationService {
     }
 
     public boolean sendPushNotification(long studyID, int participantId, String title, String message, Map<String, String> data) {
+        return sendPushNotification(studyID, participantId, title, message, data, false);
+    }
+
+    public boolean sendPushNotification(long studyID, int participantId, String title, String message, Map<String, String> data, boolean sendSilently) {
         Optional<PushNotificationsToken> tkn = this.pushNotificationsRepository.getTokenById(studyID, participantId);
 
         if (tkn.isEmpty()) {
@@ -50,7 +54,7 @@ public class PushNotificationService {
         final String serviceType = token.service();
         if ("FCM".equals(serviceType)) {
             try {
-                String msgId = this.firebaseService.sendNotification(title, message, data, token.token());
+                String msgId = this.firebaseService.sendNotification(title, message, data, token.token(), sendSilently);
                 if (msgId != null) {
                     LOG.info("Store Text Message (sid:{} pid:{}, mid:{})", studyID, participantId, msgId);
                     //TODO kind of workaround, data handling should be cleaned up
@@ -97,7 +101,19 @@ public class PushNotificationService {
                 "Your study was updated. For more information, please launch the app!",
                 Map.of("key", "STUDY_STATE_CHANGED",
                         "oldState", toAppState(oldState),
-                        "newState", toAppState(newState))
+                        "newState", toAppState(newState)),
+                true
+        );
+    }
+
+    public void sendMilestoneUpdate(Participant participant) {
+        sendPushNotification(
+                participant.getStudyId(),
+                participant.getParticipantId(),
+                "Your Study has a new update",
+                "Your study schedule was updated. For more information, please launch the app!",
+                Map.of("key", "MILESTONE_UPDATED"),
+                true
         );
     }
 
