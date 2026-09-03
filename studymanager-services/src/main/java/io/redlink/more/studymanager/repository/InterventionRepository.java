@@ -14,7 +14,7 @@ import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.model.Action;
 import io.redlink.more.studymanager.model.Intervention;
 import io.redlink.more.studymanager.model.Trigger;
-import io.redlink.more.studymanager.model.scheduler.Event;
+import io.redlink.more.studymanager.model.scheduler.ScheduleEvent;
 import io.redlink.more.studymanager.utils.MapperUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -300,7 +300,7 @@ public class InterventionRepository {
                 .setInterventionId(rs.getInt("intervention_id"))
                 .setTitle(rs.getString("title"))
                 .setPurpose(rs.getString("purpose"))
-                .setSchedule(MapperUtils.readValue(rs.getString("schedule"), Event.class))
+                .setSchedule(MapperUtils.readValue(rs.getString("schedule"), ScheduleEvent.class))
                 .setStudyGroupId(getValidNullableIntegerValue(rs, "study_group_id"))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"))
                 .setModified(RepositoryUtils.readInstant(rs, "modified"))
