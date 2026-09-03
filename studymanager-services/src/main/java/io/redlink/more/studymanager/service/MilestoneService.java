@@ -85,6 +85,9 @@ public class MilestoneService {
         if (repository.countObservationsUsingMilestone(studyId, milestoneId) > 0) {
             throw DataConstraintException.createMilestoneInUseByObservation(studyId, milestoneId);
         }
+        if (repository.countInterventionsUsingMilestone(studyId, milestoneId) > 0) {
+            throw DataConstraintException.createMilestoneInUseByIntervention(studyId, milestoneId);
+        }
         repository.deleteById(studyId, milestoneId);
         repository.decrementOrderIndexAbove(studyId, milestone.getOrderIndex());
     }

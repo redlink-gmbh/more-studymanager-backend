@@ -37,8 +37,8 @@ import static io.redlink.more.studymanager.repository.RepositoryUtils.getValidNu
 @Component
 public class InterventionRepository {
 
-    private static final String INSERT_INTERVENTION = "INSERT INTO interventions(study_id,intervention_id,title,purpose,study_group_id,schedule) VALUES (:study_id,(SELECT COALESCE(MAX(intervention_id),0)+1 FROM interventions WHERE study_id = :study_id),:title,:purpose,:study_group_id,:schedule::jsonb)";
-    private static final String IMPORT_INTERVENTION = "INSERT INTO interventions(study_id,intervention_id,title,purpose,study_group_id,schedule) VALUES (:study_id,:intervention_id,:title,:purpose,:study_group_id,:schedule::jsonb)";
+    private static final String INSERT_INTERVENTION = "INSERT INTO interventions(study_id,intervention_id,title,purpose,study_group_id,schedule,milestone_id) VALUES (:study_id,(SELECT COALESCE(MAX(intervention_id),0)+1 FROM interventions WHERE study_id = :study_id),:title,:purpose,:study_group_id,:schedule::jsonb,:milestone_id)";
+    private static final String IMPORT_INTERVENTION = "INSERT INTO interventions(study_id,intervention_id,title,purpose,study_group_id,schedule,milestone_id) VALUES (:study_id,:intervention_id,:title,:purpose,:study_group_id,:schedule::jsonb,:milestone_id)";
     private static final String GET_INTERVENTION_BY_IDS = """
             SELECT i.*, ARRAY_AGG(iog.observation_group_id) FILTER (WHERE iog.observation_group_id IS NOT NULL) AS observation_group_ids
             FROM interventions i
@@ -69,7 +69,7 @@ public class InterventionRepository {
             GROUP BY i.study_id, i.intervention_id""";
     private static final String DELETE_INTERVENTION_BY_IDS = "DELETE FROM interventions WHERE study_id = ? AND intervention_id = ?";
     private static final String DELETE_ALL = "DELETE FROM interventions";
-    private static final String UPDATE_INTERVENTION = "UPDATE interventions SET title=:title, study_group_id=:study_group_id, purpose=:purpose, schedule=:schedule::jsonb WHERE study_id=:study_id AND intervention_id=:intervention_id";
+    private static final String UPDATE_INTERVENTION = "UPDATE interventions SET title=:title, study_group_id=:study_group_id, purpose=:purpose, schedule=:schedule::jsonb, milestone_id=:milestone_id WHERE study_id=:study_id AND intervention_id=:intervention_id";
     private static final String CREATE_ACTION = "INSERT INTO actions(study_id,intervention_id,action_id,type,properties) VALUES (:study_id,:intervention_id,(SELECT COALESCE(MAX(action_id),0)+1 FROM actions WHERE study_id = :study_id AND intervention_id=:intervention_id),:type,:properties::jsonb) RETURNING *";
     private static final String IMPORT_ACTION = "INSERT INTO actions(study_id,intervention_id,action_id,type,properties) VALUES (:study_id,:intervention_id,:action_id,:type,:properties::jsonb) RETURNING *";
     private static final String GET_ACTION_BY_IDS = "SELECT * FROM actions WHERE study_id=? AND intervention_id=? AND action_id=?";
@@ -259,7 +259,8 @@ public class InterventionRepository {
                 .addValue("title", intervention.getTitle())
                 .addValue("purpose", intervention.getPurpose())
                 .addValue("study_group_id", intervention.getStudyGroupId())
-                .addValue("schedule", MapperUtils.writeValueAsString(intervention.getSchedule()));
+                .addValue("schedule", MapperUtils.writeValueAsString(intervention.getSchedule()))
+                .addValue("milestone_id", intervention.getMilestoneId());
     }
 
     private static MapSqlParameterSource triggerToParams(Long studyId, Integer interventionId, Trigger trigger) {
@@ -303,7 +304,8 @@ public class InterventionRepository {
                 .setStudyGroupId(getValidNullableIntegerValue(rs, "study_group_id"))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"))
                 .setModified(RepositoryUtils.readInstant(rs, "modified"))
-                .setObservationGroupIds(RepositoryUtils.readSet(rs, "observation_group_ids", Integer.class));
+                .setObservationGroupIds(RepositoryUtils.readSet(rs, "observation_group_ids", Integer.class))
+                .setMilestoneId(getValidNullableIntegerValue(rs, "milestone_id"));
     }
 
     private void setInverventionObservationGroupIds(Long studyId, Integer interventionId, Set<Integer> observationGroupIds) {

@@ -78,6 +78,20 @@ class MilestoneServiceTest {
     }
 
     @Test
+    void deleteMilestoneFailsWhenUsedByIntervention() {
+        when(repository.getByIds(1L, 2))
+                .thenReturn(new Milestone().setStudyId(1L).setMilestoneId(2).setName("M2").setOrderIndex(3));
+        when(repository.countActiveParticipantMilestones(1L, 2)).thenReturn(0);
+        when(repository.countObservationsUsingMilestone(1L, 2)).thenReturn(0);
+        when(repository.countInterventionsUsingMilestone(1L, 2)).thenReturn(1);
+
+        Assertions.assertThrows(DataConstraintException.class, () -> milestoneService.deleteMilestone(1L, 2));
+
+        verify(repository, never()).deleteById(anyLong(), anyInt());
+        verify(repository, never()).decrementOrderIndexAbove(anyLong(), anyInt());
+    }
+
+    @Test
     void deleteMilestoneFailsWhenMilestoneDoesNotExist() {
         when(repository.getByIds(1L, 99)).thenReturn(null);
 

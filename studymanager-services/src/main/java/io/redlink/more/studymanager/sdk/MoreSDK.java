@@ -20,6 +20,7 @@ import io.redlink.more.studymanager.core.sdk.schedule.Schedule;
 import io.redlink.more.studymanager.core.ui.DataViewData;
 import io.redlink.more.studymanager.core.ui.ViewConfig;
 import io.redlink.more.studymanager.model.Participant;
+import io.redlink.more.studymanager.model.ParticipantMilestone;
 import io.redlink.more.studymanager.model.data.ElasticActionDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticObservationDataPoint;
@@ -33,6 +34,7 @@ import io.redlink.more.studymanager.sdk.scoped.MoreTriggerSDKImpl;
 import io.redlink.more.studymanager.service.ElasticDataService;
 import io.redlink.more.studymanager.service.ElasticService;
 import io.redlink.more.studymanager.service.GoalService;
+import io.redlink.more.studymanager.service.ParticipantMilestoneService;
 import io.redlink.more.studymanager.service.ParticipantService;
 import io.redlink.more.studymanager.service.PushNotificationService;
 import org.slf4j.Logger;
@@ -70,6 +72,8 @@ public class MoreSDK {
 
     private final GoalService goalService;
 
+    private final ParticipantMilestoneService participantMilestoneService;
+
     public MoreSDK(
             NameValuePairRepository nvpairs,
             SchedulingService schedulingService,
@@ -77,7 +81,8 @@ public class MoreSDK {
             ElasticService elasticService, ElasticDataService elasticDataService,
             PushNotificationService pushNotificationService,
             ObservationRepository observationRepository,
-            GoalService goalService) {
+            GoalService goalService,
+            ParticipantMilestoneService participantMilestoneService) {
         this.nvpairs = nvpairs;
         this.schedulingService = schedulingService;
         this.participantService = participantService;
@@ -86,6 +91,7 @@ public class MoreSDK {
         this.pushNotificationService = pushNotificationService;
         this.observationRepository = observationRepository;
         this.goalService = goalService;
+        this.participantMilestoneService = participantMilestoneService;
     }
 
     public MoreActionSDK scopedActionSDK(Long studyId, Integer studyGroupId, int interventionId, int actionId, String actionType, int participantId) {
@@ -96,8 +102,8 @@ public class MoreSDK {
         return new MoreObservationSDKImpl(this, studyId, studyGroupId, observationId);
     }
 
-    public MoreTriggerSDK scopedTriggerSDK(Long studyId, Integer studyGroupId, int interventionId) {
-        return new MoreTriggerSDKImpl(this, studyId, studyGroupId, interventionId);
+    public MoreTriggerSDK scopedTriggerSDK(Long studyId, Integer studyGroupId, int interventionId, Integer milestoneId) {
+        return new MoreTriggerSDKImpl(this, studyId, studyGroupId, interventionId, milestoneId);
     }
 
     public String addSchedule(String issuer, long studyId, Integer studyGroupId, int interventionId, Schedule schedule) {
@@ -119,11 +125,35 @@ public class MoreSDK {
     }
 
     public Set<SimpleParticipant> listParticipants(long studyId, Integer studyGroupId, Set<Participant.Status> status) {
-        return participantService.listParticipants(studyId).stream()
+        return listParticipants(studyId, studyGroupId, status, null);
+    }
+
+    public Set<SimpleParticipant> listParticipants(long studyId, Integer studyGroupId, Set<Participant.Status> status, Integer milestoneId) {
+        Set<Participant> matching = participantService.listParticipants(studyId).stream()
                 .filter(p -> studyGroupId == null || studyGroupId.equals(p.getStudyGroupId()))
                 .filter(p -> status == null || status.contains(p.getStatus()))
+                .collect(Collectors.toSet());
+
+        if (milestoneId == null) {
+            return matching.stream()
+                    .map(p -> new SimpleParticipant(p.getParticipantId(), p.getStart()))
+                    .collect(Collectors.toSet());
+        }
+
+        // participants who haven't reached the milestone yet are excluded entirely
+        Set<Integer> reachedMilestone = participantMilestoneService.listParticipantsForMilestone(studyId, milestoneId).stream()
+                .map(ParticipantMilestone::getParticipantId)
+                .collect(Collectors.toSet());
+
+        return matching.stream()
+                .filter(p -> reachedMilestone.contains(p.getParticipantId()))
                 .map(p -> new SimpleParticipant(p.getParticipantId(), p.getStart()))
                 .collect(Collectors.toSet());
+    }
+
+    public Optional<Instant> getParticipantMilestoneDateTime(long studyId, int participantId, int milestoneId) {
+        return participantMilestoneService.findParticipantMilestone(studyId, participantId, milestoneId)
+                .map(ParticipantMilestone::getDateTime);
     }
 
     public Set<Integer> listActiveParticipantsByQuery(long studyId, Integer studyGroupId, String query, TimeRange timerange) {

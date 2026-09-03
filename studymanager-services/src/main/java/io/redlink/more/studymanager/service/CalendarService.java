@@ -192,23 +192,47 @@ public class CalendarService {
                         })
                         .toList(),
                 interventions.stream()
-                        .map(intervention -> {
+                        .flatMap(intervention -> {
                             Trigger trigger = interventionService.getTriggerByIds(study.getStudyId(), intervention.getInterventionId());
-                            return SchedulerUtils.parseToInterventionSchedules(
-                                            trigger,
-                                            effectiveRange.getMinimum(),
-                                            effectiveRange.getMaximum()
-                                    )
-                                    .stream()
-                                    // Disabled client-side filter for now...
-                                    // .filter(filterWindow::contains)
-                                    .map(event -> InterventionTimelineEvent.fromInterventionAndTrigger(intervention, trigger, event))
-                                    .toList();
+                            return interventionEvents(study, participant, intervention, trigger, effectiveRange);
                         })
-                        .flatMap(List::stream)
                         .collect(Collectors.toList())
 
         );
+    }
+
+    private Stream<InterventionTimelineEvent> interventionEvents(
+            Study study, Participant participant, Intervention intervention, Trigger trigger, Range<Instant> effectiveRange) {
+        boolean milestoneApplies = intervention.getMilestoneId() != null
+                && trigger != null
+                && Objects.equals(trigger.getType(), "relative-time-trigger");
+
+        if (!milestoneApplies) {
+            return SchedulerUtils.parseToInterventionSchedules(
+                            trigger, effectiveRange.getMinimum(), effectiveRange.getMaximum(), false)
+                    .stream()
+                    // Disabled client-side filter for now...
+                    // .filter(filterWindow::contains)
+                    .map(event -> InterventionTimelineEvent.fromInterventionAndTrigger(intervention, trigger, event));
+        }
+
+        if (participant != null) {
+            return participantMilestoneService
+                    .findParticipantMilestone(study.getStudyId(), participant.getParticipantId(), intervention.getMilestoneId())
+                    // participant hasn't reached this milestone yet: no occurrences
+                    .map(pm -> SchedulerUtils.parseToInterventionSchedules(trigger, pm.getDateTime(), effectiveRange.getMaximum(), true))
+                    .map(events -> events.stream()
+                            .map(event -> InterventionTimelineEvent.fromInterventionAndTrigger(intervention, trigger, event)))
+                    .orElseGet(Stream::empty);
+        }
+
+        // no participant selected: emit occurrences for every participant that has reached this milestone,
+        // each anchored to their own milestone date
+        return participantMilestoneService.listParticipantsForMilestone(study.getStudyId(), intervention.getMilestoneId())
+                .stream()
+                .flatMap(pm -> SchedulerUtils.parseToInterventionSchedules(trigger, pm.getDateTime(), effectiveRange.getMaximum(), true)
+                        .stream()
+                        .map(event -> InterventionTimelineEvent.fromInterventionAndTrigger(intervention, trigger, event)));
     }
 
     private static Stream<ObservationTimelineEvent> observationEvents(

@@ -193,7 +193,7 @@ public class InterventionService {
                         .map(trigger -> factory(trigger)
                                 .orElseThrow(() -> NotFoundException.TriggerFactory(trigger.getType()))
                                 .create(
-                                        sdk.scopedTriggerSDK(intervention.getStudyId(), intervention.getStudyGroupId(), intervention.getInterventionId()),
+                                        sdk.scopedTriggerSDK(intervention.getStudyId(), intervention.getStudyGroupId(), intervention.getInterventionId(), null),
                                         trigger.getProperties()
                                 )
                         ).orElse(null))
