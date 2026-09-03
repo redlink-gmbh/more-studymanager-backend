@@ -26,7 +26,8 @@ public final class InterventionTransformer {
                 .setPurpose(dto.getPurpose())
                 .setStudyGroupId(dto.getStudyGroupId())
                 .setSchedule(EventTransformer.fromObservationScheduleDTO_V1(dto.getSchedule()))
-                .setObservationGroupIds(dto.getObservationGroupIds());
+                .setObservationGroupIds(dto.getObservationGroupIds())
+                .setMilestoneId(dto.getMilestoneId());
     }
 
     public static InterventionDTO toInterventionDTO_V1(Intervention intervention) {
@@ -40,6 +41,7 @@ public final class InterventionTransformer {
                 .studyGroupId(intervention.getStudyGroupId())
                 .schedule(EventTransformer.toObservationScheduleDTO_V1(intervention.getSchedule()))
                 .observationGroupIds(intervention.getObservationGroupIds())
+                .milestoneId(intervention.getMilestoneId())
                 .created(instant1)
                 .modified(instant);
     }

@@ -54,6 +54,9 @@ public class MilestoneRepository {
     private static final String COUNT_OBSERVATIONS_USING_MILESTONE = """
             SELECT COUNT(*) FROM observations
             WHERE study_id = :study_id AND milestone_id = :milestone_id""";
+    private static final String COUNT_INTERVENTIONS_USING_MILESTONE = """
+            SELECT COUNT(*) FROM interventions
+            WHERE study_id = :study_id AND milestone_id = :milestone_id""";
     private static final String CLEAR_MILESTONES = "DELETE FROM milestones";
 
     private final JdbcTemplate template;
@@ -162,6 +165,15 @@ public class MilestoneRepository {
     public int countObservationsUsingMilestone(long studyId, int milestoneId) {
         return namedTemplate.queryForObject(
                 COUNT_OBSERVATIONS_USING_MILESTONE,
+                new MapSqlParameterSource()
+                        .addValue("study_id", studyId)
+                        .addValue("milestone_id", milestoneId),
+                Integer.class);
+    }
+
+    public int countInterventionsUsingMilestone(long studyId, int milestoneId) {
+        return namedTemplate.queryForObject(
+                COUNT_INTERVENTIONS_USING_MILESTONE,
                 new MapSqlParameterSource()
                         .addValue("study_id", studyId)
                         .addValue("milestone_id", milestoneId),

@@ -14,6 +14,7 @@ import io.redlink.more.studymanager.core.properties.TriggerProperties;
 import io.redlink.more.studymanager.model.Action;
 import io.redlink.more.studymanager.model.Contact;
 import io.redlink.more.studymanager.model.Intervention;
+import io.redlink.more.studymanager.model.Milestone;
 import io.redlink.more.studymanager.model.ObservationGroup;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.StudyGroup;
@@ -45,7 +46,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EnableAutoConfiguration
 @ContextConfiguration(classes = {
         InterventionRepository.class, StudyRepository.class, StudyGroupRepository.class, ObservationGroupRepository.class,
-        JPAConfiguration.class
+        MilestoneRepository.class, JPAConfiguration.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles({"test", "test-containers-flyway"})
@@ -62,6 +63,9 @@ class InterventionRepositoryTest {
 
     @Autowired
     private ObservationGroupRepository observationGroupRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
 
     @BeforeEach
     void deleteAll() {
@@ -238,6 +242,30 @@ class InterventionRepositoryTest {
         interventionRepository.deleteActionByIds(studyId, interventionId, actionResponse4.getActionId());
         assertThat(interventionRepository.listActions(studyId, interventionId).size()).isEqualTo(0);
 
+    }
+
+    @Test
+    @DisplayName("Interventions can be inserted, imported and updated with a milestoneId")
+    void testMilestoneIdRoundTrip() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+        Integer milestoneId = milestoneRepository.insert(new Milestone().setStudyId(studyId).setName("Baseline")).getMilestoneId();
+
+        Intervention inserted = interventionRepository.insert(new Intervention()
+                .setStudyId(studyId)
+                .setTitle("Milestone-anchored intervention")
+                .setMilestoneId(milestoneId));
+        assertThat(inserted.getMilestoneId()).isEqualTo(milestoneId);
+        assertThat(interventionRepository.getByIds(studyId, inserted.getInterventionId()).getMilestoneId()).isEqualTo(milestoneId);
+
+        Intervention updated = interventionRepository.updateIntervention(inserted.setMilestoneId(null));
+        assertThat(updated.getMilestoneId()).isNull();
+
+        Intervention imported = interventionRepository.importIntervention(studyId, new Intervention()
+                .setStudyId(studyId)
+                .setInterventionId(99)
+                .setTitle("Imported intervention")
+                .setMilestoneId(milestoneId));
+        assertThat(imported.getMilestoneId()).isEqualTo(milestoneId);
     }
 
     @Test

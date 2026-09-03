@@ -11,6 +11,8 @@ package io.redlink.more.studymanager.core.sdk;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.sdk.schedule.Schedule;
 
+import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 
 public interface MoreTriggerSDK extends MorePlatformSDK {
@@ -19,6 +21,12 @@ public interface MoreTriggerSDK extends MorePlatformSDK {
     void removeSchedule(String id);
 
     Set<Integer> participantIdsMatchingQuery(String query, TimeRange timeRange);
+
+    /**
+     * The date-time at which the given participant reached this trigger's configured milestone,
+     * or empty if the trigger isn't milestone-anchored or the participant hasn't reached it yet.
+     */
+    Optional<Instant> getMilestoneDateTime(Integer participantId);
 
     String addWebhook();
 

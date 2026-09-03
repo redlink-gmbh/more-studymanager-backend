@@ -14,6 +14,7 @@ import io.redlink.more.studymanager.core.factory.TriggerFactory;
 import io.redlink.more.studymanager.core.io.Parameters;
 import io.redlink.more.studymanager.core.io.TriggerResult;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
+import io.redlink.more.studymanager.model.Intervention;
 import io.redlink.more.studymanager.model.Trigger;
 import io.redlink.more.studymanager.sdk.MoreSDK;
 import io.redlink.more.studymanager.service.InterventionService;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 public class TriggerJob implements Job {
@@ -71,7 +73,12 @@ public class TriggerJob implements Job {
             TriggerFactory factory = factory(trigger)
                     .orElseThrow(() -> new SchedulingException("Cannot find triggerType " + trigger.getType()));
 
-            MoreTriggerSDK sdk = moreSDK.scopedTriggerSDK(studyId, studyGroupId, interventionId);
+            Intervention intervention = interventionService.getIntervention(studyId, interventionId);
+            Integer milestoneId = Objects.equals(trigger.getType(), "relative-time-trigger")
+                    ? intervention.getMilestoneId()
+                    : null;
+
+            MoreTriggerSDK sdk = moreSDK.scopedTriggerSDK(studyId, studyGroupId, interventionId, milestoneId);
             Parameters parameters = new Parameters(Map.of("triggerTime", context.getFireTime()));
 
             TriggerResult result = factory.create(sdk, trigger.getProperties()).execute(parameters);
