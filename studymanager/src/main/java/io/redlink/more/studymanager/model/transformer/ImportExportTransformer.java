@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ public final class ImportExportTransformer {
     }
 
     public static StudyImportExport fromStudyImportExportDTO_V1(StudyImportExportDTO dto) {
+        final Long sourceStudyId = dto.getStudy() == null ? null : dto.getStudy().getStudyId();
         return new StudyImportExport()
                 .setStudy(StudyTransformer.fromStudyDTO_V1(dto.getStudy()))
                 .setStudyGroups(transform(dto.getStudyGroups(), StudyGroupTransformer::fromStudyGroupDTO_V1))
@@ -57,7 +59,7 @@ public final class ImportExportTransformer {
                 )
                 .setParticipants(transform(dto.getParticipants(), ImportExportTransformer::fromParticipantDTO_V1))
                 .setIntegrations(transform(dto.getIntegrations(), ImportExportTransformer::fromIntegrationExportDTO_V1))
-                .setStudyGoalConfig(fromStudyGoalConfigDTO_V1(dto.getStudy().getStudyId(), dto.getGoalConfiguration()))
+                .setStudyGoalConfig(fromStudyGoalConfigDTO_V1(sourceStudyId, dto.getGoalConfiguration()))
                 .setGoalTemplates(transform(dto.getGoalTemplates(), ImportExportTransformer::fromGoalTemplateDTO_V1));
     }
 
@@ -79,17 +81,25 @@ public final class ImportExportTransformer {
 
     }
 
-    private static StudyImportExport.StudyGoalConfigData fromStudyGoalConfigDTO_V1(long studyId, GoalConfigurationDTO dto) {
-        var config = new StudyImportExport.StudyGoalConfigData(studyId);
+    private static StudyImportExport.StudyGoalConfigData fromStudyGoalConfigDTO_V1(Long studyId, GoalConfigurationDTO dto) {
+        var config = new StudyImportExport.StudyGoalConfigData();
+        config.setStudyId(studyId);
+        if (dto == null) { //the goal configuration is optional in the import file
+            return config;
+        }
+        config.setConsentDefined(dto.getConsent() != null);
         config.setAchievability(dto.getConsent() == null ? null : dto.getConsent().getAchievability())
                 .setCommitment(dto.getConsent() == null ? null : dto.getConsent().getCommitment())
                 .setUnderstandability(dto.getConsent() == null ? null : dto.getConsent().getUnderstandability());
-        config.setTopics(transform(dto.getTopics(), gtDto -> fromGoalTopicDTO_V1(studyId, gtDto)));
-        config.setAdherenceChecks(transform(dto.getAdherenceChecks(), acDto -> fromAdherenceCheckDTO_V1(studyId, acDto)));
+        config.setTopics(nonNull(transform(dto.getTopics(), gtDto -> fromGoalTopicDTO_V1(studyId, gtDto))));
+        config.setAdherenceChecks(nonNull(transform(dto.getAdherenceChecks(), acDto -> fromAdherenceCheckDTO_V1(studyId, acDto))));
         return config;
     }
 
-    private static GoalAdherenceCheck fromAdherenceCheckDTO_V1(long studyId, GoalAdherenceCheckDTO dto) {
+    private static GoalAdherenceCheck fromAdherenceCheckDTO_V1(Long studyId, GoalAdherenceCheckDTO dto) {
+        if (dto == null || dto.getCheck() == null) { //an adherence check without a schedule is not importable
+            return null;
+        }
         return new GoalAdherenceCheck()
                 .setStudyId(studyId)
                 .setCheckId(dto.getCheck().ordinal())
@@ -97,7 +107,10 @@ public final class ImportExportTransformer {
                 .setTime(dto.getTime());
     }
 
-    private static GoalTopic fromGoalTopicDTO_V1(long studyId, GoalTopicDTO dto) {
+    private static GoalTopic fromGoalTopicDTO_V1(Long studyId, GoalTopicDTO dto) {
+        if (dto == null) {
+            return null;
+        }
         return new GoalTopic()
                 .setStudyId(studyId)
                 .setKey(dto.getKey())
@@ -133,6 +146,12 @@ public final class ImportExportTransformer {
     }
 
     private static GoalConfigurationDTO toGoalConfigurationDTO_V1(StudyImportExport.StudyGoalConfigData goalConfig) {
+        if (goalConfig == null) { //no goal configuration for this study - export the (empty) default
+            return new GoalConfigurationDTO()
+                    .consent(new GoalConsentDTO())
+                    .topics(List.of())
+                    .adherenceChecks(List.of());
+        }
         return new GoalConfigurationDTO()
                 .consent(new GoalConsentDTO()
                         .achievability(goalConfig.getAchievability())
@@ -154,7 +173,7 @@ public final class ImportExportTransformer {
                 .studyId(goalTemplate.getStudyId())
                 .title(goalTemplate.getTitle())
                 .templateId(goalTemplate.getTemplateId())
-                .adherenceChecks(transform(goalTemplate.getAdherenceCheckIds(), ImportExportTransformer::toAdherenceCheckEnumDTO_V1))
+                .adherenceChecks(toAdherenceCheckEnumsDTO_V1(goalTemplate.getAdherenceCheckIds()))
                 .categories(toGoalTemplateCategoriesDTO_V1(goalTemplate))
                 .observationGroupIds(goalTemplate.getObservationGroupIds())
                 .studyGroupId(goalTemplate.getStudyGroupId())
@@ -166,17 +185,18 @@ public final class ImportExportTransformer {
 
     private static GoalTemplateCategoriesDTO toGoalTemplateCategoriesDTO_V1(GoalTemplate goalTemplate) {
         return new GoalTemplateCategoriesDTO()
-                .kind(GoalTemplateCategoriesDTO.KindEnum.fromValue(goalTemplate.getKind()))
+                .kind(GoalV1Transformer.mapKindToEnum(goalTemplate.getKind()))
                 .topics(goalTemplate.getTopicKeys() == null ? null : List.copyOf(goalTemplate.getTopicKeys()));
     }
 
-    private static AdherenceCheckScheduleEnumDTO toAdherenceCheckEnumDTO_V1(Integer adherenceCheckId) {
-        return AdherenceCheckScheduleEnumDTO.values()[adherenceCheckId];
+    private static List<AdherenceCheckScheduleEnumDTO> toAdherenceCheckEnumsDTO_V1(Collection<Integer> adherenceCheckIds) {
+        //we store the ordinal as checkId - ids outside the enum range are skipped
+        return nonNull(transform(adherenceCheckIds, GoalV1Transformer::mapOrdinalToAdherenceEnum));
     }
 
     private static GoalAdherenceCheckDTO goalAdherenceCheckDTO_V1(GoalAdherenceCheck goalAdherenceCheck) {
         return new GoalAdherenceCheckDTO()
-                .check(AdherenceCheckScheduleEnumDTO.values()[goalAdherenceCheck.getCheckId()]) //we store the ordinal as checkID
+                .check(GoalV1Transformer.mapOrdinalToAdherenceEnum(goalAdherenceCheck.getCheckId())) //we store the ordinal as checkID
                 .time(goalAdherenceCheck.getTime());
     }
 
@@ -202,6 +222,13 @@ public final class ImportExportTransformer {
 
     private static ParticipantMilestoneInfo fromParticipantMilestoneInfoDTO_V1(ParticipantMilestoneInfoDTO milestone) {
         return new ParticipantMilestoneInfo(milestone.getMilestoneId(), milestone.getDateTime());
+    }
+
+    private static <T> List<T> nonNull(Collection<T> elements) {
+        if (elements == null) {
+            return List.of();
+        }
+        return elements.stream().filter(Objects::nonNull).toList();
     }
 
     private static <S, T> List<T> transform(Collection<S> elements, Function<S, T> transformer) {

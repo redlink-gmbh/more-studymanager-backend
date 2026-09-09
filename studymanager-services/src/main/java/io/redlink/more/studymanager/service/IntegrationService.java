@@ -58,12 +58,10 @@ public class IntegrationService {
     }
 
     public Optional<EndpointToken> getToken(Long studyId, Integer observationId, Integer tokenId) {
-        studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
         return repository.getToken(studyId, observationId, tokenId);
     }
 
     public List<EndpointToken> getTokens(Long studyId, Integer observationId) {
-        studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
         return repository.getAllTokens(studyId, observationId);
     }
 

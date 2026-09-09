@@ -16,11 +16,13 @@ import io.redlink.more.studymanager.controller.RequiresStudyRole;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.model.EndpointToken;
 import io.redlink.more.studymanager.model.Observation;
+import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.StudyRole;
 import io.redlink.more.studymanager.model.transformer.EndpointTokenTransformer;
 import io.redlink.more.studymanager.model.transformer.ObservationTransformer;
 import io.redlink.more.studymanager.service.IntegrationService;
 import io.redlink.more.studymanager.service.ObservationService;
+import io.redlink.more.studymanager.service.StudyStateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,10 +39,12 @@ public class ObservationsApiV1Controller implements ObservationsApi {
     private final ObservationService service;
 
     private final IntegrationService integrationService;
+    private final StudyStateService studyStateService;
 
-    public ObservationsApiV1Controller(ObservationService service, IntegrationService integrationService) {
+    public ObservationsApiV1Controller(ObservationService service, IntegrationService integrationService, StudyStateService studyStateService) {
         this.service = service;
         this.integrationService = integrationService;
+        this.studyStateService = studyStateService;
     }
 
     @Override
@@ -121,7 +125,7 @@ public class ObservationsApiV1Controller implements ObservationsApi {
     @RequiresStudyRole({StudyRole.STUDY_ADMIN, StudyRole.STUDY_OPERATOR})
     @Audited
     public ResponseEntity<EndpointTokenDTO> getToken(Long studyId, Integer observationId, Integer tokenId) {
-
+        studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
         Optional<EndpointToken> token = integrationService.getToken(studyId, observationId, tokenId);
         if (token.isEmpty()) {
             throw new BadRequestException("Token with given id doesn't exist for given observation");
@@ -137,6 +141,7 @@ public class ObservationsApiV1Controller implements ObservationsApi {
     @RequiresStudyRole({StudyRole.STUDY_ADMIN, StudyRole.STUDY_OPERATOR})
     @Audited
     public ResponseEntity<List<EndpointTokenDTO>> getTokens(Long studyId, Integer observationId) {
+        studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
         return ResponseEntity.ok().body(
                 EndpointTokenTransformer.toEndpointTokensDTO(
                         integrationService.getTokens(studyId, observationId)

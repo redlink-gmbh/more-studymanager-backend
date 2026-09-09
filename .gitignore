@@ -5,6 +5,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+graphify-out/cache
+
+
 ### STS ###
 .apt_generated
 .classpath

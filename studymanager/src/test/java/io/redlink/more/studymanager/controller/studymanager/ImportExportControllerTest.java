@@ -24,6 +24,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,6 +32,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -47,6 +49,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -505,4 +509,104 @@ class ImportExportControllerTest {
                 .andExpect(jsonPath("$.modified").exists())
                 .andExpect(jsonPath("$.created").exists());
     }
+
+    @Test
+    @DisplayName("Study import should succeed for exports without a (complete) goalConfiguration")
+    void testImportStudyWithoutGoalConfiguration() throws Exception {
+        when(importExportService.importStudy(any(StudyImportExport.class), any()))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0, StudyImportExport.class)
+                        .getStudy()
+                        .setStudyId(2L)
+                        .setStudyState(Study.Status.DRAFT)
+                        .setCreated(Instant.ofEpochMilli(0))
+                        .setModified(Instant.ofEpochMilli(0)));
+
+        //an export created before goals existed - no goalConfiguration at all
+        importStudy("""
+                {"study":{"studyId":1,"title":"Legacy Study"}}""")
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.studyId").value(2L));
+
+        //a goalConfiguration without the (optional) consent block
+        importStudy("""
+                {"study":{"studyId":1,"title":"Legacy Study"},
+                 "goalConfiguration":{"topics":[],"adherenceChecks":[]}}""")
+                .andExpect(status().isCreated());
+
+        //no study id - it only stamps the source study on topics/checks, which the import overrides
+        importStudy("""
+                {"study":{"title":"Legacy Study"},
+                 "goalConfiguration":{"consent":{"commitment":"Do you commit?"}}}""")
+                .andExpect(status().isCreated());
+
+        ArgumentCaptor<StudyImportExport> captor = ArgumentCaptor.forClass(StudyImportExport.class);
+        verify(importExportService, times(3)).importStudy(captor.capture(), any());
+
+        var noGoalConfig = captor.getAllValues().get(0).getStudyGoalConfig();
+        assertThat(noGoalConfig).isNotNull();
+        assertThat(noGoalConfig.getCommitment()).isNull();
+        assertThat(noGoalConfig.getAchievability()).isNull();
+        assertThat(noGoalConfig.getUnderstandability()).isNull();
+        assertThat(noGoalConfig.getTopics()).isEmpty();
+        assertThat(noGoalConfig.getAdherenceChecks()).isEmpty();
+
+        var noConsent = captor.getAllValues().get(1).getStudyGoalConfig();
+        assertThat(noConsent).isNotNull();
+        assertThat(noConsent.getCommitment()).isNull();
+        assertThat(noConsent.getTopics()).isEmpty();
+        assertThat(noConsent.getAdherenceChecks()).isEmpty();
+
+        var noStudyId = captor.getAllValues().get(2).getStudyGoalConfig();
+        assertThat(noStudyId.getStudyId()).isNull();
+        assertThat(noStudyId.getCommitment()).isEqualTo("Do you commit?");
+    }
+
+    private ResultActions importStudy(String json) throws Exception {
+        return mvc.perform(multipart("/api/v1/studies/import/study")
+                .file("file", json.getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @Test
+    @DisplayName("Import should create the goal config for a consent with only null texts")
+    void testImportGoalConfigWithNullConsentTexts() throws Exception {
+        when(importExportService.importStudy(any(StudyImportExport.class), any()))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0, StudyImportExport.class)
+                        .getStudy()
+                        .setStudyId(2L)
+                        .setStudyState(Study.Status.DRAFT)
+                        .setCreated(Instant.ofEpochMilli(0))
+                        .setModified(Instant.ofEpochMilli(0)));
+
+        importStudy("""
+                {"study":{"studyId":1,"title":"Goals Study"},
+                 "goalConfiguration":{
+                   "consent":{"commitment":null,"achievability":null,"understandability":null},
+                   "topics":[
+                     {"key":"medication-care","title":"Medication & Care","description":"Medikamente einnehmen"},
+                     {"key":"movement-activity","title":"Movement & Activity","description":"Schritte"}],
+                   "adherenceChecks":[
+                     {"check":"morning","time":"07:00:00"},
+                     {"check":"night","time":"23:00:00"}]}}""")
+                .andExpect(status().isCreated());
+
+        ArgumentCaptor<StudyImportExport> captor = ArgumentCaptor.forClass(StudyImportExport.class);
+        verify(importExportService).importStudy(captor.capture(), any());
+        var config = captor.getValue().getStudyGoalConfig();
+
+        //the consent block is present, so a study goal config has to be created
+        assertThat(config.isConsentDefined()).isTrue();
+        assertThat(config.hasConsent()).isTrue();
+        assertThat(config.getCommitment()).isNull();
+        assertThat(config.getTopics())
+                .extracting("key", "title")
+                .containsExactly(
+                        tuple("medication-care", "Medication & Care"),
+                        tuple("movement-activity", "Movement & Activity"));
+        assertThat(config.getAdherenceChecks())
+                .extracting("checkId", "title", "time")
+                .containsExactly(
+                        tuple(AdherenceCheckScheduleEnumDTO.MORNING.ordinal(), "morning", LocalTime.parse("07:00")),
+                        tuple(AdherenceCheckScheduleEnumDTO.NIGHT.ordinal(), "night", LocalTime.parse("23:00")));
+    }
+
 }
