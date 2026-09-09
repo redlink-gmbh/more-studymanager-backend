@@ -229,7 +229,7 @@ public final class GoalV1Transformer {
     /**
      * Maps internal ordinal (stored in adherenceCheckIds) to DTO enum.
      */
-    private static AdherenceCheckScheduleEnumDTO mapOrdinalToAdherenceEnum(Integer ordinal) {
+    static AdherenceCheckScheduleEnumDTO mapOrdinalToAdherenceEnum(Integer ordinal) {
         if (ordinal == null) return null;
         AdherenceCheckScheduleEnumDTO[] values = AdherenceCheckScheduleEnumDTO.values();
         if (ordinal >= 0 && ordinal < values.length) {
@@ -246,7 +246,7 @@ public final class GoalV1Transformer {
         return enumValue.ordinal();
     }
 
-    private static GoalTemplateCategoriesDTO.KindEnum mapKindToEnum(String kind) {
+    static GoalTemplateCategoriesDTO.KindEnum mapKindToEnum(String kind) {
         if (kind == null) return null;
         try {
             return GoalTemplateCategoriesDTO.KindEnum.fromValue(kind.toLowerCase().trim());

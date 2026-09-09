@@ -463,4 +463,97 @@ public class ImportExportServiceTest {
                 new ParticipantMilestoneInfo(2, milestoneDateTime));
     }
 
+    @Test
+    @DisplayName("Study import should succeed when the study export contains no goal configuration")
+    void testImportStudyWithoutGoalConfig() {
+        Long studyId = 1L;
+
+        StudyImportExport studyImport = new StudyImportExport()
+                .setStudy(new Study())
+                .setStudyGoalConfig(null); //e.g. an export created before goals existed
+
+        when(studyService.createStudy(any(), any()))
+                .thenAnswer(invocationOnMock ->
+                        ((Study) invocationOnMock.getArgument(0)).setStudyId(studyId));
+
+        Study newStudy = importExportService.importStudy(studyImport, currentUser);
+
+        assertThat(newStudy.getStudyId()).isEqualTo(studyId);
+        verify(goalService, never()).setGoalConfig(any());
+        verify(goalService).importGoalTopics(studyId, List.of());
+        verify(goalService).importAdherenceChecks(studyId, List.of());
+    }
+
+    @Test
+    @DisplayName("Study import should create the goal config for a defined consent even if all its texts are null")
+    void testImportStudyWithEmptyConsentTexts() {
+        Long studyId = 1L;
+        Long sourceStudyId = 99L;
+
+        StudyImportExport.StudyGoalConfigData goalConfigData = new StudyImportExport.StudyGoalConfigData(sourceStudyId)
+                .setConsentDefined(true); //the import file carries a "consent" block, all texts null
+        goalConfigData.setTopics(List.of(
+                new GoalTopic().setStudyId(sourceStudyId).setKey("topic-key-1").setTitle("Topic 1")));
+
+        StudyImportExport studyImport = new StudyImportExport()
+                .setStudy(new Study())
+                .setStudyGoalConfig(goalConfigData);
+
+        when(studyService.createStudy(any(), any()))
+                .thenAnswer(invocationOnMock ->
+                        ((Study) invocationOnMock.getArgument(0)).setStudyId(studyId));
+
+        importExportService.importStudy(studyImport, currentUser);
+
+        verify(goalService).setGoalConfig(goalConfigCaptor.capture());
+        assertThat(goalConfigCaptor.getValue().getStudyId()).isEqualTo(studyId);
+        assertThat(goalConfigCaptor.getValue().getCommitment()).isNull();
+        assertThat(goalConfigCaptor.getValue().getAchievability()).isNull();
+        assertThat(goalConfigCaptor.getValue().getUnderstandability()).isNull();
+
+        verify(goalService).importGoalTopics(eq(studyId), goalTopicsCaptor.capture());
+        assertThat(goalTopicsCaptor.getValue()).hasSize(1);
+        assertThat(goalTopicsCaptor.getValue().get(0).getKey()).isEqualTo("topic-key-1");
+    }
+
+    @Test
+    @DisplayName("Study import should not create a goal config if the import defines no consent")
+    void testImportStudyWithoutConsent() {
+        Long studyId = 1L;
+
+        //no consent block at all - e.g. an export created before goals existed
+        StudyImportExport studyImport = new StudyImportExport()
+                .setStudy(new Study())
+                .setStudyGoalConfig(new StudyImportExport.StudyGoalConfigData(99L));
+
+        when(studyService.createStudy(any(), any()))
+                .thenAnswer(invocationOnMock ->
+                        ((Study) invocationOnMock.getArgument(0)).setStudyId(studyId));
+
+        importExportService.importStudy(studyImport, currentUser);
+
+        verify(goalService, never()).setGoalConfig(any());
+    }
+
+    @Test
+    @DisplayName("Study export should contain an empty goal configuration if the study has none")
+    void testExportStudyWithoutGoalConfig() {
+        Long studyId = 1L;
+
+        when(studyService.getStudy(eq(studyId), any()))
+                .thenReturn(Optional.of(new Study().setStudyId(studyId)));
+        when(goalService.getGoalConfig(studyId)).thenReturn(null);
+
+        StudyImportExport export = importExportService.exportStudy(studyId, currentUser);
+
+        assertThat(export.getStudyGoalConfig()).isNotNull();
+        assertThat(export.getStudyGoalConfig().isConsentDefined()).isFalse();
+        assertThat(export.getStudyGoalConfig().getStudyId()).isEqualTo(studyId);
+        assertThat(export.getStudyGoalConfig().getCommitment()).isNull();
+        assertThat(export.getStudyGoalConfig().getAchievability()).isNull();
+        assertThat(export.getStudyGoalConfig().getUnderstandability()).isNull();
+        assertThat(export.getStudyGoalConfig().getTopics()).isEmpty();
+        assertThat(export.getStudyGoalConfig().getAdherenceChecks()).isEmpty();
+    }
+
 }

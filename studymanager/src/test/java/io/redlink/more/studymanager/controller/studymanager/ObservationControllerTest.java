@@ -12,14 +12,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.redlink.more.studymanager.api.v1.model.EndpointTokenDTO;
 import io.redlink.more.studymanager.api.v1.model.ObservationDTO;
 import io.redlink.more.studymanager.api.v1.model.ObservationScheduleDTO;
+import io.redlink.more.studymanager.exception.BadStudyStateException;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
 import io.redlink.more.studymanager.model.EndpointToken;
 import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.PlatformRole;
+import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.service.IntegrationService;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
 import io.redlink.more.studymanager.service.ObservationService;
+import io.redlink.more.studymanager.service.StudyStateService;
 import io.redlink.more.studymanager.utils.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +43,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,6 +60,9 @@ class ObservationControllerTest {
 
     @MockitoBean
     ObservationService observationService;
+
+    @MockitoBean
+    StudyStateService studyStateService;
 
     @MockitoBean
     OAuth2AuthenticationService oAuth2AuthenticationService;
@@ -295,7 +303,24 @@ class ObservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("Reading tokens of a CLOSED study should be rejected with a conflict")
+    void testReadTokensOfClosedStudy() throws Exception {
+        when(studyStateService.assertStudyNotInState(1L, Study.Status.CLOSED))
+                .thenThrow(BadStudyStateException.state());
+
+        mvc.perform(get("/api/v1/studies/1/observations/1/tokens/1"))
+                .andDo(print())
+                .andExpect(status().isConflict());
+
+        mvc.perform(get("/api/v1/studies/1/observations/1/tokens"))
+                .andDo(print())
+                .andExpect(status().isConflict());
+
+        //the state check must short-circuit before the tokens are read
+        verify(integrationService, never()).getToken(anyLong(), anyInt(), anyInt());
+        verify(integrationService, never()).getTokens(anyLong(), anyInt());
+    }
+
 }
-
-
-

@@ -28,7 +28,7 @@ public class StudyImportExport {
     private Map<Integer, Trigger> triggers = new HashMap<>();
     private Map<Integer, List<Action>> actions = new HashMap<>();
     private List<IntegrationInfo> integrations = new ArrayList<>();
-    private StudyGoalConfigData studyGoalConfig = null;
+    private StudyGoalConfigData studyGoalConfig = new StudyGoalConfigData();
     private List<GoalTemplate> goalTemplates = new ArrayList<>();
 
     public Study getStudy() {
@@ -135,7 +135,7 @@ public class StudyImportExport {
     }
 
     public StudyImportExport setStudyGoalConfig(StudyGoalConfigData studyGoalConfig) {
-        this.studyGoalConfig = studyGoalConfig;
+        this.studyGoalConfig = studyGoalConfig == null ? new StudyGoalConfigData() : studyGoalConfig;
         return this;
     }
 
@@ -158,6 +158,11 @@ public class StudyImportExport {
 
         private List<GoalTopic> topics = new ArrayList<>();
         private List<GoalAdherenceCheck> adherenceChecks = new ArrayList<>();
+        private boolean consentDefined;
+
+        public StudyGoalConfigData() {
+            super();
+        }
 
         public StudyGoalConfigData(long studyId) {
             super();
@@ -170,6 +175,32 @@ public class StudyImportExport {
             setAchievability(config.getAchievability());
             setCommitment(config.getCommitment());
             setUnderstandability(config.getUnderstandability());
+            this.consentDefined = true; //the study has a goal config
+        }
+
+        /**
+         * Whether the study defines a goal consent. This is <code>true</code> even if all consent
+         * texts are <code>null</code>, as the presence of the consent - not its content - decides
+         * whether a study goal config is created on import.
+         */
+        public boolean isConsentDefined() {
+            return consentDefined;
+        }
+
+        public StudyGoalConfigData setConsentDefined(boolean consentDefined) {
+            this.consentDefined = consentDefined;
+            return this;
+        }
+
+        /**
+         * Whether a study goal config has to be created for this data - either the consent is
+         * explicitly defined or at least one consent text is present.
+         */
+        public boolean hasConsent() {
+            return consentDefined
+                    || getCommitment() != null
+                    || getAchievability() != null
+                    || getUnderstandability() != null;
         }
 
         public List<GoalAdherenceCheck> getAdherenceChecks() {

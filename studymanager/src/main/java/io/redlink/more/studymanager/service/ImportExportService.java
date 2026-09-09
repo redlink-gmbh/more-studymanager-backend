@@ -203,16 +203,19 @@ public class ImportExportService {
 
         //Goals
         var goalConfData = studyImport.getStudyGoalConfig();
-        StudyGoalConfig goalConfig = new StudyGoalConfig()
-                .setStudyId(studyId)
-                .setAchievability(goalConfData.getAchievability())
-                .setCommitment(goalConfData.getCommitment())
-                .setUnderstandability(goalConfData.getUnderstandability());
-        if (goalConfig.getAchievability() != null || goalConfig.getCommitment() != null || goalConfig.getUnderstandability() != null) {
-            goalService.setGoalConfig(goalConfig);
-        } //else if all values are null we do not need to set a config as this is the default
-        goalService.importGoalTopics(studyId, goalConfData.getTopics());
-        goalService.importAdherenceChecks(studyId, goalConfData.getAdherenceChecks());
+        if (goalConfData != null) { //the goal configuration is optional in the import
+            StudyGoalConfig goalConfig = new StudyGoalConfig()
+                    .setStudyId(studyId)
+                    .setAchievability(goalConfData.getAchievability())
+                    .setCommitment(goalConfData.getCommitment())
+                    .setUnderstandability(goalConfData.getUnderstandability());
+            if (goalConfData.hasConsent()) {
+                //the import defines a consent - create the config even if all consent texts are null
+                goalService.setGoalConfig(goalConfig);
+            } //else the import has no consent at all (e.g. an export created before goals existed)
+            goalService.importGoalTopics(studyId, goalConfData.getTopics());
+            goalService.importAdherenceChecks(studyId, goalConfData.getAdherenceChecks());
+        }
         studyImport.getGoalTemplates().stream()
                 .filter(Objects::nonNull)
                 .forEach(gt -> goalService.importGoalTemplate(studyId, gt));
