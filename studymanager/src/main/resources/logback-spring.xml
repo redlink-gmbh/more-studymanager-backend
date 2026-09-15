@@ -22,7 +22,7 @@
         <!-- <logger name="org.springframework.web" level="DEBUG"/> -->
 
         <!-- TRACE level will log the registered ComponentFactories on Startup -->
-        <logger name="io.redlink.more.studymanager.configuration.ComponentFactoriesConfiguration" level="TRACE" />
+        <logger name="io.redlink.more.studymanager.configuration.ComponentFactoriesConfiguration" level="TRACE"/>
     </springProfile>
 
 </configuration>
