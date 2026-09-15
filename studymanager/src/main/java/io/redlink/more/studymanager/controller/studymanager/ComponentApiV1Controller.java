@@ -159,6 +159,7 @@ public class ComponentApiV1Controller implements ComponentsApi {
         if (ObservationFactory.class.isAssignableFrom(factory.getClass())) {
             c.hidden(((ObservationFactory) factory).getHidden());
             c.visibility(toVisibilityDTO(((ObservationFactory) factory).getVisibility()));
+            c.resyncable(((ObservationFactory) factory).isResyncable());
         }
         return c;
     }

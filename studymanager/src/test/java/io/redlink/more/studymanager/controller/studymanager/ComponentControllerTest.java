@@ -15,6 +15,8 @@ import io.redlink.more.studymanager.core.factory.ActionFactory;
 import io.redlink.more.studymanager.core.factory.GoalTemplateFactory;
 import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.factory.TriggerFactory;
+import io.redlink.more.studymanager.core.io.Visibility;
+import io.redlink.more.studymanager.core.measurement.MeasurementSet;
 import io.redlink.more.studymanager.core.model.User;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.properties.model.BooleanValue;
@@ -45,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({ComponentApiV1Controller.class})
@@ -103,6 +106,10 @@ class ComponentControllerTest {
                             .setImmutable(false)
                             .setDefaultValue(new IntegerRange(1, 50))
             ));
+
+            when(observationFactory.getMeasurementSet()).thenReturn(new MeasurementSet("TEST", Set.of()));
+            when(observationFactory.getVisibility()).thenReturn(Visibility.DEFAULT);
+            when(observationFactory.isResyncable()).thenReturn(true);
 
             this.triggerFactory = mock(TriggerFactory.class);
             when(triggerFactory.getId()).thenReturn("my-test-trigger");
@@ -183,6 +190,15 @@ class ComponentControllerTest {
         value = jsonNodeArgumentCaptor.getValue().get("hello").asText();
         Assertions.assertEquals("world", value);
 
+    }
+
+    @Test
+    void testListObservationComponentsExposesResyncable() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/components/observation"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].componentId").value("my-test-observation"))
+                .andExpect(jsonPath("$[0].resyncable").value(true))
+                .andExpect(jsonPath("$[0].visibility.changeable").value(true));
     }
 
     @Test
