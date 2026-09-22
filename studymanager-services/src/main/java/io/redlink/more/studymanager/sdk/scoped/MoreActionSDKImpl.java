@@ -60,9 +60,8 @@ public class MoreActionSDKImpl extends MorePlatformSDKImpl implements MoreAction
             ctx.putIntervention(interventionId);
             ctx.putAction(actionId, actionType);
 
-            if (sdk.sendPushNotification(studyId, participantId, title, message, null)) {
-                sdk.storeDatapoint(ElasticDataPoint.Type.action, studyId, studyGroupId, participantId, actionId, actionType, Instant.now(), Map.of("title", title, "message", message));
-            }
+            sdk.sendPushNotification(studyId, participantId, title, message, null);
+            sdk.storeDatapoint(ElasticDataPoint.Type.action, studyId, studyGroupId, participantId, actionId, actionType, Instant.now(), Map.of("title", title, "message", message));
         }
     }
 
@@ -80,9 +79,8 @@ public class MoreActionSDKImpl extends MorePlatformSDKImpl implements MoreAction
 
             LOGGER.info("Trigger observation for participant {} with deepLink <{}>", participantId, deepLink);
 
-            if (sdk.sendPushNotification(studyId, participantId, title, message, Map.of("deepLink", deepLink))) {
-                sdk.storeDatapoint(ElasticDataPoint.Type.action, studyId, studyGroupId, participantId, actionId, actionType, Instant.now(), Map.of("title", title, "message", message));
-            }
+            sdk.sendPushNotification(studyId, participantId, title, message, Map.of("deepLink", deepLink));
+            sdk.storeDatapoint(ElasticDataPoint.Type.action, studyId, studyGroupId, participantId, actionId, actionType, Instant.now(), Map.of("title", title, "message", message));
         }
     }
 }

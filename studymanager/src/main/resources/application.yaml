@@ -73,8 +73,17 @@ elastic:
 kibana:
   uri: ${KIBANA_URI:http://localhost:5601}
 
-firebase:
-  settingsFile: ${FIREBASE_SETTINGS:file:firebase-settings.json}
+push:
+  base-url: ${PUSH_SERVICE_URL:http://localhost:8090}
+  api-key: ${PUSH_SERVICE_API_KEY:}
+  connect-timeout: 5s
+  read-timeout: 10s
+  retry:
+    initial-delay: 5s
+    multiplier: 2
+    max-delay: 5m
+    max-attempts: 10
+    queue-capacity: 10000
 
 management:
   endpoint:

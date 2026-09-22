@@ -55,6 +55,17 @@ public class Study {
             return value;
         }
 
+        /**
+         * The study-states the app knows, which are fewer than the ones the study-manager tracks.
+         */
+        public String toAppState() {
+            return (switch (this) {
+                case ACTIVE, PREVIEW -> ACTIVE;
+                case PAUSED, PAUSED_PREVIEW -> PAUSED;
+                default -> CLOSED;
+            }).getValue();
+        }
+
         public static Status fromValue(String value) {
             for (Status c : Status.values()) {
                 if (c.value.equalsIgnoreCase(value)) {

@@ -8,7 +8,7 @@
  */
 package io.redlink.more.studymanager.service;
 
-import io.redlink.more.studymanager.event.ParticipantMilestoneChangedEvent;
+import io.redlink.more.studymanager.event.PushNotificationEvent;
 import io.redlink.more.studymanager.exception.DataConstraintException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.Milestone;
@@ -89,7 +89,7 @@ class ParticipantMilestoneServiceTest {
 
         service.createParticipantMilestone(1L, 3, 2, DATE_TIME);
 
-        verify(applicationEventPublisher, never()).publishEvent(any(ParticipantMilestoneChangedEvent.class));
+        verify(applicationEventPublisher, never()).publishEvent(any(PushNotificationEvent.class));
     }
 
     @Test
@@ -103,6 +103,6 @@ class ParticipantMilestoneServiceTest {
 
         service.createParticipantMilestone(1L, 3, 2, DATE_TIME);
 
-        verify(applicationEventPublisher).publishEvent(any(ParticipantMilestoneChangedEvent.class));
+        verify(applicationEventPublisher).publishEvent(any(PushNotificationEvent.class));
     }
 }

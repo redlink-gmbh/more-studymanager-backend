@@ -19,11 +19,14 @@ import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.sdk.schedule.Schedule;
 import io.redlink.more.studymanager.core.ui.DataViewData;
 import io.redlink.more.studymanager.core.ui.ViewConfig;
+import io.redlink.more.studymanager.event.PushNotificationEvent;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.ParticipantMilestone;
 import io.redlink.more.studymanager.model.data.ElasticActionDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticDataPoint;
 import io.redlink.more.studymanager.model.data.ElasticObservationDataPoint;
+import io.redlink.more.studymanager.push.client.model.MessageType;
+import io.redlink.more.studymanager.push.client.model.Priority;
 import io.redlink.more.studymanager.repository.NameValuePairRepository;
 import io.redlink.more.studymanager.repository.ObservationRepository;
 import io.redlink.more.studymanager.scheduling.SchedulingService;
@@ -36,9 +39,9 @@ import io.redlink.more.studymanager.service.ElasticService;
 import io.redlink.more.studymanager.service.GoalService;
 import io.redlink.more.studymanager.service.ParticipantMilestoneService;
 import io.redlink.more.studymanager.service.ParticipantService;
-import io.redlink.more.studymanager.service.PushNotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -66,7 +69,7 @@ public class MoreSDK {
 
     private final ElasticDataService elasticDataService;
 
-    private final PushNotificationService pushNotificationService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final ObservationRepository observationRepository;
 
@@ -79,7 +82,7 @@ public class MoreSDK {
             SchedulingService schedulingService,
             ParticipantService participantService,
             ElasticService elasticService, ElasticDataService elasticDataService,
-            PushNotificationService pushNotificationService,
+            ApplicationEventPublisher applicationEventPublisher,
             ObservationRepository observationRepository,
             GoalService goalService,
             ParticipantMilestoneService participantMilestoneService) {
@@ -88,7 +91,7 @@ public class MoreSDK {
         this.participantService = participantService;
         this.elasticService = elasticService;
         this.elasticDataService = elasticDataService;
-        this.pushNotificationService = pushNotificationService;
+        this.applicationEventPublisher = applicationEventPublisher;
         this.observationRepository = observationRepository;
         this.goalService = goalService;
         this.participantMilestoneService = participantMilestoneService;
@@ -165,9 +168,11 @@ public class MoreSDK {
     }
 
 
-    public boolean sendPushNotification(long studyId, int participantId, String title, String message, Map<String, String> data) {
+    public void sendPushNotification(long studyId, int participantId, String title, String message, Map<String, String> data) {
         LOGGER.debug("Sending message to participant (sid:{}, pid:{}): {} -- {}", studyId, participantId, title, message);
-        return pushNotificationService.sendPushNotification(studyId, participantId, title, message, data);
+        applicationEventPublisher.publishEvent(new PushNotificationEvent(
+                this, studyId, participantId, title, message, data,
+                MessageType.FOREGROUND, Priority.URGENT));
     }
 
     public void storeDatapoint(

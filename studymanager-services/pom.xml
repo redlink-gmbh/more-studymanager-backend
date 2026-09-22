@@ -116,9 +116,9 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
+        <dependency> <!-- @Generated on the generated push-api client -->
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
 
         <dependency> <!-- PasswordEncoder -->
@@ -174,5 +174,52 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator.version}</version>
+                <executions>
+                    <execution>
+                        <id>push-api-client</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatorName>java</generatorName>
+                            <library>restclient</library>
+
+                            <inputSpec>${project.basedir}/src/main/resources/openapi/push-v1.yaml</inputSpec>
+                            <output>${project.build.directory}/generated-sources/push-api</output>
+
+                            <invokerPackage>io.redlink.more.studymanager.push.client</invokerPackage>
+                            <apiPackage>io.redlink.more.studymanager.push.client.api</apiPackage>
+                            <modelPackage>io.redlink.more.studymanager.push.client.model</modelPackage>
+
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <!-- unlike the server-stub generation this must be true: it emits ApiClient -->
+                            <generateSupportingFiles>true</generateSupportingFiles>
+
+                            <configOptions>
+                                <sourceFolder>src</sourceFolder>
+                                <useJakartaEe>true</useJakartaEe>
+                                <openApiNullable>false</openApiNullable>
+                                <annotationLibrary>none</annotationLibrary>
+                                <documentationProvider>none</documentationProvider>
+                                <serializationLibrary>jackson</serializationLibrary>
+                                <useBeanValidation>false</useBeanValidation>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Collections;
 import java.util.Set;
@@ -43,6 +44,9 @@ class ParticipantServiceTest {
 
     @Mock
     ApplicationAccessService applicationAccessService;
+
+    @Mock
+    ApplicationEventPublisher applicationEventPublisher;
 
     @InjectMocks
     ParticipantService participantService;

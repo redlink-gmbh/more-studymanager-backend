@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: MORE Push Notification API
+  description: |
+    Server-to-server API for delivering push notifications to MORE participants.
+    Callers authenticate with a static API key in the `X-API-Key` header.
+    Sends are accepted asynchronously: a request is queued and dispatched by a
+    background worker, so a `202` means "accepted for delivery", not "delivered".
+  version: '1'
+servers:
+  - url: /api/v1
+    description: This server
+tags:
+  - name: notifications
+    description: Send push notifications and inspect delivery status
+
+security:
+  - apiKey: [ ]
+
+paths:
+  /notifications:
+    post:
+      tags: [ notifications ]
+      operationId: sendNotification
+      summary: Queue a push notification for delivery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PushNotificationRequest'
+      responses:
+        '202':
+          description: Accepted for delivery
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PushNotificationAccepted'
+        '400':
+          description: Malformed request, or neither recipients nor tokens given
+        '401':
+          description: Missing or invalid API key
+
+  /notifications/{batchId}:
+    get:
+      tags: [ notifications ]
+      operationId: getBatchStatus
+      summary: Delivery status of a previously queued batch
+      parameters:
+        - name: batchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Current status of the batch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchStatus'
+        '401':
+          description: Missing or invalid API key
+        '404':
+          description: No such batch
+
+components:
+
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: |
+        Shared secret issued to each calling service and injected by the deployment
+        pipeline. The service is also network-isolated; the key is what stops a client
+        that can reach the port from sending notifications to participants.
+
+  schemas:
+
+    Recipient:
+      type: object
+      description: A MORE participant, resolved to a device token via the study manager database.
+      required: [ studyId, participantId ]
+      properties:
+        studyId:
+          type: integer
+          format: int64
+        participantId:
+          type: integer
+          format: int32
+
+    Priority:
+      type: string
+      description: |
+        Delivery priority. Defaults to `NORMAL`.
+
+        Each level has a batching window: the message becomes due that long after it is
+        accepted, and everything that came due leaves in the same pass. Waiting longer
+        means fewer, larger sends, which is easier on both the push service and the
+        device's battery.
+
+        | Priority | Window  | Behaviour                                                         |
+        |----------|---------|-------------------------------------------------------------------|
+        | `URGENT` | none    | Queued ahead of any backlog and sent as soon as possible.          |
+        | `HIGH`   | ~5 s    | Sent with the next batch; the platform is asked to wake the device.|
+        | `NORMAL` | ~10 s   | Sent with the next batch.                                          |
+        | `LOW`    | ~20 s   | Anything that can wait — digests, reminders, housekeeping.         |
+
+        `URGENT` is the only level that starts a delivery attempt immediately rather than
+        waiting for a scheduled pass. The response is `202` for all four — priority
+        shortens the delay before the attempt, it never makes the call synchronous. The
+        windows above are the deployed defaults and are configurable per environment.
+      enum: [ URGENT, HIGH, NORMAL, LOW ]
+
+    MessageType:
+      type: string
+      description: |
+        `FOREGROUND` sends a user-visible notification (title/body are rendered by the OS).
+        `BACKGROUND` sends a silent data-only message for the app to handle itself.
+      enum: [ FOREGROUND, BACKGROUND ]
+
+    PushNotificationRequest:
+      type: object
+      description: |
+        Provide `recipients`, `tokens`, or both — at least one must be non-empty.
+        `recipients` are looked up in the token store; `tokens` are used as given.
+      properties:
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recipient'
+        tokens:
+          type: array
+          description: Raw device tokens, bypassing participant lookup.
+          items:
+            type: string
+        title:
+          type: string
+          description: Notification title. Omitted for background messages.
+        body:
+          type: string
+          description: Notification body. Omitted for background messages.
+        data:
+          type: object
+          description: Arbitrary key/value payload handed to the app untouched.
+          additionalProperties:
+            type: string
+        imageUrl:
+          type: string
+          format: uri
+          description: Image rendered with the notification.
+        priority:
+          $ref: '#/components/schemas/Priority'
+        type:
+          $ref: '#/components/schemas/MessageType'
+
+    SkippedRecipient:
+      type: object
+      required: [ recipient, reason ]
+      properties:
+        recipient:
+          $ref: '#/components/schemas/Recipient'
+        reason:
+          type: string
+          example: NO_TOKEN_REGISTERED
+
+    PushNotificationAccepted:
+      type: object
+      required: [ batchId, accepted ]
+      properties:
+        batchId:
+          type: string
+          format: uuid
+          description: Use this to poll delivery status.
+        accepted:
+          type: integer
+          format: int32
+          description: Number of messages queued for delivery.
+        skipped:
+          type: array
+          description: Recipients that could not be resolved to a token.
+          items:
+            $ref: '#/components/schemas/SkippedRecipient'
+
+    DeliveryFailure:
+      type: object
+      required: [ token, error, permanent ]
+      properties:
+        token:
+          type: string
+        error:
+          type: string
+        permanent:
+          type: boolean
+          description: If true the message will not be retried.
+
+    BatchStatus:
+      type: object
+      required: [ batchId, total, pending, sent, failed ]
+      properties:
+        batchId:
+          type: string
+          format: uuid
+        total:
+          type: integer
+          format: int32
+        pending:
+          type: integer
+          format: int32
+        sent:
+          type: integer
+          format: int32
+        failed:
+          type: integer
+          format: int32
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryFailure'

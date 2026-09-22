@@ -19,15 +19,13 @@ import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.ParticipantMilestone;
 import io.redlink.more.studymanager.model.Trigger;
 import io.redlink.more.studymanager.repository.NameValuePairRepository;
-import io.redlink.more.studymanager.repository.NotificationRepository;
 import io.redlink.more.studymanager.repository.ObservationRepository;
-import io.redlink.more.studymanager.repository.PushNotificationTokenRepository;
 import io.redlink.more.studymanager.repository.StudyGroupRepository;
 import io.redlink.more.studymanager.repository.StudyRepository;
 import io.redlink.more.studymanager.scheduling.SchedulingService;
 import io.redlink.more.studymanager.service.ElasticDataService;
 import io.redlink.more.studymanager.service.ElasticService;
-import io.redlink.more.studymanager.service.FirebaseMessagingService;
+import io.redlink.more.studymanager.service.PushNotificationDispatcher;
 import io.redlink.more.studymanager.service.GoalService;
 import io.redlink.more.studymanager.service.InterventionService;
 import io.redlink.more.studymanager.service.ParticipantMilestoneService;
@@ -62,9 +60,9 @@ import static org.mockito.Mockito.*;
 @ContextConfiguration(classes = {
         MoreSDK.class, JPAConfiguration.class,
         NameValuePairRepository.class, StudyRepository.class, StudyGroupRepository.class,
-        PushNotificationTokenRepository.class, NotificationRepository.class, ObservationRepository.class,
+        ObservationRepository.class,
         ElasticDataService.class, SchedulingService.class, PushNotificationService.class,
-        StudyGroupService.class, StudyStateService.class, FirebaseMessagingService.class
+        StudyGroupService.class, StudyStateService.class
 })
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles({"test", "test-containers-flyway"})
@@ -95,7 +93,7 @@ class MoreSDKTest {
     ElasticService elasticService;
 
     @MockitoBean
-    FirebaseMessagingService firebaseMessagingService;
+    PushNotificationDispatcher pushNotificationDispatcher;
 
     @Test
     void testTriggerScheduling() throws InterruptedException {

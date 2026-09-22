@@ -1,7 +1,7 @@
 package io.redlink.more.studymanager.scheduling;
 
-import io.redlink.more.studymanager.event.StudyParticipantClosedEvent;
 import io.redlink.more.studymanager.model.Participant;
+import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.service.ParticipantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,9 @@ public class StudyParticipantCron {
     }
 
     private void publishStudyParticipantClosedEvent(final Participant participant) {
-        applicationEventPublisher.publishEvent(new StudyParticipantClosedEvent(this, participant));
+        participantService.notifyAboutStudyState(
+                participant.getStudyId(), List.of(participant.getParticipantId()),
+                Study.Status.ACTIVE, Study.Status.CLOSED);
     }
 
 
