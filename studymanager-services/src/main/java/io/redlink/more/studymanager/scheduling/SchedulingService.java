@@ -16,7 +16,7 @@ import org.quartz.*;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;

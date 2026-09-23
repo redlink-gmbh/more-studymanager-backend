@@ -8,12 +8,14 @@
  */
 package io.redlink.more.studymanager.service;
 
-import io.redlink.more.studymanager.event.ParticipantMilestoneChangedEvent;
+import io.redlink.more.studymanager.event.PushNotificationEvent;
 import io.redlink.more.studymanager.exception.DataConstraintException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.Participant;
 import io.redlink.more.studymanager.model.ParticipantMilestone;
 import io.redlink.more.studymanager.model.Study;
+import io.redlink.more.studymanager.push.client.model.MessageType;
+import io.redlink.more.studymanager.push.client.model.Priority;
 import io.redlink.more.studymanager.repository.MilestoneRepository;
 import io.redlink.more.studymanager.repository.ParticipantMilestoneRepository;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -106,7 +109,12 @@ public class ParticipantMilestoneService {
 
     private void publishIfActive(Participant participant) {
         if (participant.getStatus() == Participant.Status.ACTIVE) {
-            applicationEventPublisher.publishEvent(new ParticipantMilestoneChangedEvent(this, participant));
+            applicationEventPublisher.publishEvent(new PushNotificationEvent(
+                    this, participant.getStudyId(), participant.getParticipantId(),
+                    "Your Study has a new update",
+                    "Your study schedule was updated. For more information, please launch the app!",
+                    Map.of("key", "MILESTONE_UPDATED"),
+                    MessageType.BACKGROUND, Priority.NORMAL));
         }
     }
 }
