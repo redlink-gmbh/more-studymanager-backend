@@ -19,6 +19,7 @@ import io.redlink.more.studymanager.model.StudyGroup;
 import io.redlink.more.studymanager.model.scheduler.Duration;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.model.scheduler.RecurrenceRule;
+import io.redlink.more.studymanager.model.scheduler.StudyWideEvent;
 import io.redlink.more.studymanager.model.scheduler.RelativeDate;
 import io.redlink.more.studymanager.model.scheduler.RelativeEvent;
 import io.redlink.more.studymanager.utils.MapperUtils;
@@ -70,6 +71,44 @@ class ObservationRepositoryTest {
     @BeforeEach
     void deleteAll() {
         observationRepository.clear();
+    }
+
+    @Test
+    @DisplayName("A study-wide schedule round-trips through the jsonb column")
+    public void testInsertAndReadStudyWideObservation() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+
+        Observation inserted = observationRepository.insert(new Observation()
+                .setStudyId(studyId)
+                .setType("app-usage-observation")
+                .setTitle("app usage")
+                .setHidden(true)
+                .setNoSchedule(false)
+                .setSchedule(new StudyWideEvent()));
+
+        assertThat(inserted.getSchedule()).isInstanceOf(StudyWideEvent.class);
+        assertThat(observationRepository.getById(studyId, inserted.getObservationId()).getSchedule())
+                .isInstanceOf(StudyWideEvent.class);
+
+        Observation updated = observationRepository.updateObservation(inserted.setTitle("app usage 2"));
+        assertThat(updated.getSchedule()).isInstanceOf(StudyWideEvent.class);
+    }
+
+    @Test
+    @DisplayName("Observations without any schedule round-trip as SQL NULL")
+    public void testInsertAndReadObservationWithoutSchedule() {
+        Long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
+
+        Observation inserted = observationRepository.insert(new Observation()
+                .setStudyId(studyId)
+                .setType("gps")
+                .setTitle("no schedule")
+                .setHidden(true)
+                .setNoSchedule(true)
+                .setSchedule(null));
+
+        assertThat(inserted.getSchedule()).isNull();
+        assertThat(observationRepository.getById(studyId, inserted.getObservationId()).getSchedule()).isNull();
     }
 
     @Test
