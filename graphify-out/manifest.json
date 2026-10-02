@@ -5,7 +5,7 @@
     "semantic_hash": ""
   },
   ".junie/extensions.json": {
-    "mtime": 1790064103.9679897,
+    "mtime": 1790310075.4412007,
     "ast_hash": "7a9a6df8914bbf82f55c7b503d02452c",
     "semantic_hash": ""
   },
@@ -180,8 +180,8 @@
     "semantic_hash": ""
   },
   "studymanager-core/src/main/java/io/redlink/more/studymanager/core/factory/ObservationFactory.java": {
-    "mtime": 1790064103.9937456,
-    "ast_hash": "4e731771c91c8e1c38b7055a61187a8e",
+    "mtime": 1790836647.668404,
+    "ast_hash": "8bafb74a537be76e5ce2fd4bb7d9cd21",
     "semantic_hash": ""
   },
   "studymanager-core/src/main/java/io/redlink/more/studymanager/core/factory/TriggerFactory.java": {
@@ -645,8 +645,8 @@
     "semantic_hash": ""
   },
   "studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/AppUsageObservationFactory.java": {
-    "mtime": 1788245016.025899,
-    "ast_hash": "86356e325a6bf7b535cf45af441b9d5e",
+    "mtime": 1790836652.4541762,
+    "ast_hash": "d6162b515460953f57fafdd755798ec1",
     "semantic_hash": ""
   },
   "studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/ExternalObservation.java": {
@@ -919,16 +919,6 @@
     "ast_hash": "de9a6c91f50c5b903842795d688bacac",
     "semantic_hash": ""
   },
-  "studymanager-services/src/main/java/io/redlink/more/studymanager/event/ParticipantMilestoneChangedEvent.java": {
-    "mtime": 1788337612.5867982,
-    "ast_hash": "cba1964daf37cea92f8cdb043f41887c",
-    "semantic_hash": ""
-  },
-  "studymanager-services/src/main/java/io/redlink/more/studymanager/event/StudyParticipantClosedEvent.java": {
-    "mtime": 1773214046.623658,
-    "ast_hash": "8985eef1f6415a02eb2c6cebdbaa7709",
-    "semantic_hash": ""
-  },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/event/StudyStateChangedEvent.java": {
     "mtime": 1773214046.624045,
     "ast_hash": "44840d2de20c136b44085a1a7d8da6c0",
@@ -1045,8 +1035,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/Observation.java": {
-    "mtime": 1790064104.0565066,
-    "ast_hash": "cb922221f505775a92b8e911676ed3c3",
+    "mtime": 1790836709.8436077,
+    "ast_hash": "40b2b6d0e19d1c38355813579959ff71",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/ObservationGroup.java": {
@@ -1120,8 +1110,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/Study.java": {
-    "mtime": 1790064104.061489,
-    "ast_hash": "24e31d3ffd2be5ad556e95b17317ebda",
+    "mtime": 1790070703.8355932,
+    "ast_hash": "884004bdb293ab7f24d8f88c6085e904",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/StudyGoalConfig.java": {
@@ -1235,8 +1225,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/scheduler/ScheduleEvent.java": {
-    "mtime": 1790064104.0728765,
-    "ast_hash": "6ae49dffbfaab8662fd330b46664f539",
+    "mtime": 1790838929.1125767,
+    "ast_hash": "8852a2f86643ce59d7fd93040fd4c9dd",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/timeline/InterventionTimelineEvent.java": {
@@ -1245,8 +1235,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/timeline/ObservationTimelineEvent.java": {
-    "mtime": 1790064104.0732827,
-    "ast_hash": "c6b981fb62c05fcbeb77e6148c87b34a",
+    "mtime": 1790836676.710903,
+    "ast_hash": "d2f1dd4d97461bf34ad7f4947812eaa2",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/timeline/StudyTimeline.java": {
@@ -1330,8 +1320,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/ObservationRepository.java": {
-    "mtime": 1790064104.0788805,
-    "ast_hash": "0d5d70a8430523613dbc0f33a9574398",
+    "mtime": 1790836709.8392084,
+    "ast_hash": "407753b29cb1ef9170c341152b6fef44",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/OccurredObservationRepository.java": {
@@ -1405,8 +1395,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/StudyParticipantCron.java": {
-    "mtime": 1773214046.6250973,
-    "ast_hash": "1345bd2c1ae027b22bc40a67feb245a8",
+    "mtime": 1790070803.2506034,
+    "ast_hash": "f500ace918f2cfe99b60cc6846264641",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/TriggerJob.java": {
@@ -1425,8 +1415,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/sdk/MoreSDK.java": {
-    "mtime": 1790069967.8418546,
-    "ast_hash": "f79faf2170f527b4bd8324ee9bf2a5e3",
+    "mtime": 1790070734.683406,
+    "ast_hash": "765362e7d72cff7d453f5d8c39cff3cf",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/sdk/scoped/MoreActionSDKImpl.java": {
@@ -1470,7 +1460,7 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/CalendarService.java": {
-    "mtime": 1788434930.648,
+    "mtime": 1790839051.6155624,
     "ast_hash": "14dfaf53cee794da6fef9dd6a669f781",
     "semantic_hash": ""
   },
@@ -1520,8 +1510,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/ObservationService.java": {
-    "mtime": 1790064104.0905128,
-    "ast_hash": "0c03528dc338ca8bfaf4ba8a605e7b5f",
+    "mtime": 1790839001.3446922,
+    "ast_hash": "64b8379801c2748c3408e15f3a21e506",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/OccurredObservationService.java": {
@@ -1530,18 +1520,18 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/ParticipantMilestoneService.java": {
-    "mtime": 1788434980.477,
-    "ast_hash": "a9087ec4391286b3933918e7ae77b331",
+    "mtime": 1790070815.1097827,
+    "ast_hash": "7e00b7e3bc0f53cea05ecff458916b1d",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/ParticipantService.java": {
-    "mtime": 1790064104.0909445,
-    "ast_hash": "9ba3ce6a4c05826db15e55b35b52419f",
+    "mtime": 1790070803.2504199,
+    "ast_hash": "2980cc254a407dcf7bfc4b8f81777426",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/PushNotificationService.java": {
-    "mtime": 1790070216.543493,
-    "ast_hash": "35079d481d3d1f21435677dc58530d23",
+    "mtime": 1790072406.392149,
+    "ast_hash": "7c304c3eadb4b97ff2b234e293284d6c",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/StudyGroupService.java": {
@@ -1580,8 +1570,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/utils/SchedulerUtils.java": {
-    "mtime": 1790064104.099709,
-    "ast_hash": "9e69cc658f7bd64d87edcf10ea9e1066",
+    "mtime": 1790839001.3436193,
+    "ast_hash": "b46ec2882b019d752d94c6b9c53ce480",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/utils/SlugUtils.java": {
@@ -1840,8 +1830,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationRepositoryTest.java": {
-    "mtime": 1790064104.1249802,
-    "ast_hash": "c3a70cb44ad9d0bce2c5593e8c5a27ed",
+    "mtime": 1790839091.003545,
+    "ast_hash": "9ecb6026877382cfa861e1a40000d49d",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/OccurredObservationRepositoryTest.java": {
@@ -1915,8 +1905,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/CalendarServiceTest.java": {
-    "mtime": 1788434932.209,
-    "ast_hash": "8e1080a3c305d9c7d68e648159924fa9",
+    "mtime": 1790839291.5764346,
+    "ast_hash": "48a3b405f472356460d8c7e4e93c81fd",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/DataProcessingServiceTest.java": {
@@ -1955,18 +1945,18 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ObservationServiceTest.java": {
-    "mtime": 1790064104.1373396,
-    "ast_hash": "f6fcab5fb851d25f5ba817ab6c0a315e",
+    "mtime": 1790839076.6646626,
+    "ast_hash": "b7a9b4fcf45aafe45ae247a9e3f01e76",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ParticipantMilestoneServiceTest.java": {
-    "mtime": 1788337612.5976517,
-    "ast_hash": "265c2f4260e7f4bb69254cfb440768a1",
+    "mtime": 1790070865.2967129,
+    "ast_hash": "80f5e122abb7f60839a0bb4ac10fb405",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ParticipantServiceTest.java": {
-    "mtime": 1790064104.1383722,
-    "ast_hash": "161ec4b5fc9694a4936e90ccd63aede0",
+    "mtime": 1790072586.9691489,
+    "ast_hash": "ec96ee2be5cdc6172218f8841723d08c",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/StudyServiceTest.java": {
@@ -1985,8 +1975,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/utils/SchedulerUtilsTest.java": {
-    "mtime": 1788434925.181342,
-    "ast_hash": "00faf7ba9cd1513523c172aaa63b9503",
+    "mtime": 1790839099.2889836,
+    "ast_hash": "d99d75b2eb75c41a91d6b573ccefc75a",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/resources/elastic/doc1.json": {
@@ -2105,8 +2095,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/controller/studymanager/ComponentApiV1Controller.java": {
-    "mtime": 1790064104.1487148,
-    "ast_hash": "96291d2d092a587f0152afe151670bb8",
+    "mtime": 1790836661.143619,
+    "ast_hash": "d029901d451f13f7547d59f267188bb7",
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/controller/studymanager/ConfigurationApiV1Controller.java": {
@@ -2210,8 +2200,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/model/transformer/EventTransformer.java": {
-    "mtime": 1790064104.155914,
-    "ast_hash": "6311f574aaa904e958e99a27612ce768",
+    "mtime": 1790839062.1674936,
+    "ast_hash": "d2d629360d6f242d5bbde508f4e180e1",
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/model/transformer/GoalV1Transformer.java": {
@@ -2375,8 +2365,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/test/java/io/redlink/more/studymanager/controller/studymanager/ComponentControllerTest.java": {
-    "mtime": 1790064104.1636553,
-    "ast_hash": "21173199e5345503ed9602076fe5c704",
+    "mtime": 1790836745.488929,
+    "ast_hash": "2ad33c875683e24f1a62910263c68dc3",
     "semantic_hash": ""
   },
   "studymanager/src/test/java/io/redlink/more/studymanager/controller/studymanager/GoalsApiV1ControllerTest.java": {
@@ -2940,8 +2930,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/resources/openapi/StudyManagerAPI.yaml": {
-    "mtime": 1790064104.162185,
-    "ast_hash": "18ed3b11aa28dd203f4ea6586bb2fff5",
+    "mtime": 1790836656.5742989,
+    "ast_hash": "487d0d9d482dbb206e7a3252e8f9611b",
     "semantic_hash": ""
   },
   "studymanager/src/test/resources/application-test-containers-flyway.yml": {
@@ -3015,8 +3005,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/PushNotificationServiceTest.java": {
-    "mtime": 1790070254.5777166,
-    "ast_hash": "c401de263983336837ce0ef9c828e332",
+    "mtime": 1790072385.902,
+    "ast_hash": "9282dda8135a237eb634564b15a80ff9",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/resources/openapi/push-v1.yaml": {
@@ -3024,9 +3014,29 @@
     "ast_hash": "095338f1da9deeee5ab76570d4fb0c0f",
     "semantic_hash": ""
   },
-  "studymanager-services/src/main/java/io/redlink/more/studymanager/event/InterventionNotificationEvent.java": {
-    "mtime": 1790069956.1787379,
-    "ast_hash": "417bfd210b01bd247751e6196f3d8d42",
+  ".claude/settings.local.json": {
+    "mtime": 1790072577.8550153,
+    "ast_hash": "872e9ba02def5d119ad7c41416d73527",
+    "semantic_hash": ""
+  },
+  "studymanager-observation/src/test/java/io/redlink/more/studymanager/component/observation/AppUsageObservationFactoryTest.java": {
+    "mtime": 1790836738.6060605,
+    "ast_hash": "afba7554a30a5d470a76afa910b2a997",
+    "semantic_hash": ""
+  },
+  "studymanager-services/src/main/java/io/redlink/more/studymanager/event/PushNotificationEvent.java": {
+    "mtime": 1790070703.8418305,
+    "ast_hash": "d7b34bdd025053b8f3c07793b71f681e",
+    "semantic_hash": ""
+  },
+  "studymanager-services/src/main/java/io/redlink/more/studymanager/model/scheduler/StudyWideEvent.java": {
+    "mtime": 1790839198.7853441,
+    "ast_hash": "d5ff54f1e768926f2e6b2f5264977b26",
+    "semantic_hash": ""
+  },
+  "studymanager-services/src/test/java/io/redlink/more/studymanager/model/scheduler/ScheduleEventSerializationTest.java": {
+    "mtime": 1790838987.9751697,
+    "ast_hash": "0b3365e2e5a23ce1d5f63c1a28ab47ad",
     "semantic_hash": ""
   }
 }
