@@ -1248,7 +1248,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "datavalidity_measurementsummary",
-      "community": 17,
+      "community": 249,
       "norm_label": "measurementsummary.java"
     },
     {
@@ -1268,7 +1268,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "datavalidity_measurementsummary_measurementsummary_measurementsummary",
-      "community": 17,
+      "community": 249,
       "norm_label": ".measurementsummary()"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "measurement",
-      "community": 17,
+      "community": 249,
       "norm_label": "measurement"
     },
     {
@@ -3258,7 +3258,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "io_triggerresult_triggerresult_proceed",
-      "community": 95,
+      "community": 317,
       "norm_label": ".proceed()"
     },
     {
@@ -16638,7 +16638,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "measurement_garminmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": "garminmeasurementsets.java"
     },
     {
@@ -16648,7 +16648,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "measurement_garminmeasurementsets_garminmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": "garminmeasurementsets"
     },
     {
@@ -16658,7 +16658,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "measurement_garminmeasurementsets_garminmeasurementsets_garminmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": ".garminmeasurementsets()"
     },
     {
@@ -16668,7 +16668,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "measurement_genericmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": "genericmeasurementsets.java"
     },
     {
@@ -16678,7 +16678,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "measurement_genericmeasurementsets_genericmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": "genericmeasurementsets"
     },
     {
@@ -16688,7 +16688,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "measurement_genericmeasurementsets_genericmeasurementsets_genericmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": ".genericmeasurementsets()"
     },
     {
@@ -16698,7 +16698,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "measurement_healthconnectmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": "healthconnectmeasurementsets.java"
     },
     {
@@ -16708,7 +16708,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "measurement_healthconnectmeasurementsets_healthconnectmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": "healthconnectmeasurementsets"
     },
     {
@@ -16718,7 +16718,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "measurement_healthconnectmeasurementsets_healthconnectmeasurementsets_healthconnectmeasurementsets",
-      "community": 17,
+      "community": 249,
       "norm_label": ".healthconnectmeasurementsets()"
     },
     {
@@ -20238,7 +20238,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "model_intervention_intervention_getinterventionid",
-      "community": 174,
+      "community": 12,
       "norm_label": ".getinterventionid()"
     },
     {
@@ -23348,7 +23348,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "model_study_study_getstudystate",
-      "community": 12,
+      "community": 7,
       "norm_label": ".getstudystate()"
     },
     {
@@ -26028,7 +26028,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "scheduler_relativedate",
-      "community": 203,
+      "community": 35,
       "norm_label": "relativedate.java"
     },
     {
@@ -26038,7 +26038,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate",
-      "community": 203,
+      "community": 35,
       "norm_label": "relativedate"
     },
     {
@@ -26048,7 +26048,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate_relativedate",
-      "community": 203,
+      "community": 35,
       "norm_label": ".relativedate()"
     },
     {
@@ -26058,7 +26058,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate_gethours",
-      "community": 203,
+      "community": 35,
       "norm_label": ".gethours()"
     },
     {
@@ -26068,7 +26068,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_model_scheduler_relativedate_java_jsonignore",
-      "community": 203,
+      "community": 35,
       "norm_label": "jsonignore"
     },
     {
@@ -26078,7 +26078,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate_getminutes",
-      "community": 203,
+      "community": 35,
       "norm_label": ".getminutes()"
     },
     {
@@ -26088,7 +26088,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate_getoffset",
-      "community": 203,
+      "community": 35,
       "norm_label": ".getoffset()"
     },
     {
@@ -26098,7 +26098,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_model_scheduler_relativedate_java_duration",
-      "community": 203,
+      "community": 35,
       "norm_label": "duration"
     },
     {
@@ -26118,7 +26118,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate_gettime",
-      "community": 203,
+      "community": 35,
       "norm_label": ".gettime()"
     },
     {
@@ -26128,7 +26128,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_model_scheduler_relativedate_java_localtime",
-      "community": 203,
+      "community": 35,
       "norm_label": "localtime"
     },
     {
@@ -26138,7 +26138,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "scheduler_relativedate_relativedate_settime",
-      "community": 203,
+      "community": 35,
       "norm_label": ".settime()"
     },
     {
@@ -31518,7 +31518,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "repository_studyrepository_studyrepository_studytoparams",
-      "community": 116,
+      "community": 41,
       "norm_label": ".studytoparams()"
     },
     {
@@ -31528,7 +31528,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_repository_studyrepository_java_mapsqlparametersource",
-      "community": 116,
+      "community": 41,
       "norm_label": "mapsqlparametersource"
     },
     {
@@ -33325,7 +33325,7 @@
       "label": ".validateActiveObservationData()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L98",
+      "source_location": "L99",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateactiveobservationdata",
       "community": 100,
@@ -33335,7 +33335,7 @@
       "label": ".validateOccurrence()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateoccurrence",
       "community": 100,
@@ -33345,7 +33345,7 @@
       "label": "OccurredObservation",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_occurredobservation",
       "community": 100,
@@ -33355,7 +33355,7 @@
       "label": "Map",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_map",
       "community": 100,
@@ -33365,7 +33365,7 @@
       "label": "Integer",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_integer",
       "community": 100,
@@ -33375,7 +33375,7 @@
       "label": "Observation",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_observation",
       "community": 100,
@@ -33385,7 +33385,7 @@
       "label": "String",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_string",
       "community": 100,
@@ -33395,7 +33395,7 @@
       "label": "ObservationFactory",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_observationfactory",
       "community": 100,
@@ -33405,7 +33405,7 @@
       "label": "Participant",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_participant",
       "community": 100,
@@ -33415,7 +33415,7 @@
       "label": ".validate()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L160",
+      "source_location": "L161",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validate",
       "community": 100,
@@ -33425,7 +33425,7 @@
       "label": "ValidateionContext",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L160",
+      "source_location": "L161",
       "_origin": "ast",
       "id": "validateioncontext",
       "community": 100,
@@ -33435,7 +33435,7 @@
       "label": "getStudyId()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L210",
+      "source_location": "L211",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_getstudyid",
       "community": 100,
@@ -33445,7 +33445,7 @@
       "label": "Long",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L210",
+      "source_location": "L211",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_long",
       "community": 100,
@@ -33455,7 +33455,7 @@
       "label": "getStudyGroupId()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L214",
+      "source_location": "L215",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_getstudygroupid",
       "community": 100,
@@ -33465,7 +33465,7 @@
       "label": "getObservationId()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L218",
+      "source_location": "L219",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_getobservationid",
       "community": 100,
@@ -33475,7 +33475,7 @@
       "label": "getParticipantId()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L222",
+      "source_location": "L223",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_getparticipantid",
       "community": 100,
@@ -33485,7 +33485,7 @@
       "label": "getTimeRage()",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L226",
+      "source_location": "L227",
       "_origin": "ast",
       "id": "scheduling_validateactiveobservationdatacron_gettimerage",
       "community": 100,
@@ -33495,7 +33495,7 @@
       "label": "TimeRange",
       "file_type": "code",
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
-      "source_location": "L226",
+      "source_location": "L227",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_timerange",
       "community": 100,
@@ -39688,7 +39688,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_service_observationservice_java_collection",
-      "community": 131,
+      "community": 82,
       "norm_label": "collection"
     },
     {
@@ -39808,7 +39808,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "studymanager_services_src_main_java_io_redlink_more_studymanager_service_observationservice_java_dataviewinfo",
-      "community": 131,
+      "community": 82,
       "norm_label": "dataviewinfo"
     },
     {
@@ -42398,7 +42398,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "utils_schedulerutils_schedulerutils_shiftstartifobservationalreadyended",
-      "community": 203,
+      "community": 35,
       "norm_label": ".shiftstartifobservationalreadyended()"
     },
     {
@@ -42988,7 +42988,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest",
-      "community": 174,
+      "community": 12,
       "norm_label": "interventionrepositorytest.java"
     },
     {
@@ -42998,7 +42998,7 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest_interventionrepositorytest",
-      "community": 174,
+      "community": 12,
       "norm_label": "interventionrepositorytest"
     },
     {
@@ -43008,7 +43008,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest_interventionrepositorytest_deleteall",
-      "community": 174,
+      "community": 12,
       "norm_label": ".deleteall()"
     },
     {
@@ -43018,7 +43018,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_interventionrepositorytest_java_beforeeach",
-      "community": 174,
+      "community": 12,
       "norm_label": "beforeeach"
     },
     {
@@ -43028,7 +43028,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest_interventionrepositorytest_testinsertlistupdatedelete",
-      "community": 174,
+      "community": 12,
       "norm_label": ".testinsertlistupdatedelete()"
     },
     {
@@ -43038,7 +43038,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_interventionrepositorytest_java_test",
-      "community": 174,
+      "community": 12,
       "norm_label": "test"
     },
     {
@@ -43048,7 +43048,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_interventionrepositorytest_java_displayname",
-      "community": 174,
+      "community": 12,
       "norm_label": "displayname"
     },
     {
@@ -43058,7 +43058,7 @@
       "source_location": "L207",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest_interventionrepositorytest_testinsertlistupdateforactions",
-      "community": 174,
+      "community": 12,
       "norm_label": ".testinsertlistupdateforactions()"
     },
     {
@@ -43068,7 +43068,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest_interventionrepositorytest_testmilestoneidroundtrip",
-      "community": 174,
+      "community": 12,
       "norm_label": ".testmilestoneidroundtrip()"
     },
     {
@@ -43078,7 +43078,7 @@
       "source_location": "L271",
       "_origin": "ast",
       "id": "repository_interventionrepositorytest_interventionrepositorytest_testupdatetrigger",
-      "community": 174,
+      "community": 12,
       "norm_label": ".testupdatetrigger()"
     },
     {
@@ -43278,7 +43278,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "repository_observationgrouprepositorytest",
-      "community": 174,
+      "community": 12,
       "norm_label": "observationgrouprepositorytest.java"
     },
     {
@@ -43288,7 +43288,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "repository_observationgrouprepositorytest_observationgrouprepositorytest",
-      "community": 174,
+      "community": 12,
       "norm_label": "observationgrouprepositorytest"
     },
     {
@@ -43298,7 +43298,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "repository_observationgrouprepositorytest_observationgrouprepositorytest_deleteall",
-      "community": 174,
+      "community": 12,
       "norm_label": ".deleteall()"
     },
     {
@@ -43308,7 +43308,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationgrouprepositorytest_java_beforeeach",
-      "community": 174,
+      "community": 12,
       "norm_label": "beforeeach"
     },
     {
@@ -43318,7 +43318,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "repository_observationgrouprepositorytest_observationgrouprepositorytest_testinsertlistupdatedelete",
-      "community": 174,
+      "community": 12,
       "norm_label": ".testinsertlistupdatedelete()"
     },
     {
@@ -43328,7 +43328,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationgrouprepositorytest_java_test",
-      "community": 174,
+      "community": 12,
       "norm_label": "test"
     },
     {
@@ -43338,7 +43338,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationgrouprepositorytest_java_displayname",
-      "community": 174,
+      "community": 12,
       "norm_label": "displayname"
     },
     {
@@ -43348,7 +43348,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "repository_observationgrouprepositorytest_observationgrouprepositorytest_testgroupmemberships",
-      "community": 174,
+      "community": 12,
       "norm_label": ".testgroupmemberships()"
     },
     {
@@ -44148,7 +44148,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "repository_studyrepositorytest",
-      "community": 12,
+      "community": 116,
       "norm_label": "studyrepositorytest.java"
     },
     {
@@ -44158,7 +44158,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest",
-      "community": 12,
+      "community": 116,
       "norm_label": "studyrepositorytest"
     },
     {
@@ -44168,7 +44168,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_deleteall",
-      "community": 12,
+      "community": 116,
       "norm_label": ".deleteall()"
     },
     {
@@ -44178,7 +44178,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_studyrepositorytest_java_beforeeach",
-      "community": 12,
+      "community": 116,
       "norm_label": "beforeeach"
     },
     {
@@ -44188,7 +44188,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_testinsert",
-      "community": 12,
+      "community": 116,
       "norm_label": ".testinsert()"
     },
     {
@@ -44198,7 +44198,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_studyrepositorytest_java_test",
-      "community": 12,
+      "community": 116,
       "norm_label": "test"
     },
     {
@@ -44208,7 +44208,7 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_studyrepositorytest_java_displayname",
-      "community": 12,
+      "community": 116,
       "norm_label": "displayname"
     },
     {
@@ -44218,7 +44218,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_testupdate",
-      "community": 12,
+      "community": 116,
       "norm_label": ".testupdate()"
     },
     {
@@ -44228,7 +44228,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_testlistanddelete",
-      "community": 12,
+      "community": 116,
       "norm_label": ".testlistanddelete()"
     },
     {
@@ -44238,7 +44238,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_testsetstate",
-      "community": 12,
+      "community": 116,
       "norm_label": ".testsetstate()"
     },
     {
@@ -44248,7 +44248,7 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_testassertstate",
-      "community": 12,
+      "community": 116,
       "norm_label": ".testassertstate()"
     },
     {
@@ -44258,7 +44258,7 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_testliststudiesbystates",
-      "community": 12,
+      "community": 41,
       "norm_label": ".testliststudiesbystates()"
     },
     {
@@ -44268,7 +44268,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "repository_studyrepositorytest_studyrepositorytest_assertpresent",
-      "community": 12,
+      "community": 116,
       "norm_label": ".assertpresent()"
     },
     {
@@ -44278,7 +44278,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_studyrepositorytest_java_optional",
-      "community": 12,
+      "community": 116,
       "norm_label": "optional"
     },
     {
@@ -44288,7 +44288,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_studyrepositorytest_java_t",
-      "community": 12,
+      "community": 116,
       "norm_label": "t"
     },
     {
@@ -44298,7 +44298,7 @@
       "source_location": "L227",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_studyrepositorytest_java_supplier",
-      "community": 12,
+      "community": 116,
       "norm_label": "supplier"
     },
     {
@@ -47948,7 +47948,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "utils_randomschedulerutilstest",
-      "community": 203,
+      "community": 16,
       "norm_label": "randomschedulerutilstest.java"
     },
     {
@@ -47968,7 +47968,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "utils_randomschedulerutilstest_randomschedulerreflection",
-      "community": 203,
+      "community": 49,
       "norm_label": "randomschedulerreflection"
     },
     {
@@ -47978,7 +47978,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "utils_randomschedulerutilstest_randomschedulerreflection_callstablehash64",
-      "community": 203,
+      "community": 49,
       "norm_label": ".callstablehash64()"
     },
     {
@@ -47998,7 +47998,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_utils_randomschedulerutilstest_java_scheduleevent",
-      "community": 203,
+      "community": 16,
       "norm_label": "scheduleevent"
     },
     {
@@ -48018,7 +48018,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_utils_randomschedulerutilstest_java_string",
-      "community": 203,
+      "community": 35,
       "norm_label": "string"
     },
     {
@@ -48038,7 +48038,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_utils_randomschedulerutilstest_java_event",
-      "community": 203,
+      "community": 16,
       "norm_label": "event"
     },
     {
@@ -48048,7 +48048,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "utils_randomschedulerutilstest_randomschedulerutilstest_generateseedforrelativeevent",
-      "community": 203,
+      "community": 35,
       "norm_label": ".generateseedforrelativeevent()"
     },
     {
@@ -48058,7 +48058,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_utils_randomschedulerutilstest_java_relativeevent",
-      "community": 203,
+      "community": 16,
       "norm_label": "relativeevent"
     },
     {
@@ -48378,7 +48378,7 @@
       "source_location": "L664",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_utils_randomschedulerutilstest_java_range",
-      "community": 203,
+      "community": 16,
       "norm_label": "range"
     },
     {
@@ -48388,7 +48388,7 @@
       "source_location": "L664",
       "_origin": "ast",
       "id": "studymanager_services_src_test_java_io_redlink_more_studymanager_utils_randomschedulerutilstest_java_instant",
-      "community": 203,
+      "community": 16,
       "norm_label": "instant"
     },
     {
@@ -48515,7 +48515,7 @@
       "label": "Application",
       "file_type": "code",
       "source_file": "studymanager/src/main/java/io/redlink/more/studymanager/Application.java",
-      "source_location": "L18",
+      "source_location": "L20",
       "_origin": "ast",
       "id": "studymanager_application_application",
       "community": 331,
@@ -48525,7 +48525,7 @@
       "label": ".main()",
       "file_type": "code",
       "source_file": "studymanager/src/main/java/io/redlink/more/studymanager/Application.java",
-      "source_location": "L28",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "studymanager_application_application_main",
       "community": 331,
@@ -48535,7 +48535,7 @@
       "label": "String",
       "file_type": "code",
       "source_file": "studymanager/src/main/java/io/redlink/more/studymanager/Application.java",
-      "source_location": "L28",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "studymanager_src_main_java_io_redlink_more_studymanager_application_java_string",
       "community": 331,
@@ -58888,7 +58888,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "studymanager_applicationsapiv1controllertest",
-      "community": 167,
+      "community": 174,
       "norm_label": "applicationsapiv1controllertest.java"
     },
     {
@@ -58898,7 +58898,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "studymanager_applicationsapiv1controllertest_applicationsapiv1controllertest",
-      "community": 167,
+      "community": 174,
       "norm_label": "applicationsapiv1controllertest"
     },
     {
@@ -58908,7 +58908,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "studymanager_applicationsapiv1controllertest_applicationsapiv1controllertest_testgetstudyapplications",
-      "community": 167,
+      "community": 174,
       "norm_label": ".testgetstudyapplications()"
     },
     {
@@ -58918,7 +58918,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "studymanager_src_test_java_io_redlink_more_studymanager_controller_studymanager_applicationsapiv1controllertest_java_test",
-      "community": 167,
+      "community": 174,
       "norm_label": "test"
     },
     {
@@ -58928,7 +58928,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "studymanager_src_test_java_io_redlink_more_studymanager_controller_studymanager_applicationsapiv1controllertest_java_displayname",
-      "community": 167,
+      "community": 174,
       "norm_label": "displayname"
     },
     {
@@ -132876,9 +132876,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepository.java",
       "source_location": "L107",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepository_observationresyncrequestrepository",
-      "target": "repository_observationresyncrequestrepository_observationresyncrequestrepository_deletesynced",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepository_observationresyncrequestrepository_deletesynced"
     },
     {
       "relation": "method",
@@ -132926,9 +132926,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepository.java",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepository_observationresyncrequestrepository",
-      "target": "repository_observationresyncrequestrepository_observationresyncrequestrepository_listsynced",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepository_observationresyncrequestrepository_listsynced"
     },
     {
       "relation": "method",
@@ -133013,9 +133013,9 @@
       "source_location": "L100",
       "weight": 1.0,
       "context": "generic_arg",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepository_observationresyncrequestrepository_listsynced",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_repository_observationresyncrequestrepository_java_observationresyncrequest",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_repository_observationresyncrequestrepository_java_observationresyncrequest"
     },
     {
       "relation": "calls",
@@ -133068,9 +133068,9 @@
       "source_location": "L100",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepository_observationresyncrequestrepository_listsynced",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_repository_observationresyncrequestrepository_java_list",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_repository_observationresyncrequestrepository_java_list"
     },
     {
       "relation": "calls",
@@ -133079,9 +133079,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepository.java",
       "source_location": "L101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepository_observationresyncrequestrepository_listsynced",
-      "target": "repository_observationresyncrequestrepository_observationresyncrequestrepository_getrowmapper",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepository_observationresyncrequestrepository_getrowmapper"
     },
     {
       "relation": "calls",
@@ -144518,9 +144518,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_observationresyncrequestrepository",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_observationresyncrequestrepository"
     },
     {
       "relation": "imports",
@@ -144667,9 +144667,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
       "source_location": "L76",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron",
-      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation"
     },
     {
       "relation": "method",
@@ -144677,9 +144677,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron",
-      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validatesyncedresyncrequests",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validatesyncedresyncrequests"
     },
     {
       "relation": "references",
@@ -144699,9 +144699,9 @@
       "source_location": "L44",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateactiveobservationdatacron",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_observationresyncrequestrepository",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_observationresyncrequestrepository"
     },
     {
       "relation": "references",
@@ -144754,9 +144754,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
       "source_location": "L66",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validatesyncedresyncrequests",
-      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation"
     },
     {
       "relation": "references",
@@ -144765,9 +144765,9 @@
       "source_location": "L61",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validatesyncedresyncrequests",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_scheduled",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_scheduled"
     },
     {
       "relation": "calls",
@@ -144809,9 +144809,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation",
-      "target": "scheduling_validateactiveobservationdatacron_getstudyid",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacron_getstudyid"
     },
     {
       "relation": "calls",
@@ -144820,9 +144820,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCron.java",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation",
-      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateoccurrence",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateoccurrence"
     },
     {
       "relation": "calls",
@@ -144842,9 +144842,9 @@
       "source_location": "L76",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacron_validateactiveobservationdatacron_validateparticipantobservation",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_study",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacron_java_study"
     },
     {
       "relation": "references",
@@ -162090,9 +162090,9 @@
       "source_file": "studymanager-services/src/main/java/io/redlink/more/studymanager/service/ObservationResyncService.java",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "service_observationresyncservice",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_service_observationresyncservice_java_observationresyncrequestrepository",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_service_observationresyncservice_java_observationresyncrequestrepository"
     },
     {
       "relation": "imports",
@@ -162172,9 +162172,9 @@
       "source_location": "L34",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "service_observationresyncservice_observationresyncservice_observationresyncservice",
-      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_service_observationresyncservice_java_observationresyncrequestrepository",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_main_java_io_redlink_more_studymanager_service_observationresyncservice_java_observationresyncrequestrepository"
     },
     {
       "relation": "references",
@@ -172389,9 +172389,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_map",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_map"
     },
     {
       "relation": "imports",
@@ -172410,9 +172410,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L179",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle"
     },
     {
       "relation": "method",
@@ -172480,9 +172480,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L98",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges"
     },
     {
       "relation": "method",
@@ -172500,9 +172500,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L126",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced"
     },
     {
       "relation": "references",
@@ -172588,9 +172588,9 @@
       "source_location": "L98",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_test",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_test"
     },
     {
       "relation": "references",
@@ -172610,9 +172610,9 @@
       "source_location": "L126",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_test",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_test"
     },
     {
       "relation": "references",
@@ -172632,9 +172632,9 @@
       "source_location": "L98",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_displayname",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_displayname"
     },
     {
       "relation": "references",
@@ -172654,9 +172654,9 @@
       "source_location": "L126",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_displayname",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_displayname"
     },
     {
       "relation": "calls",
@@ -172665,9 +172665,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L106",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle"
     },
     {
       "relation": "calls",
@@ -172676,9 +172676,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L103",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newobservation",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newobservation"
     },
     {
       "relation": "calls",
@@ -172687,9 +172687,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L102",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newparticipant",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newparticipant"
     },
     {
       "relation": "calls",
@@ -172698,9 +172698,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testinsertmerges",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newstudy",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newstudy"
     },
     {
       "relation": "calls",
@@ -172709,9 +172709,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L131",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newobservation",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newobservation"
     },
     {
       "relation": "calls",
@@ -172720,9 +172720,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newparticipant",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newparticipant"
     },
     {
       "relation": "calls",
@@ -172731,9 +172731,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/ObservationResyncRequestRepositoryTest.java",
       "source_location": "L129",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_testlistanddeletesynced",
-      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newstudy",
-      "confidence_score": 1.0
+      "target": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_newstudy"
     },
     {
       "relation": "calls",
@@ -172808,9 +172808,9 @@
       "source_location": "L179",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_long",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_long"
     },
     {
       "relation": "references",
@@ -172819,9 +172819,9 @@
       "source_location": "L179",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_map",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_map"
     },
     {
       "relation": "references",
@@ -172830,9 +172830,9 @@
       "source_location": "L179",
       "weight": 1.0,
       "context": "generic_arg",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_object",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_object"
     },
     {
       "relation": "references",
@@ -172841,9 +172841,9 @@
       "source_location": "L179",
       "weight": 1.0,
       "context": "generic_arg",
+      "confidence_score": 1.0,
       "source": "repository_observationresyncrequestrepositorytest_observationresyncrequestrepositorytest_cycle",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_string",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_repository_observationresyncrequestrepositorytest_java_string"
     },
     {
       "relation": "references",
@@ -175418,9 +175418,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest",
-      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest"
     },
     {
       "relation": "imports",
@@ -175429,9 +175429,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_observationresyncrequest",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_observationresyncrequest"
     },
     {
       "relation": "imports",
@@ -175440,9 +175440,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_test",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_test"
     },
     {
       "relation": "method",
@@ -175450,9 +175450,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest",
-      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_deletesthesyncedrequestevenifthevalidationfails",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_deletesthesyncedrequestevenifthevalidationfails"
     },
     {
       "relation": "method",
@@ -175460,9 +175460,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L79",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest",
-      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request"
     },
     {
       "relation": "method",
@@ -175470,9 +175470,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L54",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest",
-      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_validatestheobservationofasyncedrequestanddeletesit",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_validatestheobservationofasyncedrequestanddeletesit"
     },
     {
       "relation": "calls",
@@ -175481,9 +175481,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_validatestheobservationofasyncedrequestanddeletesit",
-      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request"
     },
     {
       "relation": "references",
@@ -175492,9 +175492,9 @@
       "source_location": "L54",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_validatestheobservationofasyncedrequestanddeletesit",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_test",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_test"
     },
     {
       "relation": "references",
@@ -175503,9 +175503,9 @@
       "source_location": "L69",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_deletesthesyncedrequestevenifthevalidationfails",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_test",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_test"
     },
     {
       "relation": "calls",
@@ -175514,9 +175514,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java",
       "source_location": "L71",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_deletesthesyncedrequestevenifthevalidationfails",
-      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request",
-      "confidence_score": 1.0
+      "target": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request"
     },
     {
       "relation": "references",
@@ -175525,9 +175525,9 @@
       "source_location": "L79",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "scheduling_validateactiveobservationdatacrontest_validateactiveobservationdatacrontest_request",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_observationresyncrequest",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_scheduling_validateactiveobservationdatacrontest_java_observationresyncrequest"
     },
     {
       "relation": "contains",
@@ -180407,9 +180407,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ObservationResyncServiceTest.java",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "service_observationresyncservicetest_observationresyncservicetest",
-      "target": "service_observationresyncservicetest_observationresyncservicetest_requestinsertswhenresyncable",
-      "confidence_score": 1.0
+      "target": "service_observationresyncservicetest_observationresyncservicetest_requestinsertswhenresyncable"
     },
     {
       "relation": "references",
@@ -180484,9 +180484,9 @@
       "source_location": "L86",
       "weight": 1.0,
       "context": "attribute",
+      "confidence_score": 1.0,
       "source": "service_observationresyncservicetest_observationresyncservicetest_requestinsertswhenresyncable",
-      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_service_observationresyncservicetest_java_test",
-      "confidence_score": 1.0
+      "target": "studymanager_services_src_test_java_io_redlink_more_studymanager_service_observationresyncservicetest_java_test"
     },
     {
       "relation": "calls",
@@ -180517,9 +180517,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ObservationResyncServiceTest.java",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "service_observationresyncservicetest_observationresyncservicetest_requestinsertswhenresyncable",
-      "target": "service_observationresyncservicetest_observationresyncservicetest_givenobservationwithfactory",
-      "confidence_score": 1.0
+      "target": "service_observationresyncservicetest_observationresyncservicetest_givenobservationwithfactory"
     },
     {
       "relation": "calls",
@@ -180528,9 +180528,9 @@
       "source_file": "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ObservationResyncServiceTest.java",
       "source_location": "L89",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "service_observationresyncservicetest_observationresyncservicetest_requestinsertswhenresyncable",
-      "target": "service_observationresyncservicetest_observationresyncservicetest_request",
-      "confidence_score": 1.0
+      "target": "service_observationresyncservicetest_observationresyncservicetest_request"
     },
     {
       "relation": "calls",
@@ -214086,5 +214086,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "03a79340f03110b9f0b5aec2f7dff73f526bb2bd"
+  "built_at_commit": "51978e6af94bbbbd15572182c7f0f91365eb7c40"
 }

@@ -1,16 +1,16 @@
-# Graph Report - more-studymanager-backend  (2026-10-08)
+# Graph Report - more-studymanager-backend  (2026-10-12)
 
 ## Corpus Check
-- 548 files · ~176,046 words
+- 548 files · ~176,094 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 6230 nodes · 14080 edges · 411 communities (373 shown, 38 thin omitted)
+- 6230 nodes · 14080 edges · 410 communities (372 shown, 38 thin omitted)
 - Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 2398 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `03a79340`
+- Built from commit: `51978e6a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -218,7 +218,6 @@
 - [[_COMMUNITY_Community 200|Community 200]]
 - [[_COMMUNITY_Community 201|Community 201]]
 - [[_COMMUNITY_Community 202|Community 202]]
-- [[_COMMUNITY_Community 203|Community 203]]
 - [[_COMMUNITY_Community 204|Community 204]]
 - [[_COMMUNITY_Community 205|Community 205]]
 - [[_COMMUNITY_Community 206|Community 206]]
@@ -403,7 +402,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (411 total, 38 thin omitted)
+## Communities (410 total, 38 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.17
@@ -455,7 +454,7 @@ Nodes (12): GoalTemplateRepository, Collection, GoalTemplate, Integer, JdbcTempl
 
 ### Community 12 - "Community 12"
 Cohesion: 0.07
-Nodes (30): GoalRepositoryTest, MilestoneRepositoryTest, ObservationRepositoryTest, ParticipantRepositoryTest, StudyRepositoryTest, StudyServiceTest, BeforeEach, DisplayName (+22 more)
+Nodes (31): GoalRepositoryTest, InterventionRepositoryTest, MilestoneRepositoryTest, ObservationGroupRepositoryTest, ObservationRepositoryTest, ParticipantRepositoryTest, StudyServiceTest, BeforeEach (+23 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.09
@@ -470,12 +469,12 @@ Cohesion: 0.18
 Nodes (11): InterventionService, Action, ActionFactory, EventListener, Integer, Intervention, List, Long (+3 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.11
-Nodes (11): IntegrationRepositoryTest, Instant, List, Long, Range, BeforeEach, DisplayName, Test (+3 more)
+Cohesion: 0.10
+Nodes (16): IntegrationRepositoryTest, Instant, List, Long, Range, BeforeEach, DisplayName, Test (+8 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.06
-Nodes (21): ArrayMeasurementSummary, BooleanMeasurementSummary, MeasurementSummary, DateMeasurementSummary, FieldValue, LimeSurveyObservationTest, MultipleChoiceQuestionObservationTest, QuestionObservationTest (+13 more)
+Cohesion: 0.09
+Nodes (17): ArrayMeasurementSummary, BooleanMeasurementSummary, MeasurementSummary, DateMeasurementSummary, FieldValue, LimeSurveyObservationTest, MultipleChoiceQuestionObservationTest, QuestionObservationTest (+9 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.10
@@ -546,8 +545,8 @@ Cohesion: 0.16
 Nodes (16): CollaboratorRoleDetailsDTO, AuthenticatedUser, CollaboratorDetailsDTO, CollaboratorDTO, CurrentUserDTO, MoreUser, SearchResult, Set (+8 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.08
-Nodes (20): ObservationScheduleDTO, RandomizationDTO, RelativeRecurrenceRuleDTO, RelativeEvent, RelativeRecurrenceRule, RecurrenceRule, Override, Randomization (+12 more)
+Cohesion: 0.06
+Nodes (25): ObservationScheduleDTO, RandomizationDTO, RelativeRecurrenceRuleDTO, RelativeDate, RelativeEvent, RelativeRecurrenceRule, RecurrenceRule, Duration (+17 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.11
@@ -570,8 +569,8 @@ Cohesion: 0.16
 Nodes (17): ComponentFactory, ComponentFactoryDTO, ComponentFactoryMeasurementsInnerDTO, ComponentsApi, ComponentApiV1Controller, WebComponent, ApplicationContext, List (+9 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.15
-Nodes (15): StudyRepository, Boolean, Collection, Iterable, JdbcTemplate, List, Long, Optional (+7 more)
+Cohesion: 0.14
+Nodes (16): StudyRepository, Boolean, Collection, Iterable, JdbcTemplate, List, Long, MapSqlParameterSource (+8 more)
 
 ### Community 42 - "Community 42"
 Cohesion: 0.13
@@ -602,8 +601,8 @@ Cohesion: 0.25
 Nodes (5): ObservationResyncServiceTest, Observation, ObservationResyncRequest, Participant, Test
 
 ### Community 49 - "Community 49"
-Cohesion: 0.19
-Nodes (8): RecurrenceRuleDTO, RecurrenceRule, Instant, Integer, List, String, Long, RecurrenceRule
+Cohesion: 0.17
+Nodes (9): RecurrenceRuleDTO, RecurrenceRule, Instant, Integer, List, String, Long, RecurrenceRule (+1 more)
 
 ### Community 50 - "Community 50"
 Cohesion: 0.11
@@ -730,8 +729,8 @@ Cohesion: 0.20
 Nodes (9): OutputStream, ScheduleEventSerializationTest, Class, Object, T, DisplayName, Test, MapperUtils (+1 more)
 
 ### Community 82 - "Community 82"
-Cohesion: 0.17
-Nodes (11): ApplicationContext, DataView, EventListener, MoreSDK, ObservationRepository, Optional, ParticipantWithObservationProperties, String (+3 more)
+Cohesion: 0.15
+Nodes (13): ApplicationContext, Collection, DataView, DataViewInfo, EventListener, MoreSDK, ObservationRepository, Optional (+5 more)
 
 ### Community 83 - "Community 83"
 Cohesion: 0.22
@@ -782,7 +781,7 @@ Cohesion: 0.33
 Nodes (6): TestComponentConfig, ActionFactory, Bean, GoalTemplateFactory, ObservationFactory, TriggerFactory
 
 ### Community 95 - "Community 95"
-Cohesion: 0.15
+Cohesion: 0.16
 Nodes (15): ActionService, Job, MoreTriggerSDK, TestJob, TriggerJob, ApplicationContext, InterventionService, JobExecutionContext (+7 more)
 
 ### Community 96 - "Community 96"
@@ -866,8 +865,8 @@ Cohesion: 0.20
 Nodes (12): CurrentUserDTO, Integer, OAuth2AuthenticationService, Override, ResponseEntity, String, URI, UserApiV1Controller (+4 more)
 
 ### Community 116 - "Community 116"
-Cohesion: 0.25
-Nodes (7): ContactDTO, Contact, String, Override, MapSqlParameterSource, Contact, ContactTransformer
+Cohesion: 0.14
+Nodes (13): ContactDTO, Contact, StudyRepositoryTest, String, Override, BeforeEach, DisplayName, Optional (+5 more)
 
 ### Community 117 - "Community 117"
 Cohesion: 0.13
@@ -922,8 +921,8 @@ Cohesion: 0.13
 Nodes (9): Component, ComponentProperties, Override, P, String, Map, Object, GoalTemplateProperties (+1 more)
 
 ### Community 131 - "Community 131"
-Cohesion: 0.21
-Nodes (9): ObservationService, Collection, DataViewInfo, Integer, List, Long, Observation, ObservationFactory (+1 more)
+Cohesion: 0.24
+Nodes (7): ObservationService, Integer, List, Long, Observation, ObservationFactory, Study
 
 ### Community 132 - "Community 132"
 Cohesion: 0.31
@@ -1058,8 +1057,8 @@ Cohesion: 0.23
 Nodes (6): ValueGroup, Class, Override, String, Value, Void
 
 ### Community 167 - "Community 167"
-Cohesion: 0.17
-Nodes (12): ApplicationsApi, MediaType, ApplicationsAPIV1Controller, ApplicationsAPIV1ControllerTest, List, Long, Override, RequiresStudyRole (+4 more)
+Cohesion: 0.25
+Nodes (9): ApplicationsApi, MediaType, ApplicationsAPIV1Controller, List, Long, Override, RequiresStudyRole, ResponseEntity (+1 more)
 
 ### Community 168 - "Community 168"
 Cohesion: 0.24
@@ -1086,8 +1085,8 @@ Cohesion: 0.27
 Nodes (7): AccMobileObservation, AccMobileObservationFactory, MeasurementSet, MoreObservationSDK, ObservationProperties, Override, String
 
 ### Community 174 - "Community 174"
-Cohesion: 0.20
-Nodes (8): InterventionRepositoryTest, ObservationGroupRepositoryTest, BeforeEach, DisplayName, Test, BeforeEach, DisplayName, Test
+Cohesion: 0.60
+Nodes (3): ApplicationsAPIV1ControllerTest, DisplayName, Test
 
 ### Community 175 - "Community 175"
 Cohesion: 0.31
@@ -1196,10 +1195,6 @@ Nodes (5): ActionParameter, Parameters, Object, Override, String
 ### Community 202 - "Community 202"
 Cohesion: 0.24
 Nodes (5): Measurement, Object, Override, String, Type
-
-### Community 203 - "Community 203"
-Cohesion: 0.13
-Nodes (11): RelativeDate, Duration, JsonIgnore, LocalTime, Event, Instant, Range, RelativeEvent (+3 more)
 
 ### Community 204 - "Community 204"
 Cohesion: 0.27
@@ -1366,8 +1361,8 @@ Cohesion: 0.29
 Nodes (7): MorePlatformSDKImpl, Integer, MoreSDK, Override, ParticipantFilter, Set, SimpleParticipant
 
 ### Community 249 - "Community 249"
-Cohesion: 0.36
-Nodes (4): AbstractBooleanGoalTemplateFactory, MeasurementSet, Override, String
+Cohesion: 0.12
+Nodes (8): AbstractBooleanGoalTemplateFactory, Measurement, GarminMeasurementSets, GenericMeasurementSets, HealthConnectMeasurementSets, MeasurementSet, Override, String
 
 ### Community 250 - "Community 250"
 Cohesion: 0.32
@@ -1614,7 +1609,7 @@ Cohesion: 0.50
 Nodes (3): GpsMobileObservation, C, MoreObservationSDK
 
 ### Community 317 - "Community 317"
-Cohesion: 0.52
+Cohesion: 0.43
 Nodes (3): TriggerResult, ActionParameter, Set
 
 ### Community 319 - "Community 319"
@@ -1703,7 +1698,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `empty()` connect `Community 107` to `Community 128`, `Community 0`, `Community 1`, `Community 131`, `Community 5`, `Community 15`, `Community 17`, `Community 21`, `Community 22`, `Community 285`, `Community 289`, `Community 36`, `Community 39`, `Community 40`, `Community 169`, `Community 47`, `Community 48`, `Community 50`, `Community 51`, `Community 52`, `Community 190`, `Community 74`, `Community 77`, `Community 80`, `Community 86`, `Community 92`, `Community 95`, `Community 109`?**
   _High betweenness centrality (0.094) - this node is a cross-community bridge._
-- **Why does `MediaType` connect `Community 167` to `Community 258`, `Community 259`, `Community 4`, `Community 7`, `Community 10`, `Community 140`, `Community 141`, `Community 14`, `Community 27`, `Community 30`, `Community 293`, `Community 40`, `Community 43`, `Community 45`, `Community 46`, `Community 50`, `Community 52`, `Community 190`, `Community 194`, `Community 79`, `Community 86`, `Community 90`, `Community 94`, `Community 101`, `Community 102`, `Community 115`?**
+- **Why does `MediaType` connect `Community 167` to `Community 258`, `Community 259`, `Community 4`, `Community 7`, `Community 10`, `Community 140`, `Community 141`, `Community 14`, `Community 27`, `Community 30`, `Community 293`, `Community 40`, `Community 43`, `Community 45`, `Community 174`, `Community 46`, `Community 50`, `Community 52`, `Community 190`, `Community 194`, `Community 79`, `Community 86`, `Community 90`, `Community 94`, `Community 101`, `Community 102`, `Community 115`?**
   _High betweenness centrality (0.082) - this node is a cross-community bridge._
 - **Why does `UUID` connect `Community 92` to `Community 259`, `Community 7`, `Community 12`, `Community 141`, `Community 19`, `Community 21`, `Community 27`, `Community 288`, `Community 32`, `Community 37`, `Community 43`, `Community 171`, `Community 44`, `Community 50`, `Community 52`, `Community 190`, `Community 193`, `Community 76`, `Community 79`, `Community 84`, `Community 103`, `Community 235`, `Community 111`, `Community 124`, `Community 127`?**
   _High betweenness centrality (0.044) - this node is a cross-community bridge._
