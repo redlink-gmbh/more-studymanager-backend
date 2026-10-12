@@ -36,6 +36,12 @@ public class GenericMeasurementSets {
             new Measurement("hr", Measurement.Type.INTEGER)
     ));
 
+    public static MeasurementSet ACTIVITY = new MeasurementSet(
+            "ACTIVITY", Set.of(
+            new Measurement("activityType", Measurement.Type.STRING),
+            new Measurement("activeTimeInSeconds", Measurement.Type.LONG)
+    ));
+
     public static MeasurementSet NOT_SPECIFIED = new MeasurementSet("NOT_SPECIFIED", Set.of(
             Measurement.Any
     ));
