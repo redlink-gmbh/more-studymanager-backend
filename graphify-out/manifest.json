@@ -855,8 +855,8 @@
     "semantic_hash": ""
   },
   "studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/measurement/GenericMeasurementSets.java": {
-    "mtime": 1791797502.8202438,
-    "ast_hash": "4aabcd71105f698b5a5dce4550e1cb42",
+    "mtime": 1791783982.711,
+    "ast_hash": "6257d02523080f64dfd287aef39e10de",
     "semantic_hash": ""
   },
   "studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/measurement/HealthConnectMeasurementSets.java": {
@@ -2025,8 +2025,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/Application.java": {
-    "mtime": 1791797675.4166963,
-    "ast_hash": "b4f2dd877464e7577f49a087f24c5de0",
+    "mtime": 1791782748.4050424,
+    "ast_hash": "256c6c316fa8c115dd0bb7e9d0f633c3",
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/audit/AuditAspect.java": {
@@ -2905,8 +2905,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/resources/application.yaml": {
-    "mtime": 1791797675.1156044,
-    "ast_hash": "dbcb0259443d514d60dd0b2434af8542",
+    "mtime": 1791782748.4168205,
+    "ast_hash": "9dd163a25ebdaf9ec3ab02fa05b86f22",
     "semantic_hash": ""
   },
   "studymanager/src/main/resources/openapi/AppAPI.yaml": {
@@ -3122,6 +3122,16 @@
   "studymanager-services/src/test/java/io/redlink/more/studymanager/scheduling/ValidateActiveObservationDataCronTest.java": {
     "mtime": 1791461821.5776834,
     "ast_hash": "6ce49d76697f48cd45163c6af945eeae",
+    "semantic_hash": ""
+  },
+  "studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/healthconnect/activity/HealthConnectActivityObservation.java": {
+    "mtime": 1791784023.783,
+    "ast_hash": "660fea7abe028c3811cebf7686c3c0fe",
+    "semantic_hash": ""
+  },
+  "studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/healthconnect/activity/HealthConnectActivityObservationFactory.java": {
+    "mtime": 1791784023.795,
+    "ast_hash": "41d7ae067562a852072aeb69a262d7ec",
     "semantic_hash": ""
   }
 }
