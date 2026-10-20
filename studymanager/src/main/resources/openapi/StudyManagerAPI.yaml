@@ -1065,6 +1065,88 @@ paths:
         '500':
           description: Error
 
+  /studies/{studyId}/observations/{observationId}/attachments:
+    parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ObservationId'
+
+    post:
+      tags:
+        - observations
+      description: Upload a file (max 10 MB) attached to the observation
+      operationId: addObservationAttachment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+      responses:
+        '201':
+          description: Attachment stored
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationAttachment'
+        '400':
+          description: bad request
+        '404':
+          description: not found
+        '413':
+          description: file too large
+
+    get:
+      tags:
+        - observations
+      description: List the files attached to the observation
+      operationId: listObservationAttachments
+      responses:
+        '200':
+          description: Attachments returned
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ObservationAttachment'
+
+  /studies/{studyId}/observations/{observationId}/attachments/{attachmentId}:
+    parameters:
+      - $ref: '#/components/parameters/StudyId'
+      - $ref: '#/components/parameters/ObservationId'
+      - $ref: '#/components/parameters/AttachmentId'
+
+    get:
+      tags:
+        - observations
+      description: Download an observation attachment
+      operationId: getObservationAttachment
+      responses:
+        '200':
+          description: The file content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: not found
+
+    delete:
+      tags:
+        - observations
+      description: Delete an observation attachment
+      operationId: deleteObservationAttachment
+      responses:
+        '204':
+          description: Attachment deleted
+
   /studies/{studyId}/observations/{observationId}/tokens:
     parameters:
       - $ref: '#/components/parameters/StudyId'
@@ -2557,6 +2639,24 @@ components:
         scheduleType:
           type: string
 
+    ObservationAttachment:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        contentType:
+          type: string
+        size:
+          type: integer
+          format: int64
+        created:
+          type: string
+          format: date-time
+      readOnly: true
+
     EndpointToken:
       type: object
       properties:
@@ -3456,6 +3556,13 @@ components:
       schema:
         type: integer
         format: int32
+      required: true
+    AttachmentId:
+      name: attachmentId
+      in: path
+      schema:
+        type: string
+        format: uuid
       required: true
     TokenId:
       name: tokenId

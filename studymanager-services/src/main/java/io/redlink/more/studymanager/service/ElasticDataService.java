@@ -182,7 +182,20 @@ public class ElasticDataService {
             long studyId, Integer studyGroupId, int observationId, int participantId,
             TimeRange timerange, MeasurementSet measurementSet
     ) throws IOException {
-        final List<Query> filters = getFilters(studyId, observationId, studyGroupId, participantId, null, timerange);
+        return validateObservationData(studyId, studyGroupId, observationId, participantId, timerange, measurementSet, Map.of());
+    }
+
+    /**
+     * @param requiredValues only datapoints whose data fields have these values (measurement id → value) are summarized
+     */
+    public ObservationDataSummary validateObservationData(
+            long studyId, Integer studyGroupId, int observationId, int participantId,
+            TimeRange timerange, MeasurementSet measurementSet, Map<String, Object> requiredValues
+    ) throws IOException {
+        final List<Query> filters = new ArrayList<>(getFilters(studyId, observationId, studyGroupId, participantId, null, timerange));
+        requiredValues.forEach((field, value) -> filters.add(Query.of(q -> q.term(t -> t
+                .field("data_" + field)
+                .value(toFieldValue(value))))));
         final SearchRequest.Builder requestBuilder = new SearchRequest.Builder()
                 .index(getStudyIdString(studyId))
                 .query(q -> q.bool(b -> b.filter(filters)))
@@ -198,6 +211,17 @@ public class ElasticDataService {
         } catch (IOException | ElasticsearchException e) {
             return ElasticService.handleIndexNotFoundException(e, () -> null, IOException::new);
         }
+    }
+
+    private static co.elastic.clients.elasticsearch._types.FieldValue toFieldValue(Object value) {
+        if (value instanceof Boolean b) {
+            return co.elastic.clients.elasticsearch._types.FieldValue.of(b.booleanValue());
+        } else if (value instanceof Double d) {
+            return co.elastic.clients.elasticsearch._types.FieldValue.of(d.doubleValue());
+        } else if (value instanceof Number n) {
+            return co.elastic.clients.elasticsearch._types.FieldValue.of(n.longValue());
+        }
+        return co.elastic.clients.elasticsearch._types.FieldValue.of(String.valueOf(value));
     }
 
     private SearchRequest.Builder buildMeasurementSetAggregations(SearchRequest.Builder builder, MeasurementSet measurementSet) {

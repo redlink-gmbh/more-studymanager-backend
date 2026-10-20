@@ -59,6 +59,9 @@ class ObservationServiceTest {
     @Mock
     ApplicationContext applicationContext;
 
+    @Mock
+    ObservationAttachmentService attachmentService;
+
     @InjectMocks
     ObservationService observationService;
 

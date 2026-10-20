@@ -15,6 +15,7 @@ import io.redlink.more.studymanager.core.ui.ViewConfig;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface MoreObservationSDK extends MorePlatformSDK {
 
@@ -29,4 +30,13 @@ public interface MoreObservationSDK extends MorePlatformSDK {
     DataViewData queryData(ViewConfig viewConfig, Integer studyGroupId, Integer participantId, TimeRange timerange);
 
     int getObservationId();
+
+    /**
+     * Sends a push notification to the given participants.
+     *
+     * @param background {@code true} sends a silent data-only message (title and message are dropped)
+     * @param priority   one of {@code URGENT, HIGH, NORMAL, LOW}
+     */
+    void sendPushNotification(Set<Integer> participantIds, String title, String message,
+                              Map<String, String> data, boolean background, String priority);
 }

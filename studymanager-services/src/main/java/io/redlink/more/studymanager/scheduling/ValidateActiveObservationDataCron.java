@@ -166,8 +166,12 @@ public class ValidateActiveObservationDataCron {
         }
         var validationResults = sdk.validateData(
                 ctx.getStudyId(), ctx.getStudyGroupId(), ctx.getObservationId(),
-                ctx.participant.getParticipantId(), ctx.getTimeRage(),
-                ctx.observationFactory.getMeasurementSet());
+                ctx.participant.getParticipantId(),
+                ctx.observationFactory.isValidationCumulative()
+                        ? new Timeframe(Instant.EPOCH, ctx.occurrence.end())
+                        : ctx.getTimeRage(),
+                ctx.observationFactory.getMeasurementSet(),
+                ctx.observationFactory.getValidationFilter());
         final OccurredObservation updatedOccurredObservation;
         if (validationResults != null) {
             var validationResult = ctx.observationComponent.validateData(ctx.occurrence.start(), ctx.occurrence.end(), validationResults);

@@ -68,6 +68,9 @@ class StudyServiceTest {
     @Mock
     ApplicationEventPublisher applicationEventPublisher;
 
+    @Mock
+    ObservationAttachmentService attachmentService;
+
     @InjectMocks
     StudyService studyService;
 
@@ -222,5 +225,6 @@ class StudyServiceTest {
         verify(studyRepository).deleteById(1L);
         verify(elasticService).deleteIndex(1L);
         verify(occurredObservationService).deleteOccurredObservations(1L);
+        verify(attachmentService).deleteFiles(1L);
     }
 }

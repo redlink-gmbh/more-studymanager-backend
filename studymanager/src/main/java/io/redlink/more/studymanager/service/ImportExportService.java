@@ -118,7 +118,7 @@ public class ImportExportService {
                         .orElseThrow(() -> new NotFoundException("study", studyId)))
                 .setStudyGroups(studyGroupService.listStudyGroups(studyId))
                 .setObservationGroups(observationGroupService.listObservationGroups(studyId))
-                .setObservations(observationService.listObservations(studyId))
+                .setObservations(observationService.listObservationsForExport(studyId))
                 .setInterventions(interventionService.listInterventions(studyId))
                 .setMilestones(milestoneService.listMilestones(studyId))
                 .setActions(new HashMap<>())

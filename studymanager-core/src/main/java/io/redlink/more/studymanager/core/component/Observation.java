@@ -62,6 +62,8 @@ public abstract class Observation<C extends ObservationProperties> extends Compo
         // no action
     }
 
+
+
     /**
      * Default implementation that checks if data are available. If any are present the validation is set to
      * complete otherwise the state is set to missing

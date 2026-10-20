@@ -295,4 +295,29 @@ class ElasticDataServiceTest {
         return writer.toString();
     }
 
+
+    @Test
+    public void testValidateObservationDataAppliesRequiredValues() throws IOException {
+        MeasurementSet measurementSet = new MeasurementSet("INFO_READ", Set.of(
+                new Measurement("messageId", Measurement.Type.STRING),
+                new Measurement("read", Measurement.Type.BOOLEAN)
+        ));
+        when(client.search(any(SearchRequest.class), any(Class.class))).thenReturn(null);
+        ArgumentCaptor<SearchRequest> request = ArgumentCaptor.forClass(SearchRequest.class);
+
+        try {
+            elasticDataService.validateObservationData(15, null, 1, 11,
+                    new Timeframe(Instant.parse("2025-12-01T16:00:00Z"), Instant.parse("2025-12-02T00:00:00Z")),
+                    measurementSet, Map.of("read", true));
+        } catch (RuntimeException e) {
+            // the (null) response is irrelevant, only the request is checked
+        }
+
+        Mockito.verify(client).search(request.capture(), any(Class.class));
+        assertThat(request.getValue().query().bool().filter().stream()
+                .filter(q -> q.isTerm() && q.term().field().equals("data_read"))
+                .map(q -> q.term().value().booleanValue())
+                .toList())
+                .containsExactly(true);
+    }
 }

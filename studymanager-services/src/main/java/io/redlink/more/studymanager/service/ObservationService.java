@@ -49,20 +49,23 @@ public class ObservationService {
 
     private final MoreSDK sdk;
     private final ApplicationContext applicationContext;
+    private final ObservationAttachmentService attachmentService;
 
     public ObservationService(StudyStateService studyStateService,
                               ObservationRepository repository,
                               MoreSDK sdk,
-                              ApplicationContext applicationContext) {
+                              ApplicationContext applicationContext,
+                              ObservationAttachmentService attachmentService) {
         this.studyStateService = studyStateService;
         this.repository = repository;
         this.sdk = sdk;
         this.applicationContext = applicationContext;
+        this.attachmentService = attachmentService;
     }
 
     public Observation addObservation(Observation observation) {
         studyStateService.assertStudyNotInState(observation.getStudyId(), Study.Status.CLOSED);
-        return repository.insert(normalize(validate(observation)));
+        return repository.insert(normalize(validate(prepare(observation, null))));
     }
 
     public Observation importObservation(Long studyId, Observation observation) {
@@ -81,6 +84,7 @@ public class ObservationService {
     public void deleteObservation(Long studyId, Integer observationId) {
         studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
         repository.deleteObservation(studyId, observationId);
+        attachmentService.deleteFiles(studyId, observationId);
     }
 
     public Optional<Observation> getObservation(Long studyId, Integer observationId) {
@@ -95,14 +99,31 @@ public class ObservationService {
         return repository.listObservations(studyId);
     }
 
+    /**
+     * The observations of the study with their properties as adjusted by {@link ObservationFactory#preExport}.
+     */
+    public List<Observation> listObservationsForExport(Long studyId) {
+        List<Observation> observations = listObservations(studyId);
+        observations.forEach(o -> getObservationFactory(o).ifPresent(f ->
+                o.setProperties((ObservationProperties) f.preExport(o.getProperties()))));
+        return observations;
+    }
+
     public List<Observation> listObservationsForGroup(Long studyId, Integer studyGroupId, Collection<Integer> observationGroupIds) {
         return repository.listObservationsForGroup(studyId, studyGroupId, observationGroupIds);
     }
 
     public Observation updateObservation(Observation observation) {
         studyStateService.assertStudyNotInState(observation.getStudyId(), Study.Status.CLOSED);
-        Observation updatedObservation = repository.updateObservation(normalize(validate(observation)));
+        Optional<Observation> previous = getObservation(observation.getStudyId(), observation.getObservationId());
+        Observation updatedObservation = repository.updateObservation(normalize(validate(prepare(observation, previous.orElse(null)))));
         repository.removeParticipantsPropertyKey(observation.getStudyId(), observation.getObservationId(), RandomSchedulerUtils.OBSERVATION_SCHEDULE_SEED_KEY);
+        if (previous.isPresent() && studyStateService.hasStudyState(observation.getStudyId(), Study.Status.ACTIVE_STATES)) {
+            factory(updatedObservation).create(
+                    sdk.scopedObservationSDK(updatedObservation.getStudyId(), updatedObservation.getStudyGroupId(), updatedObservation.getObservationId()),
+                    updatedObservation.getProperties()
+            ).onUpdate(previous.get().getProperties(), updatedObservation.getTitle());
+        }
         return updatedObservation;
     }
 
@@ -204,6 +225,17 @@ public class ObservationService {
     private Observation normalize(Observation observation) {
         if (getObservationFactory(observation).map(ObservationFactory::isStudyWide).orElse(false)) {
             observation.setSchedule(new StudyWideEvent());
+        }
+        return observation;
+    }
+
+    private Observation prepare(Observation observation, Observation previous) {
+        try {
+            observation.setProperties((ObservationProperties) factory(observation).prepareUpdate(
+                    previous != null && previous.getType().equals(observation.getType()) ? previous.getProperties() : null,
+                    observation.getProperties()));
+        } catch (ConfigurationValidationException e) {
+            throw new BadRequestException(e.getMessage());
         }
         return observation;
     }

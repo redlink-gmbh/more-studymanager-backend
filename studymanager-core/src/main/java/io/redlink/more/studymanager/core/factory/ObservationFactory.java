@@ -15,6 +15,8 @@ import io.redlink.more.studymanager.core.measurement.MeasurementSet;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
 
+import java.util.Map;
+
 public abstract class ObservationFactory<C extends Observation<P>, P extends ObservationProperties> extends ComponentFactory<C, P> {
     public abstract C create(MoreObservationSDK sdk, P properties) throws ConfigurationValidationException;
 
@@ -36,6 +38,35 @@ public abstract class ObservationFactory<C extends Observation<P>, P extends Obs
 
     public boolean isResyncable() {
         return false;
+    }
+
+    /**
+     * Required field values (measurement id → value) a datapoint must have to be included in the
+     * data summary passed to {@link Observation#validateData}. Empty by default, i.e. all datapoints count.
+     */
+    public Map<String, Object> getValidationFilter() {
+        return Map.of();
+    }
+
+    /**
+     * If {@code true}, {@link Observation#validateData} gets a summary of all data from the start of the study up to
+     * the end of the occurrence, instead of only the data within the occurrence.
+     */
+    public boolean isValidationCumulative() {
+        return false;
+    }
+
+    /**
+     * Called before the properties of an observation are stored. Allows to reject changes that depend on the
+     * previous state, or to set server-side values.
+     *
+     * @param previous the stored properties, {@code null} if the observation is created
+     * @param updated  the properties to store
+     * @return the properties to store
+     * @throws ConfigurationValidationException if the update is not allowed
+     */
+    public P prepareUpdate(P previous, P updated) throws ConfigurationValidationException {
+        return updated;
     }
 
     /**

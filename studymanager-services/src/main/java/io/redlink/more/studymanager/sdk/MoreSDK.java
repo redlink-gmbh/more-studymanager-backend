@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -175,6 +176,16 @@ public class MoreSDK {
                 MessageType.FOREGROUND, Priority.URGENT));
     }
 
+    public void sendPushNotification(long studyId, Set<Integer> participantIds, String title, String message,
+                                     Map<String, String> data, MessageType type, Priority priority) {
+        if (participantIds.isEmpty()) {
+            return;
+        }
+        LOGGER.debug("Sending {} message to {} participants (sid:{})", type, participantIds.size(), studyId);
+        applicationEventPublisher.publishEvent(new PushNotificationEvent(
+                this, studyId, List.copyOf(participantIds), title, message, data, type, priority));
+    }
+
     public void storeDatapoint(
             ElasticDataPoint.Type type,
             long studyId,
@@ -234,9 +245,9 @@ public class MoreSDK {
         }
     }
 
-    public ObservationDataSummary validateData(long studyId, Integer studyGroupId, int observationId, int participantId, TimeRange timerange, MeasurementSet measurementSet) {
+    public ObservationDataSummary validateData(long studyId, Integer studyGroupId, int observationId, int participantId, TimeRange timerange, MeasurementSet measurementSet, Map<String, Object> requiredValues) {
         try {
-            return elasticDataService.validateObservationData(studyId, studyGroupId, observationId, participantId, timerange, measurementSet);
+            return elasticDataService.validateObservationData(studyId, studyGroupId, observationId, participantId, timerange, measurementSet, requiredValues);
         } catch (IOException e) {
             LOGGER.warn("Failed to query observation data to validate data for observation: {} of study: {} and participant: {} in time range {} and meassurements: {}",
                     observationId, studyId, participantId, timerange, measurementSet, e);
