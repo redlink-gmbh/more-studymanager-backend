@@ -19,11 +19,15 @@ import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
 import io.redlink.more.studymanager.core.sdk.MorePlatformSDK;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static java.util.function.Predicate.not;
 
 public class InfoObservation<C extends ObservationProperties> extends Observation<C> {
 
@@ -35,8 +39,10 @@ public class InfoObservation<C extends ObservationProperties> extends Observatio
     }
 
     /**
-     * New messages without a publish time are announced with a visible push. Scheduled or edited messages only
-     * send a silent push so the app re-fetches its config; the app itself shows scheduled messages at their publishAt.
+     * New messages without a publish time are announced with a visible push to participants for whom the
+     * observation is currently active (per their study calendar), all others only get a silent push. Scheduled
+     * (publishAt or publishAfter) or edited messages only send a silent push so the app re-fetches its config; the
+     * app itself shows scheduled messages at their publish time.
      */
     @Override
     public void onUpdate(ObservationProperties previous, String title) {
@@ -46,38 +52,51 @@ public class InfoObservation<C extends ObservationProperties> extends Observatio
             return;
         }
         Set<Integer> participants = sdk.participantIds(MorePlatformSDK.ParticipantFilter.ACTIVE_ONLY);
-        boolean silentUpdate = false;
+        Set<Integer> activeNow = null; // computed once, only if an immediate message is sent
+        Set<Integer> silent = new HashSet<>();
         for (Map.Entry<String, Map<?, ?>> e : after.entrySet()) {
             Map<?, ?> msg = e.getValue();
             if (!before.containsKey(e.getKey())) {
-                if (msg.get("publishAt") == null) {
-                    sdk.sendPushNotification(participants, title, excerpt(String.valueOf(msg.get("text"))),
+                if (msg.get(InfoObservationFactory.MSG_PUBLISH_AT) == null
+                        && msg.get(InfoObservationFactory.MSG_PUBLISH_AFTER) == null) {
+                    if (activeNow == null) {
+                        activeNow = sdk.participantsWithActiveOccurrence(participants, Instant.now());
+                    }
+                    sdk.sendPushNotification(activeNow, title, excerpt(String.valueOf(msg.get("text"))),
                             data(e.getKey()), false, Objects.toString(msg.get("priority"), "NORMAL"));
+                    participants.stream().filter(not(activeNow::contains)).forEach(silent::add);
                 } else {
-                    silentUpdate = true;
+                    silent.addAll(participants);
                 }
             } else if (!msg.equals(before.get(e.getKey()))) {
-                silentUpdate = true;
+                silent.addAll(participants);
             }
         }
-        if (silentUpdate) {
-            sdk.sendPushNotification(participants, null, null, data(null), true, "HIGH");
+        if (!silent.isEmpty()) {
+            sdk.sendPushNotification(silent, null, null, data(null), true, "HIGH");
         }
     }
 
+    /** Without the activation, publishAfter messages count as shown right away. */
+    @Override
+    public ObservationValidationResult validateData(Instant start, Instant end, ObservationDataSummary summary) {
+        return validateData(() -> Instant.EPOCH, start, end, summary);
+    }
+
     /**
-     * Complete if every message shown by the end of the occurrence (publishAt, otherwise sentAt) has a datapoint
+     * Complete if every message shown by the end of the occurrence (publishAt, publishAfter resolved against the
+     * activation, otherwise sentAt) has a datapoint
      * with its messageId and read=true, otherwise incomplete. So a complete occurrence becomes incomplete once a
      * new message is sent, until it is read. The summary only contains read datapoints from the start of the study
      * (see {@link InfoObservationFactory#getValidationFilter()} and {@link InfoObservationFactory#isValidationCumulative()}).
      */
     @Override
-    public ObservationValidationResult validateData(Instant start, Instant end, ObservationDataSummary summary) {
+    public ObservationValidationResult validateData(Supplier<Instant> activation, Instant start, Instant end, ObservationDataSummary summary) {
         if (summary == null) {
             return new ObservationValidationResult(false, ObservationDataState.MISSING);
         }
         Set<String> expected = InfoObservationFactory.messagesById(properties).entrySet().stream()
-                .filter(e -> shownAt(e.getValue()).isBefore(end))
+                .filter(e -> shownAt(e.getValue(), activation).isBefore(end))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
         Set<String> read = summary.measurements() == null ? Set.of() : summary.measurements().stream()
@@ -91,8 +110,13 @@ public class InfoObservation<C extends ObservationProperties> extends Observatio
                 read.containsAll(expected) ? ObservationDataState.COMPLETE : ObservationDataState.INCOMPLETE);
     }
 
-    private static Instant shownAt(Map<?, ?> msg) {
-        Object at = msg.get("publishAt") != null ? msg.get("publishAt") : msg.get(InfoObservationFactory.MSG_SENT_AT);
+    private static Instant shownAt(Map<?, ?> msg, Supplier<Instant> activation) {
+        if (msg.get(InfoObservationFactory.MSG_PUBLISH_AFTER) instanceof Map<?, ?> publishAfter) {
+            return InfoObservationFactory.resolvePublishAfter(publishAfter, activation.get());
+        }
+        Object at = msg.get(InfoObservationFactory.MSG_PUBLISH_AT) != null
+                ? msg.get(InfoObservationFactory.MSG_PUBLISH_AT)
+                : msg.get(InfoObservationFactory.MSG_SENT_AT);
         return at == null ? Instant.EPOCH : Instant.parse(String.valueOf(at));
     }
 

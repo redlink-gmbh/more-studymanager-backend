@@ -9,6 +9,7 @@
 package io.redlink.more.studymanager.component.observation;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
+import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
 import io.redlink.more.studymanager.core.sdk.MorePlatformSDK;
@@ -22,6 +23,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -72,10 +75,22 @@ class InfoObservationTest {
 
     @Test
     void newImmediateMessageSendsVisiblePush() {
+        when(sdk.participantsWithActiveOccurrence(eq(participants), any())).thenReturn(participants);
         update(props(), props(msg("a", "**Hello** [there](http://x)", "URGENT", null)));
         verify(sdk).sendPushNotification(participants, "News", "Hello there",
                 Map.of("key", InfoObservation.PUSH_KEY, "observationId", "7", "messageId", "a"), false, "URGENT");
         verify(sdk, never()).sendPushNotification(any(), any(), any(), any(), eq(true), anyString());
+    }
+
+    @Test
+    void newImmediateMessageIsSilentWhereTheObservationIsNotActive() {
+        when(sdk.participantsWithActiveOccurrence(eq(participants), any())).thenReturn(Set.of(1));
+        update(props(), props(msg("a", "x", null, null), msg("b", "y", null, null)));
+        verify(sdk).sendPushNotification(eq(Set.of(1)), eq("News"), eq("x"), any(), eq(false), eq("NORMAL"));
+        verify(sdk).sendPushNotification(eq(Set.of(1)), eq("News"), eq("y"), any(), eq(false), eq("NORMAL"));
+        verify(sdk).sendPushNotification(eq(Set.of(2)), isNull(), isNull(), any(), eq(true), eq("HIGH"));
+        // the calendar is only consulted once per update
+        verify(sdk).participantsWithActiveOccurrence(eq(participants), any());
     }
 
     @Test
@@ -138,7 +153,8 @@ class InfoObservationTest {
         // a message sent after the occurrence does not affect it
         assertEquals(ObservationDataState.INCOMPLETE,
                 obs.validateData(start, Instant.parse("2026-10-23T00:00:00Z"), readSummary("a", "b")).state());
-        assertEquals(Map.of("read", true), factory.getValidationFilter());
+        assertEquals(Map.of("read", true, "text", ObservationFactory.VALUE_PRESENT, "shownAt", ObservationFactory.VALUE_PRESENT),
+                factory.getValidationFilter());
         assertTrue(factory.isValidationCumulative());
     }
 
@@ -157,6 +173,61 @@ class InfoObservationTest {
         assertNotNull(((Map<?, ?>) messages.get(1)).get(InfoObservationFactory.MSG_SENT_AT));
 
         assertThrows(ConfigurationValidationException.class, () -> factory.prepareUpdate(second, props(msg("b", "y", null, null))));
+    }
+
+    @Test
+    void prepareUpdateAllowsDeletionInDraftOrPausedStudy() {
+        ObservationProperties first = factory.prepareUpdate(null, props(msg("a", "x", null, null), msg("b", "y", null, null)));
+        ObservationProperties second = factory.prepareUpdate(first, props(msg("b", "y", null, null)), true);
+        assertEquals(List.of("b"), ((List<?>) second.get("messages")).stream().map(m -> ((Map<?, ?>) m).get("id")).toList());
+    }
+
+    private static Map<String, Object> relative(String id, long value, String unit, String time) {
+        Map<String, Object> publishAfter = new HashMap<>(Map.of("offset", Map.of("value", value, "unit", unit)));
+        if (time != null) publishAfter.put("time", time);
+        Map<String, Object> m = msg(id, "x", null, null);
+        m.put(InfoObservationFactory.MSG_PUBLISH_AFTER, publishAfter);
+        return m;
+    }
+
+    @Test
+    void validationOfPublishAfter() {
+        assertEquals(1, ((List<?>) factory.validate(props(relative("a", 1, "DAY", "09:00"))).get("messages")).size());
+        assertEquals(1, ((List<?>) factory.validate(props(relative("a", 0, "HOUR", null))).get("messages")).size());
+        assertThrows(ConfigurationValidationException.class, () -> factory.validate(props(relative("a", -1, "DAY", null))));
+        assertThrows(ConfigurationValidationException.class, () -> factory.validate(props(relative("a", 1, "WEEK", null))));
+        assertThrows(ConfigurationValidationException.class, () -> factory.validate(props(relative("a", 1, "DAY", "9 am"))));
+        Map<String, Object> both = relative("a", 1, "DAY", null);
+        both.put("publishAt", "2026-10-20T08:00:00Z");
+        assertThrows(ConfigurationValidationException.class, () -> factory.validate(props(both)));
+    }
+
+    @Test
+    void publishAfterIsRelativeToActivation() {
+        Instant activation = Instant.parse("2026-10-20T15:30:00Z");
+        Map<?, ?> zero = (Map<?, ?>) relative("a", 0, "DAY", null).get(InfoObservationFactory.MSG_PUBLISH_AFTER);
+        assertEquals(activation, InfoObservationFactory.resolvePublishAfter(zero, activation));
+
+        Map<?, ?> nextMorning = (Map<?, ?>) relative("a", 1, "DAY", "09:00").get(InfoObservationFactory.MSG_PUBLISH_AFTER);
+        assertEquals(activation.atZone(ZoneId.systemDefault()).plusDays(1).with(LocalTime.of(9, 0)).toInstant(),
+                InfoObservationFactory.resolvePublishAfter(nextMorning, activation));
+
+        // a time of day before the activation is clamped to the activation
+        Map<?, ?> sameDayEarly = (Map<?, ?>) relative("a", 0, "DAY", "00:00").get(InfoObservationFactory.MSG_PUBLISH_AFTER);
+        assertEquals(activation, InfoObservationFactory.resolvePublishAfter(sameDayEarly, activation));
+    }
+
+    @Test
+    void validateDataResolvesPublishAfterPerParticipant() {
+        var obs = factory.create(sdk, props(relative("a", 24, "HOUR", null)));
+        Instant start = Instant.parse("2026-10-23T00:00:00Z");
+        Instant end = Instant.parse("2026-10-24T00:00:00Z");
+        // activated two days earlier: the message was shown by now and is not read
+        assertEquals(ObservationDataState.INCOMPLETE,
+                obs.validateData(() -> Instant.parse("2026-10-21T00:00:00Z"), start, end, readSummary()).state());
+        // activated (late joiner) at the start of this occurrence: the message is only shown afterwards
+        assertEquals(ObservationDataState.COMPLETE,
+                obs.validateData(() -> start, start, end, readSummary()).state());
     }
 
     @Test

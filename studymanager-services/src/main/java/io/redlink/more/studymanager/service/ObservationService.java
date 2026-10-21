@@ -65,7 +65,7 @@ public class ObservationService {
 
     public Observation addObservation(Observation observation) {
         studyStateService.assertStudyNotInState(observation.getStudyId(), Study.Status.CLOSED);
-        return repository.insert(normalize(validate(prepare(observation, null))));
+        return repository.insert(normalize(validate(prepare(observation, null, false))));
     }
 
     public Observation importObservation(Long studyId, Observation observation) {
@@ -116,7 +116,12 @@ public class ObservationService {
     public Observation updateObservation(Observation observation) {
         studyStateService.assertStudyNotInState(observation.getStudyId(), Study.Status.CLOSED);
         Optional<Observation> previous = getObservation(observation.getStudyId(), observation.getObservationId());
-        Observation updatedObservation = repository.updateObservation(normalize(validate(prepare(observation, previous.orElse(null)))));
+        boolean deletionAllowed = studyStateService.hasStudyState(observation.getStudyId(), Study.Status.CONTENT_DELETION_STATES);
+        Observation updatedObservation = repository.updateObservation(normalize(validate(prepare(observation, previous.orElse(null), deletionAllowed))));
+        if (deletionAllowed && previous.isPresent()) {
+            attachmentService.deleteDropped(observation.getStudyId(), observation.getObservationId(),
+                    previous.get().getProperties(), updatedObservation.getProperties());
+        }
         repository.removeParticipantsPropertyKey(observation.getStudyId(), observation.getObservationId(), RandomSchedulerUtils.OBSERVATION_SCHEDULE_SEED_KEY);
         if (previous.isPresent() && studyStateService.hasStudyState(observation.getStudyId(), Study.Status.ACTIVE_STATES)) {
             factory(updatedObservation).create(
@@ -229,11 +234,12 @@ public class ObservationService {
         return observation;
     }
 
-    private Observation prepare(Observation observation, Observation previous) {
+    private Observation prepare(Observation observation, Observation previous, boolean deletionAllowed) {
         try {
             observation.setProperties((ObservationProperties) factory(observation).prepareUpdate(
                     previous != null && previous.getType().equals(observation.getType()) ? previous.getProperties() : null,
-                    observation.getProperties()));
+                    observation.getProperties(),
+                    deletionAllowed));
         } catch (ConfigurationValidationException e) {
             throw new BadRequestException(e.getMessage());
         }

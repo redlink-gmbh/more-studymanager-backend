@@ -40,9 +40,17 @@ public abstract class ObservationFactory<C extends Observation<P>, P extends Obs
         return false;
     }
 
+    /** Value for {@link #getValidationFilter()}: the field must be given and not null, whatever its value. */
+    public static final Object VALUE_PRESENT = new Object() {
+        @Override
+        public String toString() {
+            return "<present>";
+        }
+    };
+
     /**
-     * Required field values (measurement id → value) a datapoint must have to be included in the
-     * data summary passed to {@link Observation#validateData}. Empty by default, i.e. all datapoints count.
+     * Required field values (measurement id → value, or {@link #VALUE_PRESENT}) a datapoint must have to be included
+     * in the data summary passed to {@link Observation#validateData}. Empty by default, i.e. all datapoints count.
      */
     public Map<String, Object> getValidationFilter() {
         return Map.of();
@@ -67,6 +75,14 @@ public abstract class ObservationFactory<C extends Observation<P>, P extends Obs
      */
     public P prepareUpdate(P previous, P updated) throws ConfigurationValidationException {
         return updated;
+    }
+
+    /**
+     * Like {@link #prepareUpdate(ObservationProperties, ObservationProperties)}, but also tells whether the study
+     * state allows removing runtime content (draft or paused study).
+     */
+    public P prepareUpdate(P previous, P updated, boolean deletionAllowed) throws ConfigurationValidationException {
+        return prepareUpdate(previous, updated);
     }
 
     /**

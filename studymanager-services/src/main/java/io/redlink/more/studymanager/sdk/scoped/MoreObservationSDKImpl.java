@@ -92,6 +92,11 @@ public class MoreObservationSDKImpl extends MorePlatformSDKImpl implements MoreO
     }
 
     @Override
+    public Set<Integer> participantsWithActiveOccurrence(Set<Integer> participantIds, Instant at) {
+        return sdk.participantsWithActiveOccurrence(studyId, observationId, participantIds, at);
+    }
+
+    @Override
     public void sendPushNotification(Set<Integer> participantIds, String title, String message,
                                      Map<String, String> data, boolean background, String priority) {
         sdk.sendPushNotification(studyId, participantIds, title, message, data,

@@ -1141,7 +1141,7 @@ paths:
     delete:
       tags:
         - observations
-      description: Delete an observation attachment
+      description: Delete an observation attachment (only while the study is draft or paused)
       operationId: deleteObservationAttachment
       responses:
         '204':

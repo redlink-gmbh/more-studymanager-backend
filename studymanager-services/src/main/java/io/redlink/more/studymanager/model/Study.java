@@ -78,6 +78,8 @@ public class Study {
         }
 
         public static Set<Status> ACTIVE_STATES = Collections.unmodifiableSet(EnumSet.of(Status.PREVIEW, Status.ACTIVE));
+        /** States in which runtime content (e.g. info messages and their attachments) can be deleted. */
+        public static Set<Status> CONTENT_DELETION_STATES = Collections.unmodifiableSet(EnumSet.of(Status.DRAFT, Status.PAUSED, Status.PAUSED_PREVIEW));
     }
 
     public Long getStudyId() {

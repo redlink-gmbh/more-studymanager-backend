@@ -34,6 +34,7 @@ import io.redlink.more.studymanager.scheduling.TriggerJob;
 import io.redlink.more.studymanager.sdk.scoped.MoreActionSDKImpl;
 import io.redlink.more.studymanager.sdk.scoped.MoreObservationSDKImpl;
 import io.redlink.more.studymanager.sdk.scoped.MoreTriggerSDKImpl;
+import io.redlink.more.studymanager.service.CalendarService;
 import io.redlink.more.studymanager.service.ElasticDataService;
 import io.redlink.more.studymanager.service.ElasticService;
 import io.redlink.more.studymanager.service.GoalService;
@@ -42,6 +43,7 @@ import io.redlink.more.studymanager.service.ParticipantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -78,6 +80,8 @@ public class MoreSDK {
 
     private final ParticipantMilestoneService participantMilestoneService;
 
+    private final CalendarService calendarService;
+
     public MoreSDK(
             NameValuePairRepository nvpairs,
             SchedulingService schedulingService,
@@ -86,7 +90,8 @@ public class MoreSDK {
             ApplicationEventPublisher applicationEventPublisher,
             ObservationRepository observationRepository,
             GoalService goalService,
-            ParticipantMilestoneService participantMilestoneService) {
+            ParticipantMilestoneService participantMilestoneService,
+            @Lazy CalendarService calendarService) { // lazy: CalendarService -> ObservationService -> MoreSDK
         this.nvpairs = nvpairs;
         this.schedulingService = schedulingService;
         this.participantService = participantService;
@@ -96,6 +101,20 @@ public class MoreSDK {
         this.observationRepository = observationRepository;
         this.goalService = goalService;
         this.participantMilestoneService = participantMilestoneService;
+        this.calendarService = calendarService;
+    }
+
+    /**
+     * The participants that have an occurrence of the observation at {@code at}, according to their study calendar.
+     * ponytail: one calendar computation per participant; batch it if large studies make this slow.
+     */
+    public Set<Integer> participantsWithActiveOccurrence(long studyId, int observationId, Set<Integer> participantIds, Instant at) {
+        return participantIds.stream()
+                .filter(participantId -> calendarService
+                        .getTimeline(studyId, participantId, null, null, null, null, null)
+                        .observationTimelineEvents().stream()
+                        .anyMatch(e -> e.observationId() == observationId && !at.isBefore(e.start()) && at.isBefore(e.end())))
+                .collect(Collectors.toSet());
     }
 
     public MoreActionSDK scopedActionSDK(Long studyId, Integer studyGroupId, int interventionId, int actionId, String actionType, int participantId) {

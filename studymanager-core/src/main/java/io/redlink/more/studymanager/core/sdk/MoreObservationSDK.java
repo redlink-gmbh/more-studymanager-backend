@@ -13,6 +13,7 @@ import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.core.ui.DataViewData;
 import io.redlink.more.studymanager.core.ui.ViewConfig;
 
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +31,12 @@ public interface MoreObservationSDK extends MorePlatformSDK {
     DataViewData queryData(ViewConfig viewConfig, Integer studyGroupId, Integer participantId, TimeRange timerange);
 
     int getObservationId();
+
+    /**
+     * The participants out of {@code participantIds} that have an occurrence of this observation at {@code at},
+     * according to their study calendar.
+     */
+    Set<Integer> participantsWithActiveOccurrence(Set<Integer> participantIds, Instant at);
 
     /**
      * Sends a push notification to the given participants.

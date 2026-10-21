@@ -12,6 +12,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.ErrorResponse;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -24,6 +25,7 @@ import co.elastic.clients.json.jackson.JacksonJsonpParser;
 import com.fasterxml.jackson.core.JsonFactory;
 import io.redlink.more.studymanager.core.datavalidity.FieldValue;
 import io.redlink.more.studymanager.core.datavalidity.MeasurementSummary;
+import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.io.Timeframe;
 import io.redlink.more.studymanager.core.measurement.Measurement;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
@@ -308,7 +310,7 @@ class ElasticDataServiceTest {
         try {
             elasticDataService.validateObservationData(15, null, 1, 11,
                     new Timeframe(Instant.parse("2025-12-01T16:00:00Z"), Instant.parse("2025-12-02T00:00:00Z")),
-                    measurementSet, Map.of("read", true));
+                    measurementSet, Map.of("read", true, "text", ObservationFactory.VALUE_PRESENT));
         } catch (RuntimeException e) {
             // the (null) response is irrelevant, only the request is checked
         }
@@ -319,5 +321,10 @@ class ElasticDataServiceTest {
                 .map(q -> q.term().value().booleanValue())
                 .toList())
                 .containsExactly(true);
+        assertThat(request.getValue().query().bool().filter().stream()
+                .filter(Query::isExists)
+                .map(q -> q.exists().field())
+                .toList())
+                .containsExactly("data_text");
     }
 }

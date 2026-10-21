@@ -27,6 +27,7 @@ import io.redlink.more.studymanager.core.datavalidity.MeasurementSummary;
 import io.redlink.more.studymanager.core.datavalidity.NumericMeasurementSummary;
 import io.redlink.more.studymanager.core.datavalidity.ObservationDataSummary;
 import io.redlink.more.studymanager.core.datavalidity.StringMeasurementSummary;
+import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.measurement.Measurement;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
@@ -186,16 +187,19 @@ public class ElasticDataService {
     }
 
     /**
-     * @param requiredValues only datapoints whose data fields have these values (measurement id → value) are summarized
+     * @param requiredValues only datapoints whose data fields have these values (measurement id → value, or
+     *                       {@link ObservationFactory#VALUE_PRESENT} for any non-null value) are summarized
      */
     public ObservationDataSummary validateObservationData(
             long studyId, Integer studyGroupId, int observationId, int participantId,
             TimeRange timerange, MeasurementSet measurementSet, Map<String, Object> requiredValues
     ) throws IOException {
         final List<Query> filters = new ArrayList<>(getFilters(studyId, observationId, studyGroupId, participantId, null, timerange));
-        requiredValues.forEach((field, value) -> filters.add(Query.of(q -> q.term(t -> t
-                .field("data_" + field)
-                .value(toFieldValue(value))))));
+        requiredValues.forEach((field, value) -> filters.add(value == ObservationFactory.VALUE_PRESENT
+                ? Query.of(q -> q.exists(e -> e.field("data_" + field)))
+                : Query.of(q -> q.term(t -> t
+                        .field("data_" + field)
+                        .value(toFieldValue(value))))));
         final SearchRequest.Builder requestBuilder = new SearchRequest.Builder()
                 .index(getStudyIdString(studyId))
                 .query(q -> q.bool(b -> b.filter(filters)))

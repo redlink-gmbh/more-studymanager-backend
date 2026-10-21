@@ -11,6 +11,7 @@ package io.redlink.more.studymanager.service;
 import io.redlink.more.studymanager.configuration.JPAConfiguration;
 import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.exception.BadRequestException;
+import io.redlink.more.studymanager.exception.BadStudyStateException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.Contact;
 import io.redlink.more.studymanager.model.Observation;
@@ -33,11 +34,14 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Testcontainers
@@ -59,7 +63,8 @@ class ObservationAttachmentServiceTest {
 
     @Test
     void testAddGetDeleteAndCascade() throws Exception {
-        var service = new ObservationAttachmentService(attachmentRepository, mock(StudyStateService.class), dir);
+        StudyStateService studyStateService = mock(StudyStateService.class);
+        var service = new ObservationAttachmentService(attachmentRepository, studyStateService, dir);
         long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
         int observationId = observationRepository.insert(new Observation()
                 .setStudyId(studyId).setTitle("info").setType("info-observation").setHidden(false).setNoSchedule(false)
@@ -80,9 +85,28 @@ class ObservationAttachmentServiceTest {
                 new ByteArrayInputStream(new byte[1])))
                 .isInstanceOf(NotFoundException.class);
 
+        when(studyStateService.assertStudyState(studyId, Study.Status.CONTENT_DELETION_STATES)).thenThrow(BadStudyStateException.state());
+        assertThatThrownBy(() -> service.deleteAttachment(studyId, observationId, a.attachmentId()))
+                .isInstanceOf(BadStudyStateException.class);
+        assertThat(service.getAttachment(studyId, observationId, a.attachmentId())).contains(a);
+        reset(studyStateService);
+
         service.deleteAttachment(studyId, observationId, a.attachmentId());
         assertThat(service.getAttachment(studyId, observationId, a.attachmentId())).isEmpty();
         assertThat(service.getFile(a)).doesNotExist();
+
+        // attachments of removed messages are deleted, unreferenced uploads are kept
+        ObservationAttachment kept = service.addAttachment(studyId, observationId, "k", null, 1, new ByteArrayInputStream(new byte[1]));
+        ObservationAttachment dropped = service.addAttachment(studyId, observationId, "d", null, 1, new ByteArrayInputStream(new byte[1]));
+        ObservationAttachment unsaved = service.addAttachment(studyId, observationId, "u", null, 1, new ByteArrayInputStream(new byte[1]));
+        service.deleteDropped(studyId, observationId,
+                Map.of("messages", List.of(
+                        Map.of("id", "1", "attachments", List.of(kept.attachmentId().toString())),
+                        Map.of("id", "2", "attachments", List.of(dropped.attachmentId().toString())))),
+                Map.of("messages", List.of(
+                        Map.of("id", "1", "attachments", List.of(kept.attachmentId().toString())))));
+        assertThat(service.listAttachments(studyId, observationId)).containsExactlyInAnyOrder(kept, unsaved);
+        assertThat(service.getFile(dropped)).doesNotExist();
 
         ObservationAttachment b = service.addAttachment(studyId, observationId, "b.txt", "text/plain", 1,
                 new ByteArrayInputStream("b".getBytes()));

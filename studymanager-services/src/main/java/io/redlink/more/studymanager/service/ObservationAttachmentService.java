@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,8 +35,8 @@ import java.util.UUID;
  * Files attached to observations. Metadata is kept in the database, the content on the filesystem at
  * {@code {dir}/{studyId}/{observationId}/{attachmentId}} (paths are built from ids only, never from user input).
  * <p>
- * ponytail: uploaded files no longer referenced by any message are kept until the observation is deleted;
- * add a cleanup job if storage becomes an issue.
+ * ponytail: in a running study, uploaded files no longer referenced by any message are kept until the observation
+ * is deleted (in a draft or paused study see {@link #deleteDropped}); add a cleanup job if storage becomes an issue.
  */
 @Service
 public class ObservationAttachmentService {
@@ -92,8 +93,29 @@ public class ObservationAttachmentService {
         return file(attachment.studyId(), attachment.observationId(), attachment.attachmentId());
     }
 
+    /** Only while the study is in draft or paused, so participants never lose a file of a running study. */
     public void deleteAttachment(long studyId, int observationId, UUID attachmentId) {
-        studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
+        studyStateService.assertStudyState(studyId, Study.Status.CONTENT_DELETION_STATES);
+        delete(studyId, observationId, attachmentId);
+    }
+
+    /**
+     * Deletes the attachments referenced in {@code previous} but no longer in {@code updated} properties, e.g. those
+     * of deleted messages. Attachments not referenced yet (uploaded, but not saved with a message) are kept.
+     * The caller checks the study state.
+     */
+    public void deleteDropped(long studyId, int observationId, Map<String, Object> previous, Map<String, Object> updated) {
+        String before = String.valueOf(previous);
+        String after = String.valueOf(updated);
+        for (ObservationAttachment attachment : repository.list(studyId, observationId)) {
+            String id = attachment.attachmentId().toString();
+            if (before.contains(id) && !after.contains(id)) {
+                delete(studyId, observationId, attachment.attachmentId());
+            }
+        }
+    }
+
+    private void delete(long studyId, int observationId, UUID attachmentId) {
         repository.delete(studyId, observationId, attachmentId);
         deleteQuietly(file(studyId, observationId, attachmentId));
     }

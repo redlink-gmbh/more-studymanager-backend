@@ -19,6 +19,7 @@ import io.redlink.more.studymanager.core.ui.DataView;
 import io.redlink.more.studymanager.core.ui.DataViewInfo;
 
 import java.time.Instant;
+import java.util.function.Supplier;
 
 public abstract class Observation<C extends ObservationProperties> extends Component<C> {
 
@@ -84,5 +85,14 @@ public abstract class Observation<C extends ObservationProperties> extends Compo
         return new ObservationValidationResult(false, ObservationDataState.COMPLETE);
     }
 
+    /**
+     * Like {@link #validateData(Instant, Instant, ObservationDataSummary)}, for observations that also need the
+     * moment the observation became active for the participant (the start of its first occurrence).
+     *
+     * @param activation lazily provides the start of the participant's first occurrence of this observation
+     */
+    public ObservationValidationResult validateData(Supplier<Instant> activation, Instant start, Instant end, ObservationDataSummary observationDataSummary) {
+        return validateData(start, end, observationDataSummary);
+    }
 
 }
