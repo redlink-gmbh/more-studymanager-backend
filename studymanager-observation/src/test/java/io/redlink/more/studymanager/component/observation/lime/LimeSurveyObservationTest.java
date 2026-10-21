@@ -161,7 +161,7 @@ public class LimeSurveyObservationTest {
         var idMs = new MeasurementSummary(
                 new Measurement(LimeSurveyObservationFactory.MEASUREMENT_ID, Measurement.Type.INTEGER));
         idMs.setNumericResult(new NumericMeasurementSummary(1.0,1.0, 1.0, 1.0, 0));
-        var submitDateMs = stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, "2026-10-03 11:22:33");
+        var submitDateMs = submitDateSummary(stored);
         var submittedMs = stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, "true");
         ObservationDataSummary validSummary = new ObservationDataSummary(
                 1,
@@ -206,7 +206,7 @@ public class LimeSurveyObservationTest {
                 1,
                 new DateMeasurementSummary(stored, stored, 0L),
                 List.of(idMs, seedSummary,
-                        stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, null),
+                        submitDateSummary(null),
                         stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, "false"))
         );
         result = questionObservation.validateData(start, end, closedEarlySummary);
@@ -228,7 +228,7 @@ public class LimeSurveyObservationTest {
                 1,
                 new DateMeasurementSummary(stored, stored, 0L),
                 List.of(idMs, seedSummary,
-                        stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, null),
+                        submitDateSummary(null),
                         stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, null))
         );
         result = questionObservation.validateData(start, end, legacyClosedEarlySummary);
@@ -271,6 +271,13 @@ public class LimeSurveyObservationTest {
         Assertions.assertEquals(ObservationDataState.INCOMPLETE, result.state());
 
 
+    }
+
+    private static MeasurementSummary submitDateSummary(Instant submitted) {
+        var summary = new MeasurementSummary(
+                new Measurement(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, Measurement.Type.DATE));
+        summary.setDateResult(new DateMeasurementSummary(submitted, submitted, submitted == null ? 1 : 0));
+        return summary;
     }
 
     private static MeasurementSummary stringSummary(String id, String value) {
