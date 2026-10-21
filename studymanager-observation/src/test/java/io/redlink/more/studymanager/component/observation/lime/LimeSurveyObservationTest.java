@@ -161,7 +161,7 @@ public class LimeSurveyObservationTest {
         var idMs = new MeasurementSummary(
                 new Measurement(LimeSurveyObservationFactory.MEASUREMENT_ID, Measurement.Type.INTEGER));
         idMs.setNumericResult(new NumericMeasurementSummary(1.0,1.0, 1.0, 1.0, 0));
-        var submitDateMs = stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, "2026-10-03 11:22:33");
+        var submitDateMs = submitDateSummary(stored);
         var submittedMs = stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, "true");
         ObservationDataSummary validSummary = new ObservationDataSummary(
                 1,
@@ -173,21 +173,39 @@ public class LimeSurveyObservationTest {
         Assertions.assertEquals(ObservationDataState.COMPLETE, result.state());
         Assertions.assertNull(result.resync());
 
-        ObservationDataSummary invalidMultipleAnswersSummary = new ObservationDataSummary(
+        //multiple answers: one closed early, one submitted
+        var multiSubmitDateMs = submitDateSummary(stored);
+        multiSubmitDateMs.setDateResult(new DateMeasurementSummary(stored, stored, 1));
+        var multiSubmittedMs = new MeasurementSummary(new Measurement(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, Measurement.Type.STRING));
+        multiSubmittedMs.setStringResult(new StringMeasurementSummary(List.of(
+                new FieldValue<>("false", 1), new FieldValue<>("true", 1))));
+        ObservationDataSummary multipleAnswersSummary = new ObservationDataSummary(
                 2,
                 new DateMeasurementSummary(stored, stored, 0L),
-                List.of(idMs, seedSummary, submitDateMs, submittedMs)
+                List.of(idMs, seedSummary, multiSubmitDateMs, multiSubmittedMs)
         );
-        result = questionObservation.validateData(start, end, invalidMultipleAnswersSummary);
-        Assertions.assertTrue(result.invalid());
+        result = questionObservation.validateData(start, end, multipleAnswersSummary);
+        Assertions.assertFalse(result.invalid());
         Assertions.assertEquals(ObservationDataState.COMPLETE, result.state());
+
+        //multiple answers, none submitted
+        ObservationDataSummary multipleUnsubmittedSummary = new ObservationDataSummary(
+                2,
+                new DateMeasurementSummary(stored, stored, 0L),
+                List.of(idMs, seedSummary,
+                        submitDateSummary(null),
+                        stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, "false"))
+        );
+        result = questionObservation.validateData(start, end, multipleUnsubmittedSummary);
+        Assertions.assertFalse(result.invalid());
+        Assertions.assertEquals(ObservationDataState.INCOMPLETE, result.state());
 
         //closed early: no submitdate, submitted=false
         ObservationDataSummary closedEarlySummary = new ObservationDataSummary(
                 1,
                 new DateMeasurementSummary(stored, stored, 0L),
                 List.of(idMs, seedSummary,
-                        stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, null),
+                        submitDateSummary(null),
                         stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, "false"))
         );
         result = questionObservation.validateData(start, end, closedEarlySummary);
@@ -209,7 +227,7 @@ public class LimeSurveyObservationTest {
                 1,
                 new DateMeasurementSummary(stored, stored, 0L),
                 List.of(idMs, seedSummary,
-                        stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, null),
+                        submitDateSummary(null),
                         stringSummary(LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED, null))
         );
         result = questionObservation.validateData(start, end, legacyClosedEarlySummary);
@@ -252,6 +270,13 @@ public class LimeSurveyObservationTest {
         Assertions.assertEquals(ObservationDataState.INCOMPLETE, result.state());
 
 
+    }
+
+    private static MeasurementSummary submitDateSummary(Instant submitted) {
+        var summary = new MeasurementSummary(
+                new Measurement(LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE, Measurement.Type.DATE));
+        summary.setDateResult(new DateMeasurementSummary(submitted, submitted, submitted == null ? 1 : 0));
+        return summary;
     }
 
     private static MeasurementSummary stringSummary(String id, String value) {

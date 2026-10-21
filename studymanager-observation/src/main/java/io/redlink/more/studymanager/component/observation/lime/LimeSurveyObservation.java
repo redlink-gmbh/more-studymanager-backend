@@ -219,6 +219,10 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
                 .filter(it -> LimeSurveyObservationFactory.MEASUREMENT_ID.equals(it.getMeasurement().getId()))
                 .findFirst()
                 .orElse(null);
+        if (observationDataSummary.numDocs() > 1) {
+            //several answers (e.g. closed early and answered again) are valid - complete if one was submitted
+            return validateSubmission(observationDataSummary, false, answerMeasurementSummary);
+        }
         //check that the field is present on all documents
         boolean hasId = answerMeasurementSummary != null
                 && answerMeasurementSummary.getNumericResult() != null
@@ -250,8 +254,10 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
     private static ObservationValidationResult validateSubmission(
             ObservationDataSummary summary, boolean invalid, MeasurementSummary idSummary) {
         List<FieldValue<String>> submitted = stringValues(summary, LimeSurveyObservationFactory.MEASUREMENT_SUBMITTED);
-        boolean hasSubmitDate = stringValues(summary, LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE).stream()
-                .anyMatch(it -> it.value() != null);
+        boolean hasSubmitDate = summary.measurements().stream()
+                .filter(it -> LimeSurveyObservationFactory.MEASUREMENT_SUBMIT_DATE.equals(it.getMeasurement().getId()))
+                .map(MeasurementSummary::getDateResult)
+                .anyMatch(it -> it != null && it.max() != null);
         boolean hasMarker = submitted.stream().anyMatch(it -> it.value() != null);
         if (!hasMarker) {
             //stored before the gateway added the marker: re-collect it from LimeSurvey to get the marker stored
