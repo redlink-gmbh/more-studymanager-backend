@@ -219,6 +219,10 @@ public class LimeSurveyObservation<C extends ObservationProperties> extends Obse
                 .filter(it -> LimeSurveyObservationFactory.MEASUREMENT_ID.equals(it.getMeasurement().getId()))
                 .findFirst()
                 .orElse(null);
+        if (observationDataSummary.numDocs() > 1) {
+            //several answers (e.g. closed early and answered again) are valid - complete if one was submitted
+            return validateSubmission(observationDataSummary, false, answerMeasurementSummary);
+        }
         //check that the field is present on all documents
         boolean hasId = answerMeasurementSummary != null
                 && answerMeasurementSummary.getNumericResult() != null
