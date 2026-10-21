@@ -12,14 +12,11 @@ import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
 import io.redlink.more.studymanager.model.ObservationAttachment;
 import io.redlink.more.studymanager.model.Study;
-import io.redlink.more.studymanager.repository.RepositoryUtils;
+import io.redlink.more.studymanager.repository.ObservationAttachmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 
@@ -47,24 +44,14 @@ public class ObservationAttachmentService {
 
     public static final long MAX_SIZE_BYTES = 10L * 1024 * 1024;
 
-    private static final String INSERT =
-            "INSERT INTO observation_attachments (attachment_id, study_id, observation_id, filename, content_type, size_bytes) " +
-                    "VALUES (:attachment_id, :study_id, :observation_id, :filename, :content_type, :size_bytes) RETURNING *";
-    private static final String GET =
-            "SELECT * FROM observation_attachments WHERE study_id = :study_id AND observation_id = :observation_id AND attachment_id = :attachment_id";
-    private static final String LIST =
-            "SELECT * FROM observation_attachments WHERE study_id = :study_id AND observation_id = :observation_id ORDER BY created";
-    private static final String DELETE =
-            "DELETE FROM observation_attachments WHERE study_id = :study_id AND observation_id = :observation_id AND attachment_id = :attachment_id";
-
-    private final NamedParameterJdbcTemplate namedTemplate;
+    private final ObservationAttachmentRepository repository;
     private final StudyStateService studyStateService;
     private final Path baseDir;
 
-    public ObservationAttachmentService(NamedParameterJdbcTemplate namedTemplate,
+    public ObservationAttachmentService(ObservationAttachmentRepository repository,
                                         StudyStateService studyStateService,
                                         @Value("${more.attachments.dir:./data/attachments}") Path baseDir) {
-        this.namedTemplate = namedTemplate;
+        this.repository = repository;
         this.studyStateService = studyStateService;
         this.baseDir = baseDir.toAbsolutePath().normalize();
     }
@@ -80,10 +67,10 @@ public class ObservationAttachmentService {
         try {
             Files.createDirectories(file.getParent());
             Files.copy(content, file, StandardCopyOption.REPLACE_EXISTING);
-            return namedTemplate.queryForObject(INSERT, params(studyId, observationId, id)
-                    .addValue("filename", filename == null || filename.isBlank() ? id.toString() : filename)
-                    .addValue("content_type", contentType == null ? "application/octet-stream" : contentType)
-                    .addValue("size_bytes", Files.size(file)), ROW_MAPPER);
+            return repository.insert(studyId, observationId, id,
+                    filename == null || filename.isBlank() ? id.toString() : filename,
+                    contentType == null ? "application/octet-stream" : contentType,
+                    Files.size(file));
         } catch (DataIntegrityViolationException e) {
             deleteQuietly(file);
             throw NotFoundException.Observation(studyId, observationId);
@@ -94,15 +81,11 @@ public class ObservationAttachmentService {
     }
 
     public List<ObservationAttachment> listAttachments(long studyId, int observationId) {
-        return namedTemplate.query(LIST, new MapSqlParameterSource()
-                .addValue("study_id", studyId)
-                .addValue("observation_id", observationId), ROW_MAPPER);
+        return repository.list(studyId, observationId);
     }
 
     public Optional<ObservationAttachment> getAttachment(long studyId, int observationId, UUID attachmentId) {
-        try (var stream = namedTemplate.queryForStream(GET, params(studyId, observationId, attachmentId), ROW_MAPPER)) {
-            return stream.findFirst();
-        }
+        return repository.get(studyId, observationId, attachmentId);
     }
 
     public Path getFile(ObservationAttachment attachment) {
@@ -111,7 +94,7 @@ public class ObservationAttachmentService {
 
     public void deleteAttachment(long studyId, int observationId, UUID attachmentId) {
         studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
-        namedTemplate.update(DELETE, params(studyId, observationId, attachmentId));
+        repository.delete(studyId, observationId, attachmentId);
         deleteQuietly(file(studyId, observationId, attachmentId));
     }
 
@@ -131,13 +114,6 @@ public class ObservationAttachmentService {
                 .resolve(attachmentId.toString());
     }
 
-    private static MapSqlParameterSource params(long studyId, int observationId, UUID attachmentId) {
-        return new MapSqlParameterSource()
-                .addValue("study_id", studyId)
-                .addValue("observation_id", observationId)
-                .addValue("attachment_id", attachmentId);
-    }
-
     private static void deleteQuietly(Path file) {
         try {
             Files.deleteIfExists(file);
@@ -154,13 +130,4 @@ public class ObservationAttachmentService {
         }
     }
 
-    private static final RowMapper<ObservationAttachment> ROW_MAPPER = (rs, rowNum) -> new ObservationAttachment(
-            rs.getObject("attachment_id", UUID.class),
-            rs.getLong("study_id"),
-            rs.getInt("observation_id"),
-            rs.getString("filename"),
-            rs.getString("content_type"),
-            rs.getLong("size_bytes"),
-            RepositoryUtils.readInstant(rs, "created")
-    );
 }

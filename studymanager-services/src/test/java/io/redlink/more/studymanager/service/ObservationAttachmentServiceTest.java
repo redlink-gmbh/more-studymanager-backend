@@ -17,6 +17,7 @@ import io.redlink.more.studymanager.model.Observation;
 import io.redlink.more.studymanager.model.ObservationAttachment;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.scheduler.StudyWideEvent;
+import io.redlink.more.studymanager.repository.ObservationAttachmentRepository;
 import io.redlink.more.studymanager.repository.ObservationRepository;
 import io.redlink.more.studymanager.repository.StudyRepository;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,6 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -42,13 +42,13 @@ import static org.mockito.Mockito.mock;
 @SpringBootTest
 @Testcontainers
 @EnableAutoConfiguration
-@ContextConfiguration(classes = {ObservationRepository.class, StudyRepository.class, JPAConfiguration.class})
+@ContextConfiguration(classes = {ObservationAttachmentRepository.class, ObservationRepository.class, StudyRepository.class, JPAConfiguration.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ActiveProfiles({"test", "test-containers-flyway"})
 class ObservationAttachmentServiceTest {
 
     @Autowired
-    private NamedParameterJdbcTemplate namedTemplate;
+    private ObservationAttachmentRepository attachmentRepository;
     @Autowired
     private ObservationRepository observationRepository;
     @Autowired
@@ -59,7 +59,7 @@ class ObservationAttachmentServiceTest {
 
     @Test
     void testAddGetDeleteAndCascade() throws Exception {
-        var service = new ObservationAttachmentService(namedTemplate, mock(StudyStateService.class), dir);
+        var service = new ObservationAttachmentService(attachmentRepository, mock(StudyStateService.class), dir);
         long studyId = studyRepository.insert(new Study().setContact(new Contact().setPerson("test").setEmail("test"))).getStudyId();
         int observationId = observationRepository.insert(new Observation()
                 .setStudyId(studyId).setTitle("info").setType("info-observation").setHidden(false).setNoSchedule(false)
