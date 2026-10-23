@@ -90,6 +90,8 @@ public class WebSecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, "/api/v1/config/buildInfo").permitAll()
                 //TODO specific handling of temporary sidecar
                 .requestMatchers("/api/v1/components/observation/lime-survey-observation/end.html").permitAll()
+                // plain browser link (no bearer token); only redirects to the public LimeSurvey login
+                .requestMatchers(HttpMethod.GET, "/api/v1/components/observation/lime-survey-observation/admin").permitAll()
                 // Study-Data-Export is authenticated internally using individual access-tokens
                 .requestMatchers(HttpMethod.GET, "/api/v1/studies/*/export/studydata/*").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/studies/*/calendar.ics").permitAll()

@@ -14,8 +14,13 @@ import io.redlink.more.studymanager.sdk.MoreSDK;
 import io.redlink.more.studymanager.service.ObservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.net.URI;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,6 +68,15 @@ public class LimeSurveySidecarController {
                 .map(r -> r ? true : null)
                 .map(r -> ResponseEntity.ok("<h1>Survey submitted</h1>"))
                 .orElse(ResponseEntity.status(401).build());
+    }
+
+    @GetMapping("/components/observation/lime-survey-observation/admin")
+    public ResponseEntity<Void> redirectToLimeSurveyAdmin(
+            @Value("${more.components.lime-survey-observation.baseUrl}") String baseUrl
+    ) {
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(StringUtils.trimTrailingCharacter(baseUrl, '/') + "/admin/"))
+                .build();
     }
 
     private LimeSurveyObservationFactory lookupLimeSurveyObservationFactory() {

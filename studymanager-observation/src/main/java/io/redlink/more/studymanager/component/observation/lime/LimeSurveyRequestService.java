@@ -42,7 +42,9 @@ public class LimeSurveyRequestService {
     private static final List<String> QUESTION_PROPERTIES =
             List.of("title", "question", "type", "question_order", "mandatory", "answeroptions", "subquestions");
     private static final DateTimeFormatter LIME_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    /** A {@code src}/{@code href} pointing at the LimeSurvey host's root, but not a protocol-relative one. */
+    /**
+     * A {@code src}/{@code href} pointing at the LimeSurvey host's root, but not a protocol-relative one.
+     */
     private static final Pattern ROOT_RELATIVE_URL = Pattern.compile("(?i)((?:src|href)=[\"'])/(?!/)");
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -280,6 +282,11 @@ public class LimeSurveyRequestService {
 
             String rsp = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             releaseSessionKey(sessionKey);
+
+            JsonNode resultNode = mapper.readTree(rsp).path("result");
+            if (!resultNode.isArray()) {
+                throw new RuntimeException("LimeSurvey could not add participants to survey " + surveyId + ": " + resultNode);
+            }
 
             var result = mapper.readValue(
                     rsp,
