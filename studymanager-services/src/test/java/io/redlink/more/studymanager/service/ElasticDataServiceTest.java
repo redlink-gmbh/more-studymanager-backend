@@ -12,6 +12,7 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.ErrorResponse;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -24,6 +25,7 @@ import co.elastic.clients.json.jackson.JacksonJsonpParser;
 import com.fasterxml.jackson.core.JsonFactory;
 import io.redlink.more.studymanager.core.datavalidity.FieldValue;
 import io.redlink.more.studymanager.core.datavalidity.MeasurementSummary;
+import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.io.Timeframe;
 import io.redlink.more.studymanager.core.measurement.Measurement;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
@@ -295,4 +297,34 @@ class ElasticDataServiceTest {
         return writer.toString();
     }
 
+
+    @Test
+    public void testValidateObservationDataAppliesRequiredValues() throws IOException {
+        MeasurementSet measurementSet = new MeasurementSet("INFO_READ", Set.of(
+                new Measurement("messageId", Measurement.Type.STRING),
+                new Measurement("read", Measurement.Type.BOOLEAN)
+        ));
+        when(client.search(any(SearchRequest.class), any(Class.class))).thenReturn(null);
+        ArgumentCaptor<SearchRequest> request = ArgumentCaptor.forClass(SearchRequest.class);
+
+        try {
+            elasticDataService.validateObservationData(15, null, 1, 11,
+                    new Timeframe(Instant.parse("2025-12-01T16:00:00Z"), Instant.parse("2025-12-02T00:00:00Z")),
+                    measurementSet, Map.of("read", true, "text", ObservationFactory.VALUE_PRESENT));
+        } catch (RuntimeException e) {
+            // the (null) response is irrelevant, only the request is checked
+        }
+
+        Mockito.verify(client).search(request.capture(), any(Class.class));
+        assertThat(request.getValue().query().bool().filter().stream()
+                .filter(q -> q.isTerm() && q.term().field().equals("data_read"))
+                .map(q -> q.term().value().booleanValue())
+                .toList())
+                .containsExactly(true);
+        assertThat(request.getValue().query().bool().filter().stream()
+                .filter(Query::isExists)
+                .map(q -> q.exists().field())
+                .toList())
+                .containsExactly("data_text");
+    }
 }

@@ -35,3 +35,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# observation attachments (local default of more.attachments.dir)
+/data/

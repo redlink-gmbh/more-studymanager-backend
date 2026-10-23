@@ -83,6 +83,13 @@ public abstract class ComponentFactory<C extends Component, P extends ComponentP
         return values;
     }
 
+    /**
+     * Adjust the properties written to a study export, e.g. to leave out runtime content.
+     */
+    public P preExport(P values) {
+        return values;
+    }
+
     public WebComponent getWebComponent() {
         return null;
     }

@@ -62,10 +62,14 @@ public class StudyService {
     private ApplicationEventPublisher applicationEventPublisher;
 
 
+    private final ObservationAttachmentService attachmentService;
+
     public StudyService(StudyRepository studyRepository, StudyAclRepository aclRepository, UserRepository userRepo,
                         StudyStateService studyStateService, OccurredObservationService occurredObservationService,
                         ElasticService elasticService, StudyGroupRepository studyGroupRepository,
-                        ApplicationEventPublisher applicationEventPublisher) {
+                        ApplicationEventPublisher applicationEventPublisher,
+                        ObservationAttachmentService attachmentService) {
+        this.attachmentService = attachmentService;
         this.studyRepository = studyRepository;
         this.aclRepository = aclRepository;
         this.userRepo = userRepo;
@@ -111,6 +115,7 @@ public class StudyService {
         studyRepository.deleteById(studyId);
         elasticService.deleteIndex(studyId);
         occurredObservationService.deleteOccurredObservations(studyId);
+        attachmentService.deleteFiles(studyId);
     }
 
     @Transactional

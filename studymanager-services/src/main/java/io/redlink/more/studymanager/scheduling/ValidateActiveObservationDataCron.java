@@ -166,11 +166,16 @@ public class ValidateActiveObservationDataCron {
         }
         var validationResults = sdk.validateData(
                 ctx.getStudyId(), ctx.getStudyGroupId(), ctx.getObservationId(),
-                ctx.participant.getParticipantId(), ctx.getTimeRage(),
-                ctx.observationFactory.getMeasurementSet());
+                ctx.participant.getParticipantId(),
+                ctx.observationFactory.isValidationCumulative()
+                        ? new Timeframe(Instant.EPOCH, ctx.occurrence.end())
+                        : ctx.getTimeRage(),
+                ctx.observationFactory.getMeasurementSet(),
+                ctx.observationFactory.getValidationFilter());
         final OccurredObservation updatedOccurredObservation;
         if (validationResults != null) {
-            var validationResult = ctx.observationComponent.validateData(ctx.occurrence.start(), ctx.occurrence.end(), validationResults);
+            var validationResult = ctx.observationComponent.validateData(
+                    () -> activation(ctx), ctx.occurrence.start(), ctx.occurrence.end(), validationResults);
             log.debug("validated {}: results: {}, state: {}", ctx.occurrence, validationResults, validationResult);
             if (validationResult.resync() != null) {
                 requestResync(ctx, validationResult.resync());
@@ -199,6 +204,17 @@ public class ValidateActiveObservationDataCron {
             );
         }
         occurredObservationService.update(updatedOccurredObservation);
+    }
+
+    /**
+     * The start of the participant's first occurrence of the observation.
+     * ponytail: one query per call, not cached; only observations that need it call it.
+     */
+    private Instant activation(ValidateionContext ctx) {
+        try (var occurrences = occurredObservationService.streamOccurredObservations(
+                ctx.getStudyId(), ctx.getParticipantId(), ctx.getObservationId(), true, EnumSet.allOf(ObservationDataState.class))) {
+            return occurrences.map(OccurredObservation::start).min(Instant::compareTo).orElse(ctx.occurrence.start());
+        }
     }
 
     /**

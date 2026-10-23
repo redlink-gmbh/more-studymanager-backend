@@ -16,24 +16,30 @@ import io.redlink.more.studymanager.exception.BadStudyStateException;
 import io.redlink.more.studymanager.model.AuthenticatedUser;
 import io.redlink.more.studymanager.model.EndpointToken;
 import io.redlink.more.studymanager.model.Observation;
+import io.redlink.more.studymanager.model.ObservationAttachment;
 import io.redlink.more.studymanager.model.PlatformRole;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.service.IntegrationService;
 import io.redlink.more.studymanager.service.OAuth2AuthenticationService;
+import io.redlink.more.studymanager.service.ObservationAttachmentService;
 import io.redlink.more.studymanager.service.ObservationService;
 import io.redlink.more.studymanager.service.StudyStateService;
 import io.redlink.more.studymanager.utils.MapperUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.EnumSet;
 import java.util.List;
@@ -48,6 +54,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -63,6 +71,9 @@ class ObservationControllerTest {
 
     @MockitoBean
     StudyStateService studyStateService;
+
+    @MockitoBean
+    ObservationAttachmentService attachmentService;
 
     @MockitoBean
     OAuth2AuthenticationService oAuth2AuthenticationService;
@@ -323,4 +334,31 @@ class ObservationControllerTest {
         verify(integrationService, never()).getTokens(anyLong(), anyInt());
     }
 
+
+    @Test
+    @DisplayName("Attachments can be uploaded and are downloaded as attachment with their original filename")
+    void testAttachmentUploadDownload(@TempDir Path dir) throws Exception {
+        UUID id = UUID.randomUUID();
+        ObservationAttachment attachment = new ObservationAttachment(id, 1L, 2, "info sheet.pdf", "application/pdf", 3, Instant.now());
+        Path file = Files.writeString(dir.resolve(id.toString()), "pdf");
+        when(attachmentService.addAttachment(eq(1L), eq(2), eq("info sheet.pdf"), eq("application/pdf"), eq(3L), any()))
+                .thenReturn(attachment);
+        when(attachmentService.getAttachment(1L, 2, id)).thenReturn(Optional.of(attachment));
+        when(attachmentService.getFile(attachment)).thenReturn(file);
+
+        mvc.perform(multipart("/api/v1/studies/1/observations/2/attachments")
+                        .file(new MockMultipartFile("file", "info sheet.pdf", "application/pdf", "pdf".getBytes())))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.attachmentId").value(id.toString()))
+                .andExpect(jsonPath("$.size").value(3));
+
+        mvc.perform(get("/api/v1/studies/1/observations/2/attachments/" + id))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", org.hamcrest.Matchers.startsWith("attachment;")))
+                .andExpect(header().string("X-Content-Type-Options", "nosniff"))
+                .andExpect(content().string("pdf"));
+
+        mvc.perform(get("/api/v1/studies/1/observations/2/attachments/" + UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
 }

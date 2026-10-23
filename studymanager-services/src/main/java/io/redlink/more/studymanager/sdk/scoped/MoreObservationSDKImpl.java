@@ -14,12 +14,15 @@ import io.redlink.more.studymanager.core.sdk.MoreObservationSDK;
 import io.redlink.more.studymanager.core.ui.DataViewData;
 import io.redlink.more.studymanager.core.ui.ViewConfig;
 import io.redlink.more.studymanager.model.data.ElasticDataPoint;
+import io.redlink.more.studymanager.push.client.model.MessageType;
+import io.redlink.more.studymanager.push.client.model.Priority;
 import io.redlink.more.studymanager.sdk.MoreSDK;
 
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class MoreObservationSDKImpl extends MorePlatformSDKImpl implements MoreObservationSDK {
 
@@ -86,5 +89,17 @@ public class MoreObservationSDKImpl extends MorePlatformSDKImpl implements MoreO
     @Override
     public DataViewData queryData(ViewConfig viewConfig, Integer studyGroupId, Integer participantId, TimeRange timerange) {
         return sdk.queryData(viewConfig, studyId, studyGroupId, observationId, participantId, timerange);
+    }
+
+    @Override
+    public Set<Integer> participantsWithActiveOccurrence(Set<Integer> participantIds, Instant at) {
+        return sdk.participantsWithActiveOccurrence(studyId, observationId, participantIds, at);
+    }
+
+    @Override
+    public void sendPushNotification(Set<Integer> participantIds, String title, String message,
+                                     Map<String, String> data, boolean background, String priority) {
+        sdk.sendPushNotification(studyId, participantIds, title, message, data,
+                background ? MessageType.BACKGROUND : MessageType.FOREGROUND, Priority.valueOf(priority));
     }
 }

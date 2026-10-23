@@ -1,6 +1,10 @@
 spring:
   main:
     banner-mode: off
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
   application:
     name: "More Studymanager"
 
@@ -101,6 +105,8 @@ management:
           show-components: always
 
 more:
+  attachments:
+    dir: ${MORE_ATTACHMENTS_DIR:./data/attachments}
   accept-operator-terms: ${MORE_ACCEPT_OPERATOR_TERMS:false}
   gateway:
     base-url: '${GATEWAY_BASE_URL:http://localhost:8085}'

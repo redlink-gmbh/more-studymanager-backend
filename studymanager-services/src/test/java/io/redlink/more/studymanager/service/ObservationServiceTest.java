@@ -25,7 +25,9 @@ import io.redlink.more.studymanager.core.factory.ObservationFactory;
 import io.redlink.more.studymanager.core.validation.ConfigurationValidationReport;
 import io.redlink.more.studymanager.exception.BadRequestException;
 import io.redlink.more.studymanager.exception.NotFoundException;
+import io.redlink.more.studymanager.core.properties.ObservationProperties;
 import io.redlink.more.studymanager.model.Observation;
+import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.scheduler.Event;
 import io.redlink.more.studymanager.model.scheduler.StudyWideEvent;
 import io.redlink.more.studymanager.repository.ObservationRepository;
@@ -39,9 +41,18 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +69,9 @@ class ObservationServiceTest {
 
     @Mock
     ApplicationContext applicationContext;
+
+    @Mock
+    ObservationAttachmentService attachmentService;
 
     @InjectMocks
     ObservationService observationService;
@@ -164,6 +178,31 @@ class ObservationServiceTest {
                 .setStudyId(1L).setObservationId(1).setType("study-wide-observation")
                 .setSchedule(new Event()));
         assertThat(updated.getSchedule()).isInstanceOf(StudyWideEvent.class);
+    }
+
+    @Test
+    void testDroppedAttachmentsAreOnlyDeletedInDraftOrPausedStudy() throws Exception {
+        ObservationFactory factory = mock(ObservationFactory.class);
+        when(factory.prepareUpdate(any(), any(), anyBoolean())).thenAnswer(i -> i.getArgument(1));
+        when(applicationContext.getBean("info-observation", ObservationFactory.class)).thenReturn(factory);
+        ObservationProperties before = new ObservationProperties(Map.of("messages", List.of(Map.of("id", "a"))));
+        when(repository.getById(1L, 1)).thenReturn(new Observation()
+                .setStudyId(1L).setObservationId(1).setType("info-observation").setProperties(before));
+        when(repository.updateObservation(any())).thenAnswer(i -> i.getArgument(0));
+        ObservationProperties after = new ObservationProperties(Map.of("messages", List.of()));
+        Supplier<Observation> update = () -> new Observation()
+                .setStudyId(1L).setObservationId(1).setType("info-observation").setProperties(after);
+
+        when(studyStateService.hasStudyState(1L, Study.Status.ACTIVE_STATES)).thenReturn(false);
+        when(studyStateService.hasStudyState(1L, Study.Status.CONTENT_DELETION_STATES)).thenReturn(false);
+        observationService.updateObservation(update.get());
+        verify(factory).prepareUpdate(before, after, false);
+        verify(attachmentService, never()).deleteDropped(anyLong(), anyInt(), any(), any());
+
+        when(studyStateService.hasStudyState(1L, Study.Status.CONTENT_DELETION_STATES)).thenReturn(true);
+        observationService.updateObservation(update.get());
+        verify(factory).prepareUpdate(before, after, true);
+        verify(attachmentService).deleteDropped(1L, 1, before, after);
     }
 
     @Test

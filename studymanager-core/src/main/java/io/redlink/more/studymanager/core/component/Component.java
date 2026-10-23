@@ -10,6 +10,7 @@ package io.redlink.more.studymanager.core.component;
 
 import io.redlink.more.studymanager.core.exception.ConfigurationValidationException;
 import io.redlink.more.studymanager.core.properties.ComponentProperties;
+import io.redlink.more.studymanager.core.properties.ObservationProperties;
 
 public abstract class Component<P extends ComponentProperties> {
     protected final P properties;
@@ -21,6 +22,16 @@ public abstract class Component<P extends ComponentProperties> {
     public abstract void activate();
 
     public abstract void deactivate();
+
+    /**
+     * Called after the component's properties were updated while the study is active.
+     *
+     * @param previous the properties before the update
+     * @param title    the (current) title of the observation
+     */
+    public void onUpdate(ObservationProperties previous, String title) {
+        // no action
+    }
 
     @Override
     public String toString() {
