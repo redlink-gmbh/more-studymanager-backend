@@ -55,20 +55,3 @@ Wer eine Studie anlegt oder importiert, bekommt automatisch alle drei Studien-Ro
 | Studie löschen (`deleteStudy`)                                        |   ❌   |    ❌    |  ✅   |
 | Rollen von Mitarbeitern setzen oder entfernen                         |   ❌   |    ❌    |  ✅   |
 | Audit-Log ansehen und exportieren                                     |   ❌   |    ❌    |  ✅   |
-
-## Öffentliche Endpunkte
-
-Diese Endpunkte sind ohne Login erreichbar (`WebSecurityConfiguration`):
-
-- `GET /api`, `GET /api/v1/me`
-- `GET /api/v1/config/ui`, `GET /api/v1/config/buildInfo`
-- `GET /api/v1/studies/*/export/studydata/*`: über ein eigenes Download-Token abgesichert
-- `GET /api/v1/studies/*/calendar.ics`
-- `/api/v1/components/observation/lime-survey-observation/end.html`
-- `GET /api/v1/components/observation/lime-survey-observation/admin`
-
-## Offene Punkte
-
-- Die Plattform-Rollen werden im Backend nicht durchgesetzt (siehe Hinweis oben).
-- `STUDY_OPERATOR` darf die Rohdaten der Studie exportieren (`exportStudyData`), obwohl die Rolle die Daten in der
-  Oberfläche nicht sehen darf.
