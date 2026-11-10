@@ -90,7 +90,7 @@ class RelativeTimeTriggerTest {
             }
 
             @Override
-            public Set<Integer> participantIdsMatchingQuery(String query, TimeRange timeRange) {
+            public Set<Integer> participantIdsMatchingQuery(String query, Map<String, String> runtimeFields, TimeRange timeRange) {
                 throw new UnsupportedOperationException();
             }
 

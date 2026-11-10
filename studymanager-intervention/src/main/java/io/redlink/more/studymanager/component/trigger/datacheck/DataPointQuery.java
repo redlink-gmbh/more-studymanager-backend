@@ -8,12 +8,31 @@
  */
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.Set;
+
 public class DataPointQuery {
+
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_NUMBER = "number";
+    public static final String TYPE_BOOLEAN = "boolean";
+
+    static final Set<String> EQUALITY_OPERATORS = Set.of("=", "==", "!=");
+    static final Set<String> COMPARISON_OPERATORS = Set.of("=", "==", "!=", "<", ">", "<=", ">=");
+
+    private static final String QUERY_STRING_RESERVED = "+-=&|><!(){}[]^\"~*?:\\/ ";
+
     private int observationId;
     private String observationType;
     private String observationProperty;
     private String operator;
     private Object propertyValue;
+    /**
+     * How the value is compared: string, number or boolean. {@code null} (triggers created before this property
+     * existed) keeps the original behaviour.
+     */
+    private String queryDataType;
 
     public DataPointQuery() {
     }
@@ -38,21 +57,116 @@ public class DataPointQuery {
         return propertyValue;
     }
 
+    public String getQueryDataType() {
+        return queryDataType;
+    }
+
     public String toQueryString() {
         return "(observation_id.keyword:" + observationId +
                 " AND " + getDataSelector() + ")";
     }
 
+    /**
+     * The runtime field (name &rarr; source field) this condition needs, if any.
+     */
+    public Optional<RuntimeField> getRuntimeField() {
+        if (TYPE_NUMBER.equals(queryDataType)) {
+            return Optional.of(new RuntimeField(numberFieldName(), dataFieldName()));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * @return an error message if this condition is invalid for its data type, otherwise empty
+     */
+    public Optional<String> validate() {
+        if (queryDataType == null) {
+            return Optional.empty();
+        }
+        return switch (queryDataType) {
+            case TYPE_STRING -> EQUALITY_OPERATORS.contains(operator) ? Optional.empty()
+                    : Optional.of("Operator '" + operator + "' is not allowed for data type string");
+            case TYPE_BOOLEAN -> {
+                if (!EQUALITY_OPERATORS.contains(operator)) {
+                    yield Optional.of("Operator '" + operator + "' is not allowed for data type boolean");
+                }
+                String v = String.valueOf(propertyValue).trim();
+                yield "true".equals(v) || "false".equals(v) ? Optional.empty()
+                        : Optional.of("Value '" + propertyValue + "' is not a boolean (true/false)");
+            }
+            case TYPE_NUMBER -> {
+                if (!COMPARISON_OPERATORS.contains(operator)) {
+                    yield Optional.of("Operator '" + operator + "' is not allowed for data type number");
+                }
+                yield parseNumber().isPresent() ? Optional.empty()
+                        : Optional.of("Value '" + propertyValue + "' is not a valid number");
+            }
+            default -> Optional.of("Unknown data type '" + queryDataType + "'");
+        };
+    }
+
     private String getDataSelector() {
+        if (TYPE_NUMBER.equals(queryDataType)) {
+            return getNumberSelector();
+        }
+        String field = escape(dataFieldName());
         if ("=".equals(operator) || "==".equals(operator)) {
-            return "data_" + observationProperty + ":" + getSanitizedPropertyValue();
+            return field + ":" + getSanitizedPropertyValue();
         } else if ("!=".equals(operator)) {
-            return "NOT data_" + observationProperty + ":" + getSanitizedPropertyValue();
+            return "NOT " + field + ":" + getSanitizedPropertyValue();
         } else if ("<".equals(operator) || ">".equals(operator) || "<=".equals(operator) || ">=".equals(operator)) {
-            return "data_" + observationProperty + ":" + operator + propertyValue;
+            return field + ":" + operator + propertyValue;
         } else {
             throw new UnsupportedOperationException();
         }
+    }
+
+    private String getNumberSelector() {
+        String field = escape(numberFieldName());
+        String value = "\"" + parseNumber()
+                .orElseThrow(() -> new IllegalArgumentException("Value '" + propertyValue + "' is not a valid number"))
+                .toPlainString() + "\"";
+        return switch (operator) {
+            case "=", "==" -> field + ":" + value;
+            // _exists_ guard: documents without a parsable value (e.g. empty LimeSurvey responses) must not match
+            case "!=" -> "(_exists_:" + field + " AND NOT " + field + ":" + value + ")";
+            case "<" -> field + ":{* TO " + value + "}";
+            case "<=" -> field + ":[* TO " + value + "]";
+            case ">" -> field + ":{" + value + " TO *}";
+            case ">=" -> field + ":[" + value + " TO *]";
+            default -> throw new UnsupportedOperationException();
+        };
+    }
+
+    private Optional<BigDecimal> parseNumber() {
+        if (propertyValue == null) {
+            return Optional.empty();
+        }
+        try {
+            double d = Double.parseDouble(String.valueOf(propertyValue).trim());
+            return Double.isFinite(d) ? Optional.of(BigDecimal.valueOf(d)) : Optional.empty();
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    private String dataFieldName() {
+        return "data_" + observationProperty;
+    }
+
+    private String numberFieldName() {
+        return "num_data_" + observationProperty;
+    }
+
+    static String escape(String s) {
+        StringBuilder sb = new StringBuilder(s.length());
+        for (char c : s.toCharArray()) {
+            if (QUERY_STRING_RESERVED.indexOf(c) >= 0) {
+                sb.append('\\');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     private Object getSanitizedPropertyValue() {
@@ -62,5 +176,8 @@ public class DataPointQuery {
                     p.trim();
         }
         return this.propertyValue;
+    }
+
+    public record RuntimeField(String name, String sourceField) {
     }
 }

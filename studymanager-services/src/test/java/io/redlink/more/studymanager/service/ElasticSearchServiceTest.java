@@ -9,6 +9,7 @@
 package io.redlink.more.studymanager.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.Refresh;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,6 +40,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -83,13 +85,81 @@ class ElasticSearchServiceTest {
         Thread.sleep(1000);
 
         List<Integer> ids = elasticService.participantsThatMapQuery(
-                study.getStudyId(), null, "data_z:[* TO *]",
+                study.getStudyId(), null, "data_z:[* TO *]", Map.of(),
                 new Timeframe(Instant.parse("2022-10-24T10:00:00Z"), Instant.parse("2022-10-24T15:00:00Z"))
         );
         assertThat(ids).hasSize(1);
         assertThat(ids.get(0)).isEqualTo(10);
 
         elasticService.deleteIndex(study);
+    }
+
+    @Test
+    void testParticipantsThatMapQueryWithNumberRuntimeFieldOnStrings() {
+        Study study = new Study().setStudyId(40L);
+        // LimeSurvey stores every answer as string
+        indexData(study, 1, Map.of("EPDSsumt1", "23", "submitted", "true"));
+        indexData(study, 2, Map.of("EPDSsumt1", "23.0000000000"));
+        indexData(study, 3, Map.of("EPDSsumt1", "5"));
+        indexData(study, 4, Map.of("EPDSsumt1", ""));
+        indexData(study, 5, Map.of("submitted", "false"));
+        indexData(study, 6, Map.of("EPDSsumt1", "abc"));
+        indexData(study, 7, Map.of("PRAQt1[PRAQ1t1]", "14"));
+        indexData(study, 8, Map.of("EPDSsumt1", "-3"));
+
+        Map<String, String> rf = Map.of(
+                "num_data_EPDSsumt1", "data_EPDSsumt1",
+                "num_data_PRAQt1[PRAQ1t1]", "data_PRAQt1[PRAQ1t1]");
+
+        assertThat(query(study, "num_data_EPDSsumt1:[\"13.0\" TO *]", rf)).containsExactlyInAnyOrder(1, 2);
+        // alphabetically "23" < "3", numerically it must match
+        assertThat(query(study, "num_data_EPDSsumt1:[\"3.0\" TO *]", rf)).containsExactlyInAnyOrder(1, 2, 3);
+        assertThat(query(study, "num_data_EPDSsumt1:\"23.0\"", rf)).containsExactlyInAnyOrder(1, 2);
+        assertThat(query(study, "num_data_EPDSsumt1:{* TO \"0.0\"}", rf)).containsExactlyInAnyOrder(8);
+        // empty, missing and unparsable values must not match "!="
+        assertThat(query(study, "(_exists_:num_data_EPDSsumt1 AND NOT num_data_EPDSsumt1:\"23.0\")", rf))
+                .containsExactlyInAnyOrder(3, 8);
+        assertThat(query(study, "num_data_PRAQt1\\[PRAQ1t1\\]:[\"13.0\" TO *]", rf)).containsExactlyInAnyOrder(7);
+        // string comparison stays as it is
+        assertThat(query(study, "data_submitted:true", rf)).containsExactlyInAnyOrder(1);
+
+        elasticService.deleteIndex(study);
+    }
+
+    @Test
+    void testParticipantsThatMapQueryWithNumberRuntimeFieldOnNumbers() {
+        Study study = new Study().setStudyId(41L);
+        indexData(study, 1, Map.of("score", 20));
+        indexData(study, 2, Map.of("score", 5.5));
+
+        Map<String, String> rf = Map.of("num_data_score", "data_score");
+        assertThat(query(study, "num_data_score:[\"13.0\" TO *]", rf)).containsExactlyInAnyOrder(1);
+        assertThat(query(study, "num_data_score:\"5.5\"", rf)).containsExactlyInAnyOrder(2);
+
+        elasticService.deleteIndex(study);
+    }
+
+    private List<Integer> query(Study study, String condition, Map<String, String> runtimeFields) {
+        return elasticService.participantsThatMapQuery(study.getStudyId(), null,
+                "(observation_id.keyword:17 AND " + condition + ")", runtimeFields, null);
+    }
+
+    private void indexData(Study study, int participantId, Map<String, Object> data) {
+        Map<String, Object> doc = new HashMap<>();
+        doc.put("participant_id", "participant_" + participantId);
+        doc.put("study_id", ElasticService.getStudyIdString(study));
+        doc.put("observation_id", "17");
+        doc.put("observation_type", "lime-survey-observation");
+        data.forEach((k, v) -> doc.put("data_" + k, v));
+        try {
+            client.index(i -> i
+                    .index(ElasticService.getStudyIdString(study))
+                    .id(String.valueOf(participantId))
+                    .refresh(Refresh.True)
+                    .document(doc));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

@@ -19,10 +19,18 @@ import io.redlink.more.studymanager.core.properties.model.Value;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
 import io.redlink.more.studymanager.core.validation.ValidationIssue;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ScheduledDatacheckTriggerFactory extends TriggerFactory<ScheduledDatacheckTrigger, TriggerProperties> {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private static List<Value> properties = new ArrayList<>();
 
@@ -52,10 +60,34 @@ public class ScheduledDatacheckTriggerFactory extends TriggerFactory<ScheduledDa
                 .setDescription("intervention.factory.trigger.scheduledDatacheck.configProps.onlyOnceDesc")
         );
 
-        properties.add(new DatacheckQueryValue("queryObject")
+        DatacheckQueryValue queryProp = new DatacheckQueryValue("queryObject");
+        queryProp.setValidationFunction(value -> validateQuery(queryProp, value));
+
+        properties.add(queryProp
                 .setName("intervention.factory.trigger.scheduled.configProps.queryObjName")
                 .setDescription("intervention.factory.trigger.scheduled.configProps.queryObjDesc")
         );
+    }
+
+    static ValidationIssue validateQuery(Value<?> prop, Object value) {
+        if (value == null) {
+            return ValidationIssue.NONE;
+        }
+        List<QueryObject> queryObjects;
+        try {
+            queryObjects = MAPPER.convertValue(value, new TypeReference<>() {
+            });
+        } catch (IllegalArgumentException e) {
+            return ValidationIssue.error(prop, "Invalid query object");
+        }
+        return queryObjects.stream()
+                .filter(qo -> qo.parameter != null)
+                .flatMap(qo -> qo.parameter.stream())
+                .map(DataPointQuery::validate)
+                .flatMap(Optional::stream)
+                .findFirst()
+                .map(msg -> ValidationIssue.error(prop, msg))
+                .orElse(ValidationIssue.NONE);
     }
 
     @Override

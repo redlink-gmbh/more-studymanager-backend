@@ -14,6 +14,8 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.mapping.RuntimeField;
+import co.elastic.clients.elasticsearch._types.mapping.RuntimeFieldType;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermsQueryField;
@@ -67,11 +69,31 @@ public class ElasticService {
         this.client = client;
     }
 
-    public List<Integer> participantsThatMapQuery(Long studyId, Integer studyGroupId, String query, TimeRange timerange) {
+    /**
+     * Parses a data field as double at query time. Reads the {@code .keyword} sub-field when the value was stored as
+     * string (e.g. LimeSurvey), otherwise a numerically mapped field. Unparsable or missing values emit nothing.
+     * The keyword check must come first: doc values of a text field are not accessible.
+     */
+    static final String NUMBER_RUNTIME_FIELD_SCRIPT = """
+            String f = params.field;
+            String k = f + '.keyword';
+            if (doc.containsKey(k)) {
+              if (doc[k].size() == 0) { return; }
+              try {
+                double d = Double.parseDouble(doc[k].value.trim());
+                if (!Double.isNaN(d) && !Double.isInfinite(d)) { emit(d); }
+              } catch (NumberFormatException e) { }
+            } else if (doc.containsKey(f) && doc[f].size() > 0 && doc[f].value instanceof Number) {
+              emit(((Number) doc[f].value).doubleValue());
+            }
+            """;
+
+    public List<Integer> participantsThatMapQuery(Long studyId, Integer studyGroupId, String query, Map<String, String> runtimeFields, TimeRange timerange) {
         SearchRequest.Builder builder = new SearchRequest.Builder();
         builder
                 .index(getStudyIdString(studyId))
                 .size(0)
+                .runtimeMappings(getNumberRuntimeFields(runtimeFields))
                 .query(q -> q.
                         bool(b -> b.
                                 must(m -> m.
@@ -101,6 +123,20 @@ public class ElasticService {
             LOG.error("Elastic Query failed", e);
             return List.of();
         }
+    }
+
+    static Map<String, RuntimeField> getNumberRuntimeFields(Map<String, String> runtimeFields) {
+        if (runtimeFields == null) {
+            return Map.of();
+        }
+        return runtimeFields.entrySet().stream().collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> RuntimeField.of(r -> r
+                        .type(RuntimeFieldType.Double)
+                        .script(s -> s.inline(i -> i
+                                .source(NUMBER_RUNTIME_FIELD_SCRIPT)
+                                .params("field", JsonData.of(e.getValue())))))
+        ));
     }
 
     static List<Query> getFilters(Long studyId, Integer studyGroupId, TimeRange timerange) {

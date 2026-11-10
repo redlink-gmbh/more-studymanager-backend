@@ -179,10 +179,10 @@ public class MoreSDK {
                 .map(ParticipantMilestone::getDateTime);
     }
 
-    public Set<Integer> listActiveParticipantsByQuery(long studyId, Integer studyGroupId, String query, TimeRange timerange) {
+    public Set<Integer> listActiveParticipantsByQuery(long studyId, Integer studyGroupId, String query, Map<String, String> runtimeFields, TimeRange timerange) {
         Set<Integer> participants = listParticipants(studyId, studyGroupId, Set.of(Participant.Status.ACTIVE))
                 .stream().map(SimpleParticipant::getId).collect(Collectors.toSet());
-        Set<Integer> allThatMatchQuery = new HashSet<>(elasticService.participantsThatMapQuery(studyId, studyGroupId, query, timerange));
+        Set<Integer> allThatMatchQuery = new HashSet<>(elasticService.participantsThatMapQuery(studyId, studyGroupId, query, runtimeFields, timerange));
         participants.retainAll(allThatMatchQuery);
         return participants;
     }
