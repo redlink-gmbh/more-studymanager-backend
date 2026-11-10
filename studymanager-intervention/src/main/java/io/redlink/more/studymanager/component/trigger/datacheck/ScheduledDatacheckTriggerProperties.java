@@ -9,10 +9,10 @@
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,14 +39,15 @@ public class ScheduledDatacheckTriggerProperties extends TriggerProperties {
     }
 
     /**
-     * Runtime fields (name &rarr; source field) required by the conditions of {@link #getElasticQueryString()}.
+     * Runtime fields required by the conditions of {@link #getElasticQueryString()}.
      */
-    public Map<String, String> getRuntimeFields() {
+    public List<RuntimeFieldSpec> getRuntimeFields() {
         return this.getQueryObject().stream()
                 .flatMap(List::stream)
                 .flatMap(qo -> qo.parameter.stream())
                 .flatMap(p -> p.getRuntimeField().stream())
-                .collect(Collectors.toMap(DataPointQuery.RuntimeField::name, DataPointQuery.RuntimeField::sourceField, (a, b) -> a));
+                .distinct()
+                .toList();
     }
 
     public Optional<String> getElasticQueryString() {

@@ -1,16 +1,16 @@
-# Graph Report - more-studymanager-backend  (2026-10-22)
+# Graph Report - more-studymanager-backend  (2026-11-10)
 
 ## Corpus Check
-- 560 files · ~182,743 words
+- 561 files · ~185,711 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 6451 nodes · 14775 edges · 427 communities (388 shown, 39 thin omitted)
-- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 2617 edges (avg confidence: 0.8)
+- 6509 nodes · 14998 edges · 402 communities (372 shown, 30 thin omitted)
+- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 2639 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `549f1d7a`
+- Built from commit: `f2bb5a53`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -225,7 +225,6 @@
 - [[_COMMUNITY_Community 207|Community 207]]
 - [[_COMMUNITY_Community 208|Community 208]]
 - [[_COMMUNITY_Community 209|Community 209]]
-- [[_COMMUNITY_Community 210|Community 210]]
 - [[_COMMUNITY_Community 211|Community 211]]
 - [[_COMMUNITY_Community 212|Community 212]]
 - [[_COMMUNITY_Community 213|Community 213]]
@@ -238,7 +237,6 @@
 - [[_COMMUNITY_Community 220|Community 220]]
 - [[_COMMUNITY_Community 221|Community 221]]
 - [[_COMMUNITY_Community 222|Community 222]]
-- [[_COMMUNITY_Community 223|Community 223]]
 - [[_COMMUNITY_Community 224|Community 224]]
 - [[_COMMUNITY_Community 225|Community 225]]
 - [[_COMMUNITY_Community 226|Community 226]]
@@ -259,8 +257,6 @@
 - [[_COMMUNITY_Community 241|Community 241]]
 - [[_COMMUNITY_Community 243|Community 243]]
 - [[_COMMUNITY_Community 244|Community 244]]
-- [[_COMMUNITY_Community 245|Community 245]]
-- [[_COMMUNITY_Community 246|Community 246]]
 - [[_COMMUNITY_Community 247|Community 247]]
 - [[_COMMUNITY_Community 248|Community 248]]
 - [[_COMMUNITY_Community 249|Community 249]]
@@ -285,25 +281,20 @@
 - [[_COMMUNITY_Community 268|Community 268]]
 - [[_COMMUNITY_Community 269|Community 269]]
 - [[_COMMUNITY_Community 270|Community 270]]
-- [[_COMMUNITY_Community 271|Community 271]]
 - [[_COMMUNITY_Community 272|Community 272]]
 - [[_COMMUNITY_Community 273|Community 273]]
 - [[_COMMUNITY_Community 274|Community 274]]
 - [[_COMMUNITY_Community 275|Community 275]]
-- [[_COMMUNITY_Community 276|Community 276]]
 - [[_COMMUNITY_Community 277|Community 277]]
 - [[_COMMUNITY_Community 278|Community 278]]
 - [[_COMMUNITY_Community 279|Community 279]]
 - [[_COMMUNITY_Community 280|Community 280]]
 - [[_COMMUNITY_Community 281|Community 281]]
-- [[_COMMUNITY_Community 282|Community 282]]
 - [[_COMMUNITY_Community 283|Community 283]]
 - [[_COMMUNITY_Community 284|Community 284]]
 - [[_COMMUNITY_Community 285|Community 285]]
-- [[_COMMUNITY_Community 286|Community 286]]
 - [[_COMMUNITY_Community 287|Community 287]]
 - [[_COMMUNITY_Community 288|Community 288]]
-- [[_COMMUNITY_Community 289|Community 289]]
 - [[_COMMUNITY_Community 290|Community 290]]
 - [[_COMMUNITY_Community 291|Community 291]]
 - [[_COMMUNITY_Community 292|Community 292]]
@@ -312,7 +303,6 @@
 - [[_COMMUNITY_Community 295|Community 295]]
 - [[_COMMUNITY_Community 296|Community 296]]
 - [[_COMMUNITY_Community 297|Community 297]]
-- [[_COMMUNITY_Community 298|Community 298]]
 - [[_COMMUNITY_Community 299|Community 299]]
 - [[_COMMUNITY_Community 300|Community 300]]
 - [[_COMMUNITY_Community 301|Community 301]]
@@ -321,18 +311,14 @@
 - [[_COMMUNITY_Community 304|Community 304]]
 - [[_COMMUNITY_Community 305|Community 305]]
 - [[_COMMUNITY_Community 306|Community 306]]
-- [[_COMMUNITY_Community 307|Community 307]]
-- [[_COMMUNITY_Community 308|Community 308]]
 - [[_COMMUNITY_Community 309|Community 309]]
 - [[_COMMUNITY_Community 310|Community 310]]
 - [[_COMMUNITY_Community 311|Community 311]]
-- [[_COMMUNITY_Community 312|Community 312]]
 - [[_COMMUNITY_Community 313|Community 313]]
 - [[_COMMUNITY_Community 314|Community 314]]
 - [[_COMMUNITY_Community 315|Community 315]]
 - [[_COMMUNITY_Community 316|Community 316]]
 - [[_COMMUNITY_Community 317|Community 317]]
-- [[_COMMUNITY_Community 318|Community 318]]
 - [[_COMMUNITY_Community 319|Community 319]]
 - [[_COMMUNITY_Community 320|Community 320]]
 - [[_COMMUNITY_Community 321|Community 321]]
@@ -358,15 +344,12 @@
 - [[_COMMUNITY_Community 343|Community 343]]
 - [[_COMMUNITY_Community 344|Community 344]]
 - [[_COMMUNITY_Community 345|Community 345]]
-- [[_COMMUNITY_Community 347|Community 347]]
 - [[_COMMUNITY_Community 348|Community 348]]
-- [[_COMMUNITY_Community 349|Community 349]]
 - [[_COMMUNITY_Community 350|Community 350]]
 - [[_COMMUNITY_Community 351|Community 351]]
 - [[_COMMUNITY_Community 361|Community 361]]
 - [[_COMMUNITY_Community 374|Community 374]]
 - [[_COMMUNITY_Community 379|Community 379]]
-- [[_COMMUNITY_Community 392|Community 392]]
 - [[_COMMUNITY_Community 395|Community 395]]
 - [[_COMMUNITY_Community 400|Community 400]]
 - [[_COMMUNITY_Community 404|Community 404]]
@@ -374,27 +357,17 @@
 - [[_COMMUNITY_Community 406|Community 406]]
 - [[_COMMUNITY_Community 407|Community 407]]
 - [[_COMMUNITY_Community 408|Community 408]]
-- [[_COMMUNITY_Community 409|Community 409]]
 - [[_COMMUNITY_Community 410|Community 410]]
-- [[_COMMUNITY_Community 411|Community 411]]
 - [[_COMMUNITY_Community 412|Community 412]]
-- [[_COMMUNITY_Community 413|Community 413]]
-- [[_COMMUNITY_Community 414|Community 414]]
 - [[_COMMUNITY_Community 415|Community 415]]
 - [[_COMMUNITY_Community 416|Community 416]]
-- [[_COMMUNITY_Community 417|Community 417]]
 - [[_COMMUNITY_Community 418|Community 418]]
-- [[_COMMUNITY_Community 419|Community 419]]
 - [[_COMMUNITY_Community 420|Community 420]]
 - [[_COMMUNITY_Community 421|Community 421]]
-- [[_COMMUNITY_Community 422|Community 422]]
-- [[_COMMUNITY_Community 423|Community 423]]
-- [[_COMMUNITY_Community 424|Community 424]]
 - [[_COMMUNITY_Community 425|Community 425]]
-- [[_COMMUNITY_Community 426|Community 426]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `empty()` - 61 edges
+1. `empty()` - 66 edges
 2. `LimeSurveyRequestService` - 45 edges
 3. `String` - 39 edges
 4. `Study` - 36 edges
@@ -408,19 +381,19 @@
 ## Surprising Connections (you probably didn't know these)
 - `studyGroupId()` --calls--> `empty()`  [INFERRED]
   studymanager-auth-token/src/main/java/io/redlink/more/auth/model/RoutingInfo.java → studymanager-observation/src/main/java/io/redlink/more/studymanager/component/observation/lime/model/SurveyStructure.java
+- `GoalTemplateProperties` --inherits--> `ComponentProperties`  [EXTRACTED]
+  studymanager-goaltemplates/src/main/java/io/redlink/more/studymanager/core/properties/GoalTemplateProperties.java → studymanager-core/src/main/java/io/redlink/more/studymanager/core/properties/ComponentProperties.java
+- `MoreObservationSDKImpl` --implements--> `MoreObservationSDK`  [EXTRACTED]
+  studymanager-services/src/main/java/io/redlink/more/studymanager/sdk/scoped/MoreObservationSDKImpl.java → studymanager-core/src/main/java/io/redlink/more/studymanager/core/sdk/MoreObservationSDK.java
 - `MorePlatformSDKImpl` --implements--> `MorePlatformSDK`  [EXTRACTED]
   studymanager-services/src/main/java/io/redlink/more/studymanager/sdk/scoped/MorePlatformSDKImpl.java → studymanager-core/src/main/java/io/redlink/more/studymanager/core/sdk/MorePlatformSDK.java
 - `MoreGoalSDK` --inherits--> `MorePlatformSDK`  [EXTRACTED]
   studymanager-goaltemplates/src/main/java/io/redlink/more/studymanager/core/sdk/MoreGoalSDK.java → studymanager-core/src/main/java/io/redlink/more/studymanager/core/sdk/MorePlatformSDK.java
-- `ApiCallException` --inherits--> `Exception`  [EXTRACTED]
-  studymanager-core/src/main/java/io/redlink/more/studymanager/core/exception/ApiCallException.java → studymanager-services/src/main/java/io/redlink/more/studymanager/service/ElasticService.java
-- `TriggerObservationValue` --inherits--> `ObjectValue`  [EXTRACTED]
-  studymanager-intervention/src/main/java/io/redlink/more/studymanager/component/action/TriggerObservationValue.java → studymanager-core/src/main/java/io/redlink/more/studymanager/core/properties/model/ObjectValue.java
 
 ## Import Cycles
 - None detected.
 
-## Communities (427 total, 39 thin omitted)
+## Communities (402 total, 30 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.19
@@ -431,68 +404,68 @@ Cohesion: 0.16
 Nodes (14): ObservationAttachmentRepository, ObservationAttachmentService, ObservationAttachmentServiceTest, InputStream, List, Map, Object, ObservationAttachment (+6 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.14
-Nodes (14): InfoObservation, InfoObservationFactory, Instant, List, Map, MeasurementSet, MoreObservationSDK, Object (+6 more)
+Cohesion: 0.05
+Nodes (37): TriggerObservationValue, DatacheckQueryValue, InfoObservation, ObjectValue, InfoObservation, InfoObservationFactory, Class, Object (+29 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.16
-Nodes (12): DataViewInfo, DataViewInfoType, ChartType, DataViewData, List, ObservationDataSummary, ObservationValidationResult, Override (+4 more)
+Cohesion: 0.26
+Nodes (7): DataViewInfo, DataViewInfoType, DataViewData, List, ObservationDataSummary, ObservationValidationResult, QuestionObservationUtils
 
 ### Community 4 - "Community 4"
-Cohesion: 0.20
-Nodes (18): DataApi, DataPointDTO, DataProcessingService, DataApiV1Controller, Audited, Instant, Integer, List (+10 more)
+Cohesion: 0.06
+Nodes (46): ChartTypeEnum, DataApi, DataPointDTO, DataProcessingService, DataViewRow, IdTitleDTO, ObservationDataViewDataRowDTO, DataProcessingService (+38 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.16
 Nodes (15): ObservationRepository, Collection, Integer, JdbcTemplate, List, Long, MapSqlParameterSource, Observation (+7 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.11
-Nodes (11): fromValue(), getValue(), Status(), Study, toAppState(), Duration, Instant, Long (+3 more)
+Cohesion: 0.07
+Nodes (21): fromValue(), getValue(), Status(), Study, toAppState(), Contact, Duration, Instant (+13 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (17): GoalConfigurationRepository, GoalConfigurationRepositoryTest, Integer, GoalAdherenceCheck, GoalTopic, Integer, JdbcTemplate, List (+9 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.22
-Nodes (5): List, Override, String, ValidationIssue, ConfigurationValidationReport
+Cohesion: 0.05
+Nodes (28): ConfigurationValidationException, ExceptionHandler, ConfigurationValidationReport, List, Override, String, ValidationIssue, List (+20 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.12
-Nodes (12): TriggerObservationValue, DatacheckQueryValue, ObjectValue, Class, Object, Override, String, Value (+4 more)
+Cohesion: 0.09
+Nodes (22): GoalAdherenceCheckDTO, GoalConfigurationDTO, IntegrationInfoDTO, ParticipantInfoDTO, ParticipantMilestoneInfo, ParticipantMilestoneInfoDTO, S, AdherenceCheckScheduleEnumDTO (+14 more)
 
 ### Community 11 - "Community 11"
 Cohesion: 0.24
 Nodes (12): GoalTemplateRepository, Collection, GoalTemplate, Integer, JdbcTemplate, List, Long, MapSqlParameterSource (+4 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.15
-Nodes (14): ChartTypeEnum, DataViewRow, IdTitleDTO, ObservationDataViewDataRowDTO, ChartType, DataView, DataViewInfo, List (+6 more)
+Cohesion: 0.24
+Nodes (10): ScheduledDatacheckTriggerPropertiesTest, DatacheckQueryValue, SafeVarargs, List, Map, Object, ScheduledDatacheckTriggerProperties, String (+2 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.09
 Nodes (17): Goal, GoalProperties, GoalRepository, Goal, Instant, Integer, Long, Set (+9 more)
 
 ### Community 14 - "Community 14"
-Cohesion: 0.26
-Nodes (16): CreateMilestoneRequestDTO, CreateParticipantMilestoneRequestDTO, MilestonesApi, MilestonesApiV1Controller, Audited, Integer, List, Long (+8 more)
+Cohesion: 0.31
+Nodes (14): CreateMilestoneRequestDTO, CreateParticipantMilestoneRequestDTO, MilestonesApi, MilestonesApiV1Controller, Audited, Integer, List, Long (+6 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.13
-Nodes (20): InterventionRepository, InterventionService, Action, ActionFactory, ApplicationContext, Collection, EventListener, Integer (+12 more)
+Cohesion: 0.18
+Nodes (11): InterventionService, Action, ActionFactory, EventListener, Integer, Intervention, List, Long (+3 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.13
-Nodes (7): IntegrationRepositoryTest, Long, BeforeEach, DisplayName, Test, Test, RandomSchedulerUtilsTest
+Cohesion: 0.11
+Nodes (16): IntegrationRepositoryTest, Instant, List, Long, Range, BeforeEach, DisplayName, Test (+8 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.17
-Nodes (4): Measurement, GarminMeasurementSets, GenericMeasurementSets, HealthConnectMeasurementSets
+Cohesion: 0.13
+Nodes (11): Matcher, StringTemplateValue, Override, Set, String, ValidationIssue, Value, String (+3 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.13
-Nodes (9): ArrayMeasurementSummary, BooleanMeasurementSummary, MeasurementSummary, MultipleChoiceQuestionObservationTest, NumericMeasurementSummary, Object, Override, String (+1 more)
+Cohesion: 0.08
+Nodes (13): ArrayMeasurementSummary, BooleanMeasurementSummary, MeasurementSummary, MultipleChoiceQuestionObservationTest, Measurement, GarminMeasurementSets, GenericMeasurementSets, HealthConnectMeasurementSets (+5 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.10
@@ -503,7 +476,7 @@ Cohesion: 0.10
 Nodes (30): Aggregate, Aggregation, ContainerBuilder, MultiBucketBase, ObjectBuilder, Operation, ElasticDataService, Builder (+22 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.13
+Cohesion: 0.12
 Nodes (22): ApplicationProperties, LoginTokenService, ParticipantApplicationRepository, ApplicationProperties, ApplicationAccessService, Map, String, EventListener (+14 more)
 
 ### Community 22 - "Community 22"
@@ -511,16 +484,16 @@ Cohesion: 0.13
 Nodes (17): GoalConfigurationRepository, GoalRepository, GoalTemplateRepository, GoalService, ApplicationContext, Collection, GoalAdherenceCheck, GoalTemplate (+9 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.12
-Nodes (18): Duration, Builder, Instant, Integer, List, LocalDate, Observation, ParticipantObservationSeed (+10 more)
+Cohesion: 0.14
+Nodes (18): Instant, Duration, Builder, Event, Instant, Integer, List, LocalDate (+10 more)
 
 ### Community 24 - "Community 24"
-Cohesion: 0.08
-Nodes (29): Async, @NonNull StudyGoalConfigData, ImportExportService, Collection, ElasticService, GatewayProperties, GoalService, InputStream (+21 more)
+Cohesion: 0.09
+Nodes (28): Async, ImportExportService, Collection, ElasticService, GatewayProperties, GoalService, InputStream, Instant (+20 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.09
-Nodes (29): GoalsApi, Matcher, StringTemplateValue, Override, Set, String, ValidationIssue, Value (+21 more)
+Cohesion: 0.21
+Nodes (18): GoalsApi, GoalsApiV1Controller, Audited, AuthenticatedUser, GoalService, GoalTemplateDTO, GoalTopicDTO, Integer (+10 more)
 
 ### Community 26 - "Community 26"
 Cohesion: 0.17
@@ -528,27 +501,27 @@ Nodes (14): ClientRegistrationRepository, WebSecurityConfiguration, GrantedAutho
 
 ### Community 27 - "Community 27"
 Cohesion: 0.14
-Nodes (16): KindEnum, StudyGoalConfigScheduleInnerDTO, AdherenceCheckScheduleEnumDTO, Collection, GoalAdherenceCheck, GoalTemplate, GoalTemplateDTO, GoalTopic (+8 more)
+Nodes (15): KindEnum, StudyGoalConfigConsentsDTO, StudyGoalConfigScheduleInnerDTO, AdherenceCheckScheduleEnumDTO, Collection, GoalAdherenceCheck, GoalTopic, GoalTopicDTO (+7 more)
 
 ### Community 28 - "Community 28"
-Cohesion: 0.17
-Nodes (14): DataProcessingService, DataView, DataViewInfo, ElasticService, Instant, Integer, List, Long (+6 more)
+Cohesion: 0.21
+Nodes (7): NamedIntegerRangeValue, NamedIntegerRange, Class, Override, String, ValidationIssue, Value
 
 ### Community 29 - "Community 29"
 Cohesion: 0.13
 Nodes (10): Cloneable, Value, Class, ComponentProperties, Function, JsonIgnore, Override, String (+2 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.13
+Cohesion: 0.14
 Nodes (27): DataHealthIndicatorEnum, ObservationResyncService, ParticipantsApi, ParticipantsApiV1Controller, ApplicationAccessService, Audited, Boolean, GatewayProperties (+19 more)
 
 ### Community 31 - "Community 31"
-Cohesion: 0.10
-Nodes (9): GoalTemplate, GoalTemplateProperties, Instant, Integer, Long, Set, String, GoalTemplate (+1 more)
+Cohesion: 0.09
+Nodes (11): GoalTemplate, GoalTemplateProperties, Instant, Integer, Long, Set, String, GoalTemplate (+3 more)
 
 ### Community 32 - "Community 32"
-Cohesion: 0.08
-Nodes (33): IntegrationInfoDTO, ParticipantInfo(), StudyImportExport, ParticipantInfoDTO, ParticipantMilestoneInfo, ParticipantMilestoneInfoDTO, S, Action (+25 more)
+Cohesion: 0.10
+Nodes (23): ParticipantInfo(), StudyImportExport, ImportExportServiceTest, Action, GoalTemplate, Integer, IntegrationInfo, Intervention (+15 more)
 
 ### Community 33 - "Community 33"
 Cohesion: 0.20
@@ -560,43 +533,43 @@ Nodes (13): CollaboratorRoleDetailsDTO, CollaboratorDetailsDTO, CollaboratorDTO,
 
 ### Community 35 - "Community 35"
 Cohesion: 0.09
-Nodes (18): ObservationScheduleDTO, RandomizationDTO, RelativeRecurrenceRuleDTO, RelativeEvent, RelativeRecurrenceRule, Override, Randomization, RelativeDate (+10 more)
+Nodes (18): ObservationScheduleDTO, RandomizationDTO, RelativeRecurrenceRuleDTO, RelativeEvent, RelativeRecurrenceRule, RecurrenceRule, Override, Randomization (+10 more)
 
 ### Community 36 - "Community 36"
-Cohesion: 0.11
-Nodes (21): DBUtils, TokenAuthUserRepository, TokenAuthUserDetailService, Class, Consumer, OptionalInt, ResultSet, Set (+13 more)
+Cohesion: 0.33
+Nodes (8): DBUtils, Class, Consumer, OptionalInt, ResultSet, Set, String, T
 
 ### Community 37 - "Community 37"
 Cohesion: 0.15
 Nodes (15): withToken(), IntegrationService, EndpointToken, String, EndpointToken, EventListener, Integer, List (+7 more)
 
 ### Community 38 - "Community 38"
-Cohesion: 0.13
-Nodes (7): Participant, Status(), Instant, Integer, Long, Set, Status
+Cohesion: 0.11
+Nodes (10): getValue(), Participant, Status(), Instant, Integer, Long, Override, Set (+2 more)
 
 ### Community 39 - "Community 39"
 Cohesion: 0.11
 Nodes (27): StudyService, ApplicationEventPublisher, Boolean, Duration, ElasticService, Iterable, List, Long (+19 more)
 
 ### Community 40 - "Community 40"
-Cohesion: 0.16
-Nodes (17): ComponentFactory, ComponentFactoryDTO, ComponentFactoryMeasurementsInnerDTO, ComponentsApi, ComponentApiV1Controller, WebComponent, ApplicationContext, List (+9 more)
+Cohesion: 0.18
+Nodes (16): ComponentFactory, ComponentFactoryDTO, ComponentFactoryMeasurementsInnerDTO, ComponentsApi, ComponentApiV1Controller, ApplicationContext, List, OAuth2AuthenticationService (+8 more)
 
 ### Community 41 - "Community 41"
 Cohesion: 0.17
 Nodes (14): StudyRepository, Boolean, Iterable, JdbcTemplate, List, Long, Optional, RowMapper (+6 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.22
-Nodes (10): ElasticService, Integer, List, Long, Map, Object, Query, String (+2 more)
+Cohesion: 0.26
+Nodes (7): ElasticService, Integer, Long, Query, String, Study, TimeRange
 
 ### Community 43 - "Community 43"
-Cohesion: 0.07
-Nodes (34): DownloadToken, DownloadTokenRepository, GenerateDownloadToken200ResponseDTO, ImportExportApi, ImportExportService, DownloadToken, DownloadTokenRepository, ImportExportApiV1Controller (+26 more)
+Cohesion: 0.05
+Nodes (45): DownloadToken, GenerateDownloadToken200ResponseDTO, HttpHeaders, ImportExportApi, KibanaProperties, DownloadToken, KibanaProxy, ProxyService (+37 more)
 
 ### Community 44 - "Community 44"
-Cohesion: 0.23
-Nodes (9): Outcome, Retry, PushNotificationDispatcherTest, BeforeEach, PushNotificationAccepted, PushNotificationDispatcher, PushNotificationRequest, PushServiceProperties (+1 more)
+Cohesion: 0.24
+Nodes (8): Retry, PushNotificationDispatcherTest, BeforeEach, PushNotificationAccepted, PushNotificationDispatcher, PushNotificationRequest, PushServiceProperties, Test
 
 ### Community 45 - "Community 45"
 Cohesion: 0.10
@@ -611,32 +584,32 @@ Cohesion: 0.16
 Nodes (10): NameValuePairRepository, NameValuePairRepositoryTest, Class, JdbcTemplate, Long, Optional, String, T (+2 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.29
-Nodes (5): Long, ParticipantData, ParticipantInfo, Set, String
+Cohesion: 0.19
+Nodes (12): LimeSurveyRequestService, Outcome, Integer, Long, Map, Object, Optional, ParticipantData (+4 more)
 
 ### Community 49 - "Community 49"
-Cohesion: 0.11
-Nodes (15): RecurrenceRuleDTO, Event, RecurrenceRule, Instant, Override, Randomization, RecurrenceRule, String (+7 more)
+Cohesion: 0.19
+Nodes (8): RecurrenceRuleDTO, RecurrenceRule, Instant, Integer, List, String, Long, RecurrenceRule
 
 ### Community 50 - "Community 50"
-Cohesion: 0.18
-Nodes (7): GatewayPropertiesConfigurationTest, ParticipantControllerTest, Bean, BeforeEach, DisplayName, GatewayProperties, Test
+Cohesion: 0.11
+Nodes (11): ParticipantApplicationAccess, GatewayPropertiesConfigurationTest, ParticipantControllerTest, Object, Override, String, Bean, BeforeEach (+3 more)
 
 ### Community 51 - "Community 51"
 Cohesion: 0.15
-Nodes (15): MoreTriggerSDK, MoreTriggerSDKImpl, Class, Instant, Integer, MoreSDK, Optional, Override (+7 more)
+Nodes (16): MoreTriggerSDKImpl, Class, Instant, Integer, List, MoreSDK, Optional, Override (+8 more)
 
 ### Community 52 - "Community 52"
-Cohesion: 0.24
-Nodes (7): AuditAspectTest, Before, AuditServiceTest, Object, Test, DisplayName, Test
+Cohesion: 0.40
+Nodes (3): AuditAspectTest, Before, Test
 
 ### Community 53 - "Community 53"
 Cohesion: 0.18
 Nodes (15): BiFunction, IdTokenClaimAccessor, OAuth2AuthenticationService, StandardClaimAccessor, AuthenticatedUser, Authentication, ClaimAccessor, List (+7 more)
 
 ### Community 54 - "Community 54"
-Cohesion: 0.22
-Nodes (11): InfoObservation, C, Instant, Map, MoreObservationSDK, ObservationDataSummary, ObservationProperties, ObservationValidationResult (+3 more)
+Cohesion: 0.21
+Nodes (4): GoalTopic, Instant, Long, String
 
 ### Community 55 - "Community 55"
 Cohesion: 0.13
@@ -647,20 +620,20 @@ Cohesion: 0.25
 Nodes (11): StudyAclRepository, Map, MapSqlParameterSource, MoreUser, NamedParameterJdbcTemplate, ResultSet, Set, String (+3 more)
 
 ### Community 57 - "Community 57"
-Cohesion: 0.23
-Nodes (7): ScheduledDatacheckTrigger, ScheduledDatacheckTriggerProperties, Boolean, MoreTriggerSDK, Override, Parameters, TriggerResult
+Cohesion: 0.27
+Nodes (7): StudyRepositoryTest, BeforeEach, DisplayName, Optional, Supplier, T, Test
 
 ### Community 58 - "Community 58"
-Cohesion: 0.08
-Nodes (34): NameValuePairRepository, SchedulingService, MoreSDK, ApplicationEventPublisher, CalendarService, DataViewData, ElasticDataService, ElasticService (+26 more)
+Cohesion: 0.05
+Nodes (43): ActionParameter, Parameters, NameValuePairRepository, SchedulingService, MoreSDK, Object, Override, String (+35 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.19
-Nodes (9): MoreObservationSDK, InfoObservationTest, BeforeEach, Map, Object, ObservationDataSummary, ObservationProperties, String (+1 more)
+Cohesion: 0.20
+Nodes (8): InfoObservationTest, BeforeEach, Map, Object, ObservationDataSummary, ObservationProperties, String, Test
 
 ### Community 60 - "Community 60"
-Cohesion: 0.15
-Nodes (13): ApplicationContext, Collection, DataView, EventListener, MoreSDK, ObservationAttachmentService, ObservationRepository, Optional (+5 more)
+Cohesion: 0.22
+Nodes (5): NamedIntegerRange, JsonCreator, Object, Override, String
 
 ### Community 61 - "Community 61"
 Cohesion: 0.13
@@ -671,16 +644,16 @@ Cohesion: 0.17
 Nodes (11): StudyAclRepositoryTest, Transactional, BeforeEach, DisplayName, Optional, String, Study, StudyRoleDetails (+3 more)
 
 ### Community 63 - "Community 63"
-Cohesion: 0.06
-Nodes (24): IntegerRange, IntegerRangeValue, NamedIntegerRange, NamedIntegerRangeValue, NamedIntegerRange, JsonCreator, Object, Override (+16 more)
+Cohesion: 0.21
+Nodes (7): IntegerRangeValue, Class, IntegerRange, Override, String, ValidationIssue, Value
 
 ### Community 64 - "Community 64"
 Cohesion: 0.16
 Nodes (15): MoreObservationSDKImpl, Class, DataViewData, Instant, Integer, Map, MoreSDK, ObservationProperties (+7 more)
 
 ### Community 65 - "Community 65"
-Cohesion: 0.22
-Nodes (16): AnsweredQuestion, LimeSurveyResponseServiceTest, Source, AnswerOptionData, DisplayName, Instant, List, Map (+8 more)
+Cohesion: 0.18
+Nodes (17): AnsweredQuestion, LimeSurveyResponseServiceTest, Source, AnswerOptionData, DisplayName, Instant, List, Map (+9 more)
 
 ### Community 66 - "Community 66"
 Cohesion: 0.08
@@ -699,8 +672,8 @@ Cohesion: 0.20
 Nodes (9): OccurredObservationRepository, OccurredObservationService, Instant, Integer, Long, ObservationDataState, OccurredObservation, Set (+1 more)
 
 ### Community 70 - "Community 70"
-Cohesion: 0.17
-Nodes (19): CalendarService, Collection, Instant, Integer, Intervention, InterventionTimelineEvent, List, LocalDate (+11 more)
+Cohesion: 0.08
+Nodes (32): CalendarService, CalendarControllerTest, Instant, Observation, ObservationTimelineEvent, Collection, Instant, Integer (+24 more)
 
 ### Community 71 - "Community 71"
 Cohesion: 0.16
@@ -719,32 +692,32 @@ Cohesion: 0.16
 Nodes (10): DateMeasurementSummary, LimeSurveyObservationTest, QuestionObservationTest, StringMeasurementSummary, Instant, MeasurementSummary, String, Test (+2 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.14
-Nodes (12): ComponentFactory, C, Class, ComponentFactoryProperties, JsonNode, List, Map, Object (+4 more)
+Cohesion: 0.13
+Nodes (13): ComponentFactory, C, Class, ComponentFactoryProperties, JsonNode, List, Map, Object (+5 more)
 
 ### Community 76 - "Community 76"
-Cohesion: 0.13
-Nodes (23): Answer, AnsweredGroup, ParticipantSurveyResponses, LimeSurveyResponseService, ElasticDataService, Instant, Integer, LimeSurveyObservationFactory (+15 more)
+Cohesion: 0.12
+Nodes (24): Answer, AnsweredGroup, ParticipantSurveyResponses, LimeSurveyResponseService, ElasticDataService, Instant, Integer, LimeSurveyObservationFactory (+16 more)
 
 ### Community 77 - "Community 77"
-Cohesion: 0.21
-Nodes (7): CalendarServiceTest, Integer, Intervention, Observation, StudyTimeline, Test, Trigger
+Cohesion: 0.15
+Nodes (9): MoreSDKTest, CalendarServiceTest, Integer, Test, Intervention, Observation, StudyTimeline, Test (+1 more)
 
 ### Community 78 - "Community 78"
-Cohesion: 0.18
-Nodes (8): GoalTemplateCategoriesDTO, StudyGoalConfigConsentsDTO, GoalsApiV1ControllerTest, GoalTopic, String, BeforeEach, DisplayName, Test
+Cohesion: 0.20
+Nodes (6): GoalsApiV1ControllerTest, GoalTopic, String, BeforeEach, DisplayName, Test
 
 ### Community 79 - "Community 79"
-Cohesion: 0.08
-Nodes (24): ObservationGroup, ObservationGroupsApi, ObservationGroupApiV1Controller, ObservationGroupControllerTest, Instant, Integer, Long, String (+16 more)
+Cohesion: 0.06
+Nodes (31): ObservationGroup, ObservationGroupsApi, ObservationGroupRepository, ObservationGroupApiV1Controller, ObservationGroupControllerTest, Instant, Integer, Long (+23 more)
 
 ### Community 80 - "Community 80"
-Cohesion: 0.14
-Nodes (15): LimeSurveyObservation, FieldValue, Instant, Integer, List, Map, MeasurementSummary, Object (+7 more)
+Cohesion: 0.11
+Nodes (18): LimeSurveyObservation, C, FieldValue, Instant, Integer, LimeSurveyRequestService, List, Map (+10 more)
 
 ### Community 81 - "Community 81"
-Cohesion: 0.15
-Nodes (11): ScheduledDatacheckTriggerPropertiesTest, OutputStream, ScheduleEventSerializationTest, Test, Class, Object, T, DisplayName (+3 more)
+Cohesion: 0.20
+Nodes (9): OutputStream, ScheduleEventSerializationTest, Class, Object, T, DisplayName, Test, MapperUtils (+1 more)
 
 ### Community 82 - "Community 82"
 Cohesion: 0.24
@@ -759,8 +732,8 @@ Cohesion: 0.23
 Nodes (10): ParticipantApplicationRepository, Integer, JdbcTemplate, List, Long, Optional, ParticipantApplication, RowMapper (+2 more)
 
 ### Community 85 - "Community 85"
-Cohesion: 0.15
-Nodes (13): ChronoUnit, Duration, fromValue(), getValue(), toChronoUnit(), toString(), Unit(), Integer (+5 more)
+Cohesion: 0.12
+Nodes (16): ChronoUnit, Disabled, Duration, fromValue(), getValue(), toChronoUnit(), toString(), Unit() (+8 more)
 
 ### Community 86 - "Community 86"
 Cohesion: 0.06
@@ -787,20 +760,20 @@ Cohesion: 0.18
 Nodes (14): AfterReturning, AfterThrowing, AuditAspect, JoinPoint, ActionState, AuditLog, AuditProperties, AuditService (+6 more)
 
 ### Community 92 - "Community 92"
-Cohesion: 0.29
+Cohesion: 0.27
 Nodes (4): ApplicationAccessServiceTest, BeforeEach, DisplayName, Test
 
 ### Community 93 - "Community 93"
-Cohesion: 0.15
-Nodes (10): MoreGoalTemplateSDK, MorePlatformSDK, Class, Integer, Optional, ParticipantFilter, Set, SimpleParticipant (+2 more)
+Cohesion: 0.18
+Nodes (9): MorePlatformSDK, Class, Integer, Optional, ParticipantFilter, Set, SimpleParticipant, String (+1 more)
 
 ### Community 94 - "Community 94"
 Cohesion: 0.21
 Nodes (8): ComponentControllerTest, TestComponentConfig, ActionFactory, Bean, GoalTemplateFactory, ObservationFactory, Test, TriggerFactory
 
 ### Community 95 - "Community 95"
-Cohesion: 0.18
-Nodes (13): ActionService, Job, TestJob, TriggerJob, ApplicationContext, InterventionService, JobExecutionContext, MoreSDK (+5 more)
+Cohesion: 0.16
+Nodes (14): ActionService, Job, TestJob, TriggerJob, ApplicationContext, InterventionService, JobExecutionContext, MoreSDK (+6 more)
 
 ### Community 96 - "Community 96"
 Cohesion: 0.15
@@ -811,12 +784,12 @@ Cohesion: 0.14
 Nodes (15): LimeSurveyObservationFactory, LimeSurveyObservation, C, ComponentFactoryProperties, JsonNode, LimeSurveyRequestService, List, MeasurementSet (+7 more)
 
 ### Community 98 - "Community 98"
-Cohesion: 0.15
+Cohesion: 0.16
 Nodes (6): LoginToken, Integer, Long, Object, Override, String
 
 ### Community 99 - "Community 99"
-Cohesion: 0.36
-Nodes (7): OccurredObservation(), OccurredObservationProperties, Boolean, Instant, Integer, Long, ObservationDataState
+Cohesion: 0.19
+Nodes (11): OccurredObservation(), OccurredObservationProperties, OccurredObservationRepositoryTest, Boolean, Instant, Integer, Long, ObservationDataState (+3 more)
 
 ### Community 100 - "Community 100"
 Cohesion: 0.14
@@ -843,12 +816,12 @@ Cohesion: 0.26
 Nodes (8): PlatformRoleDTO, Collection, PlatformRole, Set, StudyRole, StudyRoleDTO, SuppressWarnings, RoleTransformer
 
 ### Community 106 - "Community 106"
-Cohesion: 0.17
-Nodes (7): ObservationGroupRepository, JdbcTemplate, List, Long, MapSqlParameterSource, ObservationGroup, RowMapper
+Cohesion: 0.32
+Nodes (5): ChartType, Override, String, ViewConfig, SimpleDataViewInfo
 
 ### Community 107 - "Community 107"
-Cohesion: 0.21
-Nodes (3): LoginTokenProperties, PostConstruct, String
+Cohesion: 0.35
+Nodes (7): TokenAuthUserRepository, JdbcTemplate, Optional, ResultSet, Set, String, TokenAuthUserDetails
 
 ### Community 108 - "Community 108"
 Cohesion: 0.20
@@ -859,12 +832,12 @@ Cohesion: 0.27
 Nodes (9): IntegrationRepository, EndpointToken, Integer, JdbcTemplate, List, Long, Optional, RowMapper (+1 more)
 
 ### Community 110 - "Community 110"
-Cohesion: 0.34
-Nodes (12): ObservationsApiV1Controller, Audited, EndpointTokenDTO, Integer, List, Long, ObservationDTO, Override (+4 more)
+Cohesion: 0.20
+Nodes (21): ObservationAttachmentDTO, ObservationsApi, ObservationsApiV1Controller, Audited, EndpointTokenDTO, Integer, IntegrationService, List (+13 more)
 
 ### Community 111 - "Community 111"
-Cohesion: 0.17
-Nodes (6): LocalDate, Status, StatusChangeDTO, Study, StudyDTO, StudyTransformer
+Cohesion: 0.27
+Nodes (5): IntegerRange, JsonCreator, Object, Override, String
 
 ### Community 112 - "Community 112"
 Cohesion: 0.15
@@ -875,8 +848,8 @@ Cohesion: 0.25
 Nodes (10): UserRepository, MapSqlParameterSource, MoreUser, NamedParameterJdbcTemplate, Optional, RowMapper, SearchResult, String (+2 more)
 
 ### Community 114 - "Community 114"
-Cohesion: 0.33
-Nodes (5): Disabled, InterventionControllerTest, BeforeEach, DisplayName, Test
+Cohesion: 0.31
+Nodes (6): TokenAuthUserDetailService, Override, String, TokenAuthUserDetails, TokenAuthUserRepository, UserDetailsService
 
 ### Community 115 - "Community 115"
 Cohesion: 0.20
@@ -939,16 +912,16 @@ Cohesion: 0.23
 Nodes (9): BeanFactory, BeanFactoryAware, ComponentFactoriesProperties, ComponentFactoriesConfiguration, Class, Override, PostConstruct, Stream (+1 more)
 
 ### Community 130 - "Community 130"
-Cohesion: 0.13
-Nodes (10): Component, ComponentProperties, ActionProperties, ObservationProperties, Override, P, String, Map (+2 more)
+Cohesion: 0.22
+Nodes (5): Component, ObservationProperties, Override, P, String
 
 ### Community 131 - "Community 131"
-Cohesion: 0.23
-Nodes (8): ObservationService, DataViewInfo, Integer, List, Long, Observation, ObservationFactory, Study
+Cohesion: 0.12
+Nodes (21): ObservationService, ApplicationContext, Collection, DataView, DataViewInfo, EventListener, Integer, List (+13 more)
 
 ### Community 132 - "Community 132"
-Cohesion: 0.17
-Nodes (13): InterventionRepository, Action, Collection, Integer, Intervention, JdbcTemplate, List, Long (+5 more)
+Cohesion: 0.06
+Nodes (38): Trigger, ScheduledDatacheckTrigger, ScheduledDatacheckTriggerProperties, TriggerProperties, QueryObject, InterventionRepository, C, MoreTriggerSDK (+30 more)
 
 ### Community 134 - "Community 134"
 Cohesion: 0.18
@@ -963,8 +936,8 @@ Cohesion: 0.22
 Nodes (9): QuestionObservationFactory, QuestionObservation, List, MeasurementSet, MoreObservationSDK, ObservationProperties, Override, String (+1 more)
 
 ### Community 137 - "Community 137"
-Cohesion: 0.22
-Nodes (8): MoreTriggerSDK, Instant, Integer, Optional, Schedule, Set, String, TimeRange
+Cohesion: 0.20
+Nodes (10): MoreTriggerSDK, Instant, Integer, List, Optional, RuntimeFieldSpec, Schedule, Set (+2 more)
 
 ### Community 138 - "Community 138"
 Cohesion: 0.25
@@ -979,8 +952,8 @@ Cohesion: 0.30
 Nodes (9): CSVConverter, HttpInputMessage, HttpOutputMessage, Autowired, Class, List, Override, ParticipantDTO (+1 more)
 
 ### Community 141 - "Community 141"
-Cohesion: 0.21
-Nodes (8): ObservationRepositoryTest, OccurredObservationRepositoryTest, BeforeEach, DisplayName, Test, BeforeEach, DisplayName, Test
+Cohesion: 0.18
+Nodes (4): Test, Test, ScheduleEventTransformerTest, SchedulerUtilsTest
 
 ### Community 142 - "Community 142"
 Cohesion: 0.24
@@ -999,8 +972,8 @@ Cohesion: 0.24
 Nodes (8): GarminDailyStepsObservationFactory, GarminDailyStepsObservation, MeasurementSet, MoreObservationSDK, ObservationProperties, Override, String, Visibility
 
 ### Community 146 - "Community 146"
-Cohesion: 0.11
-Nodes (17): ScheduledDatacheckTriggerProperties, ComponentProperties, QueryObject, Boolean, Long, Map, Object, Optional (+9 more)
+Cohesion: 0.17
+Nodes (9): ComponentProperties, Boolean, Long, Object, String, Map, Object, GoalTemplateProperties (+1 more)
 
 ### Community 147 - "Community 147"
 Cohesion: 0.30
@@ -1035,20 +1008,20 @@ Cohesion: 0.18
 Nodes (6): GoalAdherenceCheck, LocalTime, Long, Object, Override, String
 
 ### Community 155 - "Community 155"
-Cohesion: 0.08
-Nodes (21): dataMap(), dataMap(), GoalAdherenceCheckDTO, GoalTopic, JsonAnyGetter, JsonUnwrapped, Map, Object (+13 more)
+Cohesion: 0.19
+Nodes (12): dataMap(), dataMap(), JsonAnyGetter, JsonUnwrapped, Map, Object, String, JsonAnyGetter (+4 more)
 
 ### Community 156 - "Community 156"
 Cohesion: 0.22
 Nodes (6): StringListValue, Class, List, Override, String, Value
 
 ### Community 157 - "Community 157"
-Cohesion: 0.15
-Nodes (12): MoreGoalTemplateSDK, SampleObject, MoreGoalTemplateSDKImpl, Serializable, Class, Integer, MoreSDK, Optional (+4 more)
+Cohesion: 0.18
+Nodes (9): MoreGoalTemplateSDKImpl, MoreGoalTemplateSDK, Class, Integer, MoreSDK, Optional, Override, String (+1 more)
 
 ### Community 158 - "Community 158"
 Cohesion: 0.43
-Nodes (3): ParticipantServiceTest, DisplayName, Test
+Nodes (4): GoalRepositoryTest, BeforeEach, DisplayName, Test
 
 ### Community 159 - "Community 159"
 Cohesion: 0.25
@@ -1063,12 +1036,12 @@ Cohesion: 0.22
 Nodes (9): AuditLogRepository, AuditService, AuditLog, AuditProperties, List, Long, Optional, Stream (+1 more)
 
 ### Community 162 - "Community 162"
-Cohesion: 0.24
-Nodes (5): AuditLog, Instant, Long, Map, String
+Cohesion: 0.15
+Nodes (10): AuditLog, AuditServiceTest, ActionState, Instant, Long, Map, Object, String (+2 more)
 
 ### Community 163 - "Community 163"
-Cohesion: 0.25
-Nodes (8): ScheduledDatacheckTriggerFactory, ScheduledDatacheckTrigger, List, MoreTriggerSDK, Override, String, TriggerProperties, Value
+Cohesion: 0.21
+Nodes (10): ScheduledDatacheckTriggerFactory, ScheduledDatacheckTrigger, List, MoreTriggerSDK, Object, Override, String, TriggerProperties (+2 more)
 
 ### Community 164 - "Community 164"
 Cohesion: 0.16
@@ -1091,16 +1064,16 @@ Cohesion: 0.24
 Nodes (7): TokenAuthUserDetails, Object, Override, RoutingInfo, Set, String, User
 
 ### Community 169 - "Community 169"
-Cohesion: 0.06
-Nodes (27): RelativeTimeFrame, Timeframe, RelativeTimeTrigger, RelativeTimeTriggerTest, Schedule, CronSchedule, IntervalSchedule, Override (+19 more)
+Cohesion: 0.05
+Nodes (28): RelativeTimeFrame, Timeframe, TimeRange, RelativeTimeTrigger, RelativeTimeTriggerTest, CronSchedule, IntervalSchedule, Schedule (+20 more)
 
 ### Community 170 - "Community 170"
 Cohesion: 0.25
 Nodes (8): RelativeTimeTriggerFactory, RelativeTimeTrigger, List, MoreTriggerSDK, Override, String, TriggerProperties, Value
 
 ### Community 171 - "Community 171"
-Cohesion: 0.19
-Nodes (9): ConfigurableApplicationContext, ElasticSearchServiceTest, EnvInitializer, InputStream, Long, Override, String, Study (+1 more)
+Cohesion: 0.18
+Nodes (11): ElasticSearchServiceTest, InputStream, Integer, List, Long, Map, Object, RuntimeFieldSpec (+3 more)
 
 ### Community 172 - "Community 172"
 Cohesion: 0.25
@@ -1115,8 +1088,8 @@ Cohesion: 0.23
 Nodes (7): MilestoneRepository, JdbcTemplate, List, Long, MapSqlParameterSource, Milestone, RowMapper
 
 ### Community 175 - "Community 175"
-Cohesion: 0.31
-Nodes (5): AbstractAmountOfGoalTemplateFactory, IntegerRange, MeasurementSet, Override, String
+Cohesion: 0.36
+Nodes (4): AbstractAmountOfGoalTemplateFactory, MeasurementSet, Override, String
 
 ### Community 176 - "Community 176"
 Cohesion: 0.23
@@ -1127,12 +1100,12 @@ Cohesion: 0.23
 Nodes (4): SimpleDataPoint, Map, Object, String
 
 ### Community 178 - "Community 178"
-Cohesion: 0.24
-Nodes (3): DataPointQuery, Object, String
+Cohesion: 0.16
+Nodes (9): BigDecimal, DataPointQuery, RuntimeFieldKind, Boolean, Long, Object, Optional, RuntimeFieldSpec (+1 more)
 
 ### Community 179 - "Community 179"
-Cohesion: 0.22
-Nodes (5): AccessDeniedException, ActionHandlingException, RuntimeException, String, String
+Cohesion: 0.09
+Nodes (13): AccessDeniedException, ActionHandlingException, BadStudyStateException, NotAuthorizedException, SchedulingException, RuntimeException, String, String (+5 more)
 
 ### Community 180 - "Community 180"
 Cohesion: 0.23
@@ -1151,8 +1124,8 @@ Cohesion: 0.27
 Nodes (7): GpsMobileObservation, GpsMobileObservationFactory, MeasurementSet, MoreObservationSDK, ObservationProperties, Override, String
 
 ### Community 184 - "Community 184"
-Cohesion: 0.09
-Nodes (20): ApplicationEvent, PushNotificationEvent, StudyStateChangedEvent, PushNotificationEvent, PushNotificationService, PushNotificationServiceTest, Integer, List (+12 more)
+Cohesion: 0.07
+Nodes (22): ApplicationEvent, PushNotificationEvent, StudyStateChangedEvent, PushNotificationEvent, ParticipantMilestoneServiceTest, PushNotificationService, PushNotificationServiceTest, Integer (+14 more)
 
 ### Community 185 - "Community 185"
 Cohesion: 0.29
@@ -1163,8 +1136,8 @@ Cohesion: 0.28
 Nodes (8): UpsertOccurredObservationsCronTest, BeforeEach, DisplayName, Instant, List, ObservationTimelineEvent, StudyTimeline, Test
 
 ### Community 187 - "Community 187"
-Cohesion: 0.39
-Nodes (4): Contact, DisplayName, Test, StudyControllerTest
+Cohesion: 0.33
+Nodes (3): ApiCallException, String, Exception
 
 ### Community 188 - "Community 188"
 Cohesion: 0.24
@@ -1179,16 +1152,16 @@ Cohesion: 0.27
 Nodes (10): Arguments, MethodSource, ParameterizedTest, DataProcessingServiceTest, List, Observation, Participant, ParticipationData (+2 more)
 
 ### Community 191 - "Community 191"
-Cohesion: 0.25
-Nodes (8): ObservationResyncService, List, Observation, ObservationResyncRequest, ObservationResyncRequestRepository, ObservationService, Optional, ParticipantService
+Cohesion: 0.40
+Nodes (4): ActionProperties, Map, Object, String
 
 ### Community 192 - "Community 192"
 Cohesion: 0.27
 Nodes (5): User, String, AuthenticatedUser, CurrentUserDTO, URI
 
 ### Community 193 - "Community 193"
-Cohesion: 0.08
-Nodes (24): GoalConfigurationDTO, StudyGoalConfig, StudyGoalConfigData, ResultActions, ImportExportServiceTest, StudyGoalConfig, ImportExportControllerTest, Long (+16 more)
+Cohesion: 0.09
+Nodes (22): DownloadTokenRepository, GoalTemplateCategoriesDTO, ImportExportService, StudyGoalConfig, StudyGoalConfigData, @NonNull StudyGoalConfigData, ResultActions, StudyGoalConfig (+14 more)
 
 ### Community 194 - "Community 194"
 Cohesion: 0.20
@@ -1203,8 +1176,8 @@ Cohesion: 0.07
 Nodes (29): Attempt, JobDetail, PendingPush, ScheduleBuilder, ScheduledExecutorService, TestQrtzScheduler, SchedulerFactoryBean, SchedulingService (+21 more)
 
 ### Community 197 - "Community 197"
-Cohesion: 0.25
-Nodes (5): ObservationResyncServiceTest, Observation, ObservationResyncRequest, Participant, Test
+Cohesion: 0.13
+Nodes (13): ObservationResyncService, ObservationResyncServiceTest, List, Observation, ObservationResyncRequest, ObservationResyncRequestRepository, ObservationService, Optional (+5 more)
 
 ### Community 198 - "Community 198"
 Cohesion: 0.16
@@ -1215,32 +1188,28 @@ Cohesion: 0.24
 Nodes (7): StudyGroupRepository, JdbcTemplate, List, Long, MapSqlParameterSource, RowMapper, StudyGroup
 
 ### Community 200 - "Community 200"
-Cohesion: 0.30
-Nodes (7): HttpHeaders, ProxyService, HttpServletRequest, Resource, ResponseEntity, String, URI
+Cohesion: 0.47
+Nodes (3): SampleObject, Serializable, String
 
 ### Community 201 - "Community 201"
-Cohesion: 0.20
-Nodes (5): ActionParameter, Parameters, Object, Override, String
+Cohesion: 0.40
+Nodes (4): Benutzerrollen und Berechtigungen, Berechtigungsmatrix, Plattform-Rollen, Studien-Rollen
 
 ### Community 202 - "Community 202"
 Cohesion: 0.24
 Nodes (5): Measurement, Object, Override, String, Type
 
 ### Community 203 - "Community 203"
-Cohesion: 0.07
-Nodes (30): GoalRepositoryTest, InterventionRepositoryTest, ObservationGroupRepositoryTest, ParticipantRepositoryTest, StudyRepositoryTest, StudyServiceTest, BeforeEach, DisplayName (+22 more)
+Cohesion: 0.09
+Nodes (23): MilestoneRepositoryTest, ObservationGroupRepositoryTest, ObservationRepositoryTest, ParticipantRepositoryTest, StudyServiceTest, BeforeEach, DisplayName, Test (+15 more)
 
 ### Community 204 - "Community 204"
 Cohesion: 0.21
 Nodes (9): ObservationResyncRequestRepository, JdbcTemplate, List, Map, Object, ObservationResyncRequest, Optional, RowMapper (+1 more)
 
 ### Community 205 - "Community 205"
-Cohesion: 0.22
-Nodes (5): ParticipantApplicationAccess, Object, Override, String, ParticipantApplicationAccessDTO
-
-### Community 206 - "Community 206"
-Cohesion: 0.24
-Nodes (8): CalendarControllerTest, Instant, Observation, ObservationTimelineEvent, BeforeEach, DisplayName, Test, fromObservation()
+Cohesion: 0.50
+Nodes (3): ConfigurableApplicationContext, EnvInitializer, Override
 
 ### Community 207 - "Community 207"
 Cohesion: 0.26
@@ -1254,10 +1223,6 @@ Nodes (8): ObservationAttachmentRepository, List, MapSqlParameterSource, NamedPa
 Cohesion: 0.31
 Nodes (6): UserSyncingOAuth2AuthorizedClientService, OAuth2AuthorizedClient, Authentication, Override, String, T
 
-### Community 210 - "Community 210"
-Cohesion: 0.40
-Nodes (4): Map, Object, GoalTemplateProperties, String
-
 ### Community 211 - "Community 211"
 Cohesion: 0.25
 Nodes (6): BooleanValue, Boolean, Class, Override, String, Value
@@ -1267,8 +1232,8 @@ Cohesion: 0.26
 Nodes (7): SaltTokenRepository, Integer, JdbcTemplate, Long, Optional, RowMapper, SaltToken
 
 ### Community 213 - "Community 213"
-Cohesion: 0.29
-Nodes (5): AuditLogRepositoryTest, ActionState, BeforeEach, DisplayName, Test
+Cohesion: 0.43
+Nodes (4): AuditLogRepositoryTest, BeforeEach, DisplayName, Test
 
 ### Community 215 - "Community 215"
 Cohesion: 0.27
@@ -1279,8 +1244,8 @@ Cohesion: 0.33
 Nodes (6): DaoAuthenticationConfiguration, DaoAuthenticationProvider, Bean, PasswordEncoder, SuppressWarnings, TokenAuthUserDetailService
 
 ### Community 217 - "Community 217"
-Cohesion: 0.47
-Nodes (3): ValueNonNullException, T, Value
+Cohesion: 0.27
+Nodes (5): ValueException, ValueNonNullException, Value, T, Value
 
 ### Community 218 - "Community 218"
 Cohesion: 0.24
@@ -1302,13 +1267,9 @@ Nodes (3): HealthConnectActivityObservation, C, MoreObservationSDK
 Cohesion: 0.50
 Nodes (4): ObservationResyncRequest(), Instant, Integer, Long
 
-### Community 223 - "Community 223"
-Cohesion: 0.31
-Nodes (7): KibanaProperties, KibanaProxy, ProxyService, HttpServletRequest, RequestMapping, ResponseEntity, String
-
 ### Community 225 - "Community 225"
-Cohesion: 0.15
-Nodes (16): HttpClient, LimeSurveyRequestService, AnswerOptionData, ComponentFactoryProperties, Function, HttpRequest, Integer, JsonNode (+8 more)
+Cohesion: 0.16
+Nodes (13): HttpClient, AnswerOptionData, ComponentFactoryProperties, Function, HttpRequest, JsonNode, List, QuestionData (+5 more)
 
 ### Community 226 - "Community 226"
 Cohesion: 0.31
@@ -1327,7 +1288,7 @@ Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 230 - "Community 230"
-Cohesion: 0.29
+Cohesion: 0.27
 Nodes (9): firstname(), lastname(), ParticipantInfo(), toString(), ParticipantCreationData, Override, String, ParticipantData (+1 more)
 
 ### Community 231 - "Community 231"
@@ -1335,8 +1296,8 @@ Cohesion: 0.22
 Nodes (8): Action Components, Component Concept, Component Factory, Components, Development:, Executable Components, More SDK, Trigger Component
 
 ### Community 232 - "Community 232"
-Cohesion: 0.10
-Nodes (23): AutoCloseable, ElasticDataPoint, LoggingContext, MoreActionSDK, MoreActionSDKImpl, Override, Class, Integer (+15 more)
+Cohesion: 0.18
+Nodes (12): AutoCloseable, LoggingContext, Action, Integer, Intervention, Long, Participant, String (+4 more)
 
 ### Community 233 - "Community 233"
 Cohesion: 0.22
@@ -1355,7 +1316,7 @@ Cohesion: 0.39
 Nodes (4): UserRepositoryTest, BeforeEach, DisplayName, Test
 
 ### Community 237 - "Community 237"
-Cohesion: 0.19
+Cohesion: 0.18
 Nodes (5): Milestone, Instant, Integer, Long, String
 
 ### Community 238 - "Community 238"
@@ -1382,14 +1343,6 @@ Nodes (4): AfterEach, EatAmountOfGoalTemplateFactoryTest, BeforeEach, Test
 Cohesion: 0.32
 Nodes (4): GoalTemplate, C, MoreGoalTemplateSDK, Override
 
-### Community 245 - "Community 245"
-Cohesion: 0.36
-Nodes (5): Trigger, C, MoreTriggerSDK, Parameters, TriggerResult
-
-### Community 246 - "Community 246"
-Cohesion: 0.25
-Nodes (4): String, Type, Value, ValidationIssue
-
 ### Community 247 - "Community 247"
 Cohesion: 0.39
 Nodes (5): SessionConfiguration, RedisSerializer, Bean, Object, ObjectMapper
@@ -1399,7 +1352,7 @@ Cohesion: 0.29
 Nodes (7): MorePlatformSDKImpl, Integer, MoreSDK, Override, ParticipantFilter, Set, SimpleParticipant
 
 ### Community 249 - "Community 249"
-Cohesion: 0.21
+Cohesion: 0.19
 Nodes (9): StudyStateService, StudyStateServiceTest, Collection, Collection, Long, Status, Study, StudyRepository (+1 more)
 
 ### Community 250 - "Community 250"
@@ -1423,8 +1376,8 @@ Cohesion: 0.36
 Nodes (4): IntegrationRepository, IntegrationServiceTest, DisplayName, Test
 
 ### Community 255 - "Community 255"
-Cohesion: 0.16
-Nodes (11): getValue(), generateSignupUrl(), Override, String, GatewayProperties, Participant, ParticipantApplicationAccess, ParticipantDTO (+3 more)
+Cohesion: 0.14
+Nodes (12): generateSignupUrl(), ParticipantServiceTest, DisplayName, Test, GatewayProperties, Participant, ParticipantApplicationAccess, ParticipantApplicationAccessDTO (+4 more)
 
 ### Community 256 - "Community 256"
 Cohesion: 0.32
@@ -1439,8 +1392,8 @@ Cohesion: 0.32
 Nodes (7): BuildInfoDTO, ConfigurationApi, FrontendConfigurationDTO, FrontendConfigurationProperties, ConfigurationApiV1Controller, Override, ResponseEntity
 
 ### Community 259 - "Community 259"
-Cohesion: 0.19
-Nodes (7): empty(), LoginTokenServiceTest, String, SurveyStructure, Integer, DisplayName, Test
+Cohesion: 0.11
+Nodes (10): empty(), LoginTokenProperties, LoginTokenServiceTest, String, SurveyStructure, Integer, PostConstruct, String (+2 more)
 
 ### Community 260 - "Community 260"
 Cohesion: 0.36
@@ -1455,12 +1408,16 @@ Cohesion: 0.18
 Nodes (13): LimeSurveySidecarController, ApplicationContext, Audited, GetMapping, Integer, LimeSurveyObservationFactory, Long, MoreSDK (+5 more)
 
 ### Community 264 - "Community 264"
-Cohesion: 0.22
+Cohesion: 0.23
 Nodes (8): MilestoneService, List, Long, Milestone, MilestoneRepository, String, StudyStateService, Transactional
 
 ### Community 265 - "Community 265"
 Cohesion: 0.38
 Nodes (4): GroupCondition(), QueryObject, value(), String
+
+### Community 266 - "Community 266"
+Cohesion: 0.17
+Nodes (11): InterventionRepository, InterventionServiceTest, ApplicationContext, Collection, MoreSDK, Optional, StudyRepository, StudyStateChangedEvent (+3 more)
 
 ### Community 267 - "Community 267"
 Cohesion: 0.38
@@ -1478,13 +1435,9 @@ Nodes (3): SimpleParticipant, Instant, Integer
 Cohesion: 0.29
 Nodes (6): Configuring a local Auth-Server, Development Setup, Login Token Configuration, More Studymanager Backend, Planning & Documentation, Tagging & Deployment
 
-### Community 271 - "Community 271"
-Cohesion: 0.33
-Nodes (3): ScheduleEvent, Randomization, String
-
 ### Community 273 - "Community 273"
-Cohesion: 0.27
-Nodes (7): TriggerObservationAction, ActionParameter, ActionProperties, MoreActionSDK, Optional, Override, TriggerObservation
+Cohesion: 0.14
+Nodes (12): TriggerObservationAction, Map, Optional, T, ActionParameter, ActionProperties, MoreActionSDK, Optional (+4 more)
 
 ### Community 274 - "Community 274"
 Cohesion: 0.31
@@ -1493,10 +1446,6 @@ Nodes (6): PushServiceConfiguration, apiBasePath(), Bean, NotificationsApi, Push
 ### Community 275 - "Community 275"
 Cohesion: 0.33
 Nodes (4): Function, R, T, Transformers
-
-### Community 276 - "Community 276"
-Cohesion: 0.40
-Nodes (4): TriggerProperties, Map, Object, String
 
 ### Community 277 - "Community 277"
 Cohesion: 0.33
@@ -1510,25 +1459,17 @@ Nodes (5): Architecture, Conventions, Key References, Layering, Modules
 Cohesion: 0.33
 Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
 
-### Community 282 - "Community 282"
-Cohesion: 0.47
-Nodes (3): Parameters, Map, String
-
 ### Community 283 - "Community 283"
 Cohesion: 0.33
 Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
 
 ### Community 284 - "Community 284"
-Cohesion: 0.33
-Nodes (5): ScheduleEvent, StudyWideEvent, Override, Randomization, String
+Cohesion: 0.11
+Nodes (12): ScheduleEvent, Event, ScheduleEvent, StudyWideEvent, Override, Randomization, String, Randomization (+4 more)
 
 ### Community 285 - "Community 285"
 Cohesion: 0.38
 Nodes (4): ValidateActiveObservationDataCronTest, Scheduled, ObservationResyncRequest, Test
-
-### Community 286 - "Community 286"
-Cohesion: 0.27
-Nodes (6): ConfigurationValidationException, ConfigurationValidationReport, List, Override, String, ValidationIssue
 
 ### Community 287 - "Community 287"
 Cohesion: 0.39
@@ -1538,21 +1479,17 @@ Nodes (5): ElasticConfiguration, ElasticProperties, Bean, ElasticsearchClient, O
 Cohesion: 0.29
 Nodes (4): Boolean, Observation, ObservationDTO, ObservationTransformer
 
-### Community 289 - "Community 289"
-Cohesion: 0.23
-Nodes (9): ObservationAttachmentDTO, ObservationsApi, IntegrationService, MultipartFile, ObservationAttachment, ObservationAttachmentService, ObservationService, Resource (+1 more)
-
 ### Community 290 - "Community 290"
 Cohesion: 0.40
 Nodes (5): Collection, EndpointToken, EndpointTokenDTO, List, EndpointTokenTransformer
 
 ### Community 291 - "Community 291"
-Cohesion: 0.19
-Nodes (11): Collection, ElasticsearchClient, FieldValue, Hit, Instant, JsonNode, OutputStream, ParticipationData (+3 more)
+Cohesion: 0.13
+Nodes (17): ElasticDataPoint, RuntimeField, Collection, ElasticsearchClient, FieldValue, Hit, Instant, JsonNode (+9 more)
 
 ### Community 292 - "Community 292"
-Cohesion: 0.15
-Nodes (8): E, ApiCallException, String, Exception, Function, R, Supplier, T
+Cohesion: 0.33
+Nodes (5): E, Function, R, Supplier, T
 
 ### Community 293 - "Community 293"
 Cohesion: 0.47
@@ -1573,10 +1510,6 @@ Nodes (7): LimeSurveyRequestServiceTest, QuestionGroupData, ComponentFactoryProp
 ### Community 297 - "Community 297"
 Cohesion: 0.53
 Nodes (4): Bean, JPAConfiguration, DataSource, Profile
-
-### Community 298 - "Community 298"
-Cohesion: 0.22
-Nodes (8): ConfigurationValidationException, ConfigurationValidationReport, List, String, ValidationIssue, ValidationReportDTO, ValidationReportTransformer, ValidationReportItemDTO
 
 ### Community 299 - "Community 299"
 Cohesion: 0.53
@@ -1610,10 +1543,6 @@ Nodes (4): fromValue(), getValue(), ObservationDataState(), String
 Cohesion: 0.50
 Nodes (3): GarminEpochStepsObservation, C, MoreObservationSDK
 
-### Community 307 - "Community 307"
-Cohesion: 0.40
-Nodes (3): BadStudyStateException, String, Throwable
-
 ### Community 309 - "Community 309"
 Cohesion: 0.50
 Nodes (3): GarminObservation, C, MoreObservationSDK
@@ -1643,12 +1572,8 @@ Cohesion: 0.50
 Nodes (3): GpsMobileObservation, C, MoreObservationSDK
 
 ### Community 317 - "Community 317"
-Cohesion: 0.22
-Nodes (5): TriggerResult, MoreSDKTest, ActionParameter, Set, Test
-
-### Community 318 - "Community 318"
-Cohesion: 0.42
-Nodes (3): Map, Object, Optional
+Cohesion: 0.43
+Nodes (3): TriggerResult, ActionParameter, Set
 
 ### Community 319 - "Community 319"
 Cohesion: 0.22
@@ -1695,16 +1620,12 @@ Cohesion: 0.67
 Nodes (3): StudyRoleDetails(), Instant, StudyRole
 
 ### Community 374 - "Community 374"
-Cohesion: 0.43
+Cohesion: 0.48
 Nodes (3): Milestone, MilestoneDTO, MilestoneTransformer
 
 ### Community 379 - "Community 379"
 Cohesion: 0.32
 Nodes (3): TriggerObservation, Integer, String
-
-### Community 392 - "Community 392"
-Cohesion: 0.38
-Nodes (4): MilestoneRepositoryTest, BeforeEach, DisplayName, Test
 
 ### Community 395 - "Community 395"
 Cohesion: 0.29
@@ -1727,72 +1648,52 @@ Cohesion: 0.40
 Nodes (4): OccurredObservationProperties, Map, Object, String
 
 ### Community 408 - "Community 408"
-Cohesion: 0.33
-Nodes (3): RelativeDate, JsonIgnore, LocalTime
-
-### Community 409 - "Community 409"
-Cohesion: 0.43
-Nodes (4): Instant, List, Range, RandomSchedulerUtils
+Cohesion: 0.22
+Nodes (5): RelativeDate, JsonIgnore, LocalTime, String, RandomSchedulerReflection
 
 ### Community 410 - "Community 410"
 Cohesion: 0.47
 Nodes (3): ParticipantMilestone, ParticipantMilestoneDTO, ParticipantMilestoneTransformer
 
-### Community 411 - "Community 411"
-Cohesion: 0.25
-Nodes (6): Event, Instant, Range, RelativeEvent, ScheduleEvent, RandomSchedulerReflection
-
 ### Community 412 - "Community 412"
 Cohesion: 0.36
 Nodes (4): AbstractBooleanGoalTemplateFactory, MeasurementSet, Override, String
-
-### Community 413 - "Community 413"
-Cohesion: 0.33
-Nodes (5): InterventionService, ObservationService, ParticipantMilestoneService, ParticipantService, StudyService
-
-### Community 414 - "Community 414"
-Cohesion: 0.48
-Nodes (5): ExceptionHandler, ExceptionControllerAdvice, ConfigurationValidationException, ResponseEntity, ValidationReportDTO
 
 ### Community 415 - "Community 415"
 Cohesion: 0.40
 Nodes (4): Map, Object, GoalTemplateProperties, String
 
 ### Community 416 - "Community 416"
-Cohesion: 0.53
-Nodes (5): Instant, Intervention, InterventionTimelineEvent, Trigger, fromInterventionAndTrigger()
-
-### Community 417 - "Community 417"
-Cohesion: 0.40
-Nodes (3): SchedulingException, String, Throwable
+Cohesion: 0.23
+Nodes (9): InterventionRepositoryTest, Instant, Intervention, InterventionTimelineEvent, Trigger, BeforeEach, DisplayName, Test (+1 more)
 
 ### Community 418 - "Community 418"
 Cohesion: 0.60
 Nodes (3): ApplicationsAPIV1ControllerTest, DisplayName, Test
 
-### Community 424 - "Community 424"
-Cohesion: 0.50
-Nodes (3): C, LimeSurveyRequestService, MoreObservationSDK
+### Community 421 - "Community 421"
+Cohesion: 0.18
+Nodes (10): MoreActionSDKImpl, MoreActionSDK, String, Class, Integer, MoreSDK, Optional, Override (+2 more)
 
 ## Knowledge Gaps
-- **545 isolated node(s):** `init-multiple-dbs.sh script`, `Integer`, `String`, `String`, `SuppressWarnings` (+540 more)
+- **550 isolated node(s):** `Integer`, `String`, `String`, `SuppressWarnings`, `String` (+545 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **39 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **30 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `empty()` connect `Community 259` to `Community 128`, `Community 131`, `Community 5`, `Community 15`, `Community 21`, `Community 22`, `Community 285`, `Community 36`, `Community 39`, `Community 40`, `Community 169`, `Community 47`, `Community 50`, `Community 51`, `Community 52`, `Community 308`, `Community 317`, `Community 318`, `Community 65`, `Community 197`, `Community 74`, `Community 77`, `Community 78`, `Community 80`, `Community 86`, `Community 92`, `Community 95`, `Community 109`, `Community 123`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
-- **Why does `MediaType` connect `Community 167` to `Community 258`, `Community 4`, `Community 140`, `Community 14`, `Community 25`, `Community 30`, `Community 289`, `Community 418`, `Community 293`, `Community 40`, `Community 43`, `Community 46`, `Community 50`, `Community 52`, `Community 187`, `Community 194`, `Community 206`, `Community 78`, `Community 79`, `Community 86`, `Community 90`, `Community 94`, `Community 101`, `Community 102`, `Community 114`, `Community 115`, `Community 123`?**
-  _High betweenness centrality (0.051) - this node is a cross-community bridge._
-- **Why does `Measurement` connect `Community 17` to `Community 97`, `Community 2`, `Community 3`, `Community 135`, `Community 136`, `Community 74`, `Community 238`, `Community 175`, `Community 143`, `Community 18`, `Community 20`, `Community 120`, `Community 59`, `Community 412`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
-- **Are the 58 inferred relationships involving `empty()` (e.g. with `.factory()` and `.getParticipantForToken()`) actually correct?**
-  _`empty()` has 58 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `init-multiple-dbs.sh script`, `Integer`, `String` to the rest of the system?**
-  _545 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Why does `empty()` connect `Community 259` to `Community 128`, `Community 131`, `Community 5`, `Community 15`, `Community 21`, `Community 22`, `Community 285`, `Community 36`, `Community 39`, `Community 40`, `Community 169`, `Community 47`, `Community 48`, `Community 178`, `Community 51`, `Community 52`, `Community 50`, `Community 65`, `Community 197`, `Community 74`, `Community 77`, `Community 78`, `Community 80`, `Community 86`, `Community 92`, `Community 95`, `Community 109`, `Community 123`?**
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **Why does `MediaType` connect `Community 167` to `Community 258`, `Community 4`, `Community 7`, `Community 140`, `Community 14`, `Community 25`, `Community 30`, `Community 418`, `Community 293`, `Community 40`, `Community 43`, `Community 46`, `Community 50`, `Community 52`, `Community 194`, `Community 70`, `Community 78`, `Community 79`, `Community 85`, `Community 86`, `Community 90`, `Community 94`, `Community 101`, `Community 102`, `Community 110`, `Community 115`, `Community 123`?**
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+- **Why does `Observation` connect `Community 45` to `Community 288`, `Community 203`, `Community 141`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Are the 63 inferred relationships involving `empty()` (e.g. with `.factory()` and `.parseBoolean()`) actually correct?**
+  _`empty()` has 63 INFERRED edges - model-reasoned connections that need verification._
+- **What connects `Integer`, `String`, `String` to the rest of the system?**
+  _550 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.13763440860215054 - nodes in this community are weakly interconnected._
-- **Should `Community 7` be split into smaller, more focused modules?**
-  _Cohesion score 0.11428571428571428 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.051251956181533644 - nodes in this community are weakly interconnected._
+- **Should `Community 4` be split into smaller, more focused modules?**
+  _Cohesion score 0.05839727195225917 - nodes in this community are weakly interconnected._

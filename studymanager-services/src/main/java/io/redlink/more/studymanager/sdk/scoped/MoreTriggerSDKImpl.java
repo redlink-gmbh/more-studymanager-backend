@@ -8,6 +8,7 @@
  */
 package io.redlink.more.studymanager.sdk.scoped;
 
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.io.SimpleParticipant;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.sdk.MoreTriggerSDK;
@@ -18,7 +19,7 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -73,7 +74,7 @@ public class MoreTriggerSDKImpl extends MorePlatformSDKImpl implements MoreTrigg
         sdk.removeSchedule(getIssuer(), id);
     }
 
-    public Set<Integer> participantIdsMatchingQuery(String query, Map<String, String> runtimeFields, TimeRange timerange) {
+    public Set<Integer> participantIdsMatchingQuery(String query, List<RuntimeFieldSpec> runtimeFields, TimeRange timerange) {
         return sdk.listActiveParticipantsByQuery(studyId, studyGroupId, query, runtimeFields, timerange);
     }
 

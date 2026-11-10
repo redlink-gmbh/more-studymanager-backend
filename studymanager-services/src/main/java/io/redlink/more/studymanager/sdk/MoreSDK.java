@@ -9,6 +9,7 @@
 package io.redlink.more.studymanager.sdk;
 
 import io.redlink.more.studymanager.core.datavalidity.ObservationDataSummary;
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.io.SimpleParticipant;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.measurement.MeasurementSet;
@@ -179,7 +180,7 @@ public class MoreSDK {
                 .map(ParticipantMilestone::getDateTime);
     }
 
-    public Set<Integer> listActiveParticipantsByQuery(long studyId, Integer studyGroupId, String query, Map<String, String> runtimeFields, TimeRange timerange) {
+    public Set<Integer> listActiveParticipantsByQuery(long studyId, Integer studyGroupId, String query, List<RuntimeFieldSpec> runtimeFields, TimeRange timerange) {
         Set<Integer> participants = listParticipants(studyId, studyGroupId, Set.of(Participant.Status.ACTIVE))
                 .stream().map(SimpleParticipant::getId).collect(Collectors.toSet());
         Set<Integer> allThatMatchQuery = new HashSet<>(elasticService.participantsThatMapQuery(studyId, studyGroupId, query, runtimeFields, timerange));

@@ -8,6 +8,9 @@
  */
 package io.redlink.more.studymanager.component.trigger.datacheck;
 
+import io.redlink.more.studymanager.core.io.RuntimeFieldKind;
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
+
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
@@ -15,10 +18,13 @@ import java.util.Set;
 public class DataPointQuery {
 
     public static final String TYPE_STRING = "string";
-    public static final String TYPE_NUMBER = "number";
+    public static final String TYPE_LONG = "long";
+    public static final String TYPE_DOUBLE = "double";
     public static final String TYPE_BOOLEAN = "boolean";
 
     static final Set<String> EQUALITY_OPERATORS = Set.of("=", "==", "!=");
+    // equality on doubles is unreliable, so double only allows ranges
+    static final Set<String> RANGE_OPERATORS = Set.of("<", ">", "<=", ">=");
     static final Set<String> COMPARISON_OPERATORS = Set.of("=", "==", "!=", "<", ">", "<=", ">=");
 
     private static final String QUERY_STRING_RESERVED = "+-=&|><!(){}[]^\"~*?:\\/ ";
@@ -29,7 +35,7 @@ public class DataPointQuery {
     private String operator;
     private Object propertyValue;
     /**
-     * How the value is compared: string, number or boolean. {@code null} (triggers created before this property
+     * How the value is compared: string, long, double or boolean. {@code null} (triggers created before this property
      * existed) keeps the original behaviour.
      */
     private String queryDataType;
@@ -69,11 +75,21 @@ public class DataPointQuery {
     /**
      * The runtime field (name &rarr; source field) this condition needs, if any.
      */
-    public Optional<RuntimeField> getRuntimeField() {
-        if (TYPE_NUMBER.equals(queryDataType)) {
-            return Optional.of(new RuntimeField(numberFieldName(), dataFieldName()));
+    public Optional<RuntimeFieldSpec> getRuntimeField() {
+        return runtimeFieldKind().map(kind -> new RuntimeFieldSpec(
+                kind.name().toLowerCase() + "_" + dataFieldName(), dataFieldName(), kind));
+    }
+
+    private Optional<RuntimeFieldKind> runtimeFieldKind() {
+        if (queryDataType == null) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return switch (queryDataType) {
+            case TYPE_LONG -> Optional.of(RuntimeFieldKind.LONG);
+            case TYPE_DOUBLE -> Optional.of(RuntimeFieldKind.DOUBLE);
+            case TYPE_BOOLEAN -> Optional.of(RuntimeFieldKind.BOOLEAN);
+            default -> Optional.empty();
+        };
     }
 
     /**
@@ -90,15 +106,21 @@ public class DataPointQuery {
                 if (!EQUALITY_OPERATORS.contains(operator)) {
                     yield Optional.of("Operator '" + operator + "' is not allowed for data type boolean");
                 }
-                String v = String.valueOf(propertyValue).trim();
-                yield "true".equals(v) || "false".equals(v) ? Optional.empty()
+                yield parseBoolean().isPresent() ? Optional.empty()
                         : Optional.of("Value '" + propertyValue + "' is not a boolean (true/false)");
             }
-            case TYPE_NUMBER -> {
+            case TYPE_LONG -> {
                 if (!COMPARISON_OPERATORS.contains(operator)) {
-                    yield Optional.of("Operator '" + operator + "' is not allowed for data type number");
+                    yield Optional.of("Operator '" + operator + "' is not allowed for data type long");
                 }
-                yield parseNumber().isPresent() ? Optional.empty()
+                yield parseLong().isPresent() ? Optional.empty()
+                        : Optional.of("Value '" + propertyValue + "' is not a whole number");
+            }
+            case TYPE_DOUBLE -> {
+                if (!RANGE_OPERATORS.contains(operator)) {
+                    yield Optional.of("Operator '" + operator + "' is not allowed for data type double");
+                }
+                yield parseDouble().isPresent() ? Optional.empty()
                         : Optional.of("Value '" + propertyValue + "' is not a valid number");
             }
             default -> Optional.of("Unknown data type '" + queryDataType + "'");
@@ -106,8 +128,9 @@ public class DataPointQuery {
     }
 
     private String getDataSelector() {
-        if (TYPE_NUMBER.equals(queryDataType)) {
-            return getNumberSelector();
+        Optional<RuntimeFieldSpec> runtimeField = getRuntimeField();
+        if (runtimeField.isPresent()) {
+            return getRuntimeFieldSelector(runtimeField.get());
         }
         String field = escape(dataFieldName());
         if ("=".equals(operator) || "==".equals(operator)) {
@@ -121,14 +144,18 @@ public class DataPointQuery {
         }
     }
 
-    private String getNumberSelector() {
-        String field = escape(numberFieldName());
-        String value = "\"" + parseNumber()
-                .orElseThrow(() -> new IllegalArgumentException("Value '" + propertyValue + "' is not a valid number"))
-                .toPlainString() + "\"";
+    private String getRuntimeFieldSelector(RuntimeFieldSpec runtimeField) {
+        String field = escape(runtimeField.target());
+        Optional<String> parsed = switch (runtimeField.kind()) {
+            case LONG -> parseLong().map(String::valueOf);
+            case DOUBLE -> parseDouble().map(BigDecimal::toPlainString);
+            case BOOLEAN -> parseBoolean().map(String::valueOf);
+        };
+        String value = "\"" + parsed.orElseThrow(() -> new IllegalArgumentException(
+                "Value '" + propertyValue + "' is not a valid " + queryDataType)) + "\"";
         return switch (operator) {
             case "=", "==" -> field + ":" + value;
-            // _exists_ guard: documents without a parsable value (e.g. empty LimeSurvey responses) must not match
+            // _exists_ guard: documents without a readable value (e.g. empty LimeSurvey responses) must not match
             case "!=" -> "(_exists_:" + field + " AND NOT " + field + ":" + value + ")";
             case "<" -> field + ":{* TO " + value + "}";
             case "<=" -> field + ":[* TO " + value + "]";
@@ -138,7 +165,7 @@ public class DataPointQuery {
         };
     }
 
-    private Optional<BigDecimal> parseNumber() {
+    private Optional<BigDecimal> parseDouble() {
         if (propertyValue == null) {
             return Optional.empty();
         }
@@ -150,12 +177,24 @@ public class DataPointQuery {
         }
     }
 
-    private String dataFieldName() {
-        return "data_" + observationProperty;
+    private Optional<Long> parseLong() {
+        if (propertyValue == null) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(Long.parseLong(String.valueOf(propertyValue).trim()));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
     }
 
-    private String numberFieldName() {
-        return "num_data_" + observationProperty;
+    private Optional<Boolean> parseBoolean() {
+        String v = String.valueOf(propertyValue).trim();
+        return "true".equals(v) || "false".equals(v) ? Optional.of(Boolean.valueOf(v)) : Optional.empty();
+    }
+
+    private String dataFieldName() {
+        return "data_" + observationProperty;
     }
 
     static String escape(String s) {
@@ -176,8 +215,5 @@ public class DataPointQuery {
                     p.trim();
         }
         return this.propertyValue;
-    }
-
-    public record RuntimeField(String name, String sourceField) {
     }
 }

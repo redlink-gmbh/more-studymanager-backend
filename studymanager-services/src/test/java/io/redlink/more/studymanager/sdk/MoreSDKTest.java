@@ -160,7 +160,7 @@ class MoreSDKTest {
 
         assertThat(
                 moreSDK.listActiveParticipantsByQuery(
-                        1L, null, "*", Map.of(), mock(Timeframe.class))
+                        1L, null, "*", List.of(), mock(Timeframe.class))
         ).containsExactlyInAnyOrder(1);
     }
 
