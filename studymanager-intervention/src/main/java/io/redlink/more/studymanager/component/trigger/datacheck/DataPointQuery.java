@@ -99,7 +99,7 @@ public class DataPointQuery {
             return Optional.empty();
         }
         return switch (queryDataType) {
-            case TYPE_STRING -> EQUALITY_OPERATORS.contains(operator) ? Optional.empty()
+            case TYPE_STRING -> COMPARISON_OPERATORS.contains(operator) ? Optional.empty()
                     : Optional.of("Operator '" + operator + "' is not allowed for data type string");
             case TYPE_BOOLEAN -> {
                 if (!EQUALITY_OPERATORS.contains(operator)) {
@@ -131,28 +131,39 @@ public class DataPointQuery {
         if (runtimeField.isPresent()) {
             return getRuntimeFieldSelector(runtimeField.get());
         }
+        if (TYPE_STRING.equals(queryDataType)) {
+            // Strings must match 1:1. data_<prop> is an analyzed text field: the analyzer lowercases, splits into
+            // words and drops punctuation, so e.g. "***" is not indexed at all and "= ***" never matched (the "!="
+            // branch fired instead). Unquoted values were also parsed as query syntax (* ? wildcards, OR, brackets).
+            // Hence: compare against the unanalyzed .keyword sub-field with an always quoted and escaped value.
+            return comparison(escape(dataFieldName() + ".keyword"), quote(String.valueOf(propertyValue)));
+        }
+        // legacy conditions (no queryDataType) keep the analyzed field; values are quoted/escaped only to prevent
+        // query injection (e.g. 'a") OR (*'), normal words and phrases match as before
         String field = escape(dataFieldName());
         if ("=".equals(operator) || "==".equals(operator)) {
-            return field + ":" + getSanitizedPropertyValue();
+            return field + ":" + quote(String.valueOf(propertyValue).trim());
         } else if ("!=".equals(operator)) {
-            return "NOT " + field + ":" + getSanitizedPropertyValue();
+            return "NOT " + field + ":" + quote(String.valueOf(propertyValue).trim());
         } else if ("<".equals(operator) || ">".equals(operator) || "<=".equals(operator) || ">=".equals(operator)) {
-            return field + ":" + operator + propertyValue;
+            return field + ":" + operator + escape(String.valueOf(propertyValue));
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
     private String getRuntimeFieldSelector(RuntimeFieldSpec runtimeField) {
-        String field = escape(runtimeField.target());
         Optional<String> parsed = switch (runtimeField.kind()) {
             case LONG -> parseLong().map(String::valueOf);
             // may yield scientific notation (e.g. 1.0E7), ES parses double values with Double.parseDouble, so this is fine
             case DOUBLE -> parseDouble().map(String::valueOf);
             case BOOLEAN -> parseBoolean().map(String::valueOf);
         };
-        String value = "\"" + parsed.orElseThrow(() -> new IllegalArgumentException(
-                "Value '" + propertyValue + "' is not a valid " + queryDataType)) + "\"";
+        return comparison(escape(runtimeField.target()), quote(parsed.orElseThrow(() -> new IllegalArgumentException(
+                "Value '" + propertyValue + "' is not a valid " + queryDataType))));
+    }
+
+    private String comparison(String field, String value) {
         return switch (operator) {
             case "=", "==" -> field + ":" + value;
             // _exists_ guard: documents without a readable value (e.g. empty LimeSurvey responses) must not match
@@ -208,12 +219,11 @@ public class DataPointQuery {
         return sb.toString();
     }
 
-    private Object getSanitizedPropertyValue() {
-        if (this.propertyValue instanceof String p) {
-            return p.contains(" ") && !p.contains("\"") ?
-                    "\"" + p.trim() + "\"" :
-                    p.trim();
-        }
-        return this.propertyValue;
+    /**
+     * Phrase literal for query_string: inside quotes reserved characters (* ? : ( ) AND OR ...) are literal,
+     * only backslash and quote must be escaped (backslash first). Prevents query injection via the value.
+     */
+    static String quote(String s) {
+        return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
     }
 }

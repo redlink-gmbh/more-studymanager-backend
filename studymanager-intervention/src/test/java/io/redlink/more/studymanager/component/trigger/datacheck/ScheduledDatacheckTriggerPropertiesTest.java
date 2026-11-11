@@ -38,7 +38,7 @@ class ScheduledDatacheckTriggerPropertiesTest {
         );
         ScheduledDatacheckTriggerProperties properties = new ScheduledDatacheckTriggerProperties(tp);
 
-        assertTrue(properties.getElasticQueryString().get().contains("observation_id.keyword:17 AND data_y:23"));
+        assertTrue(properties.getElasticQueryString().get().contains("observation_id.keyword:17 AND data_y:\"23\""));
         // legacy conditions without queryDataType keep the original query and need no runtime fields
         assertTrue(properties.getElasticQueryString().get().contains("data_x:>75"));
         assertTrue(properties.getRuntimeFields().isEmpty());
@@ -89,15 +89,45 @@ class ScheduledDatacheckTriggerPropertiesTest {
     }
 
     @Test
-    void stringConditionsStayOnDataField() {
+    void stringConditionsMatchExactlyOnKeywordField() {
         ScheduledDatacheckTriggerProperties properties = properties(
                 condition("seed", "!=", "abc", "string"),
-                condition("seed", "=", "xyz", "string"));
+                condition("seed", "=", "xyz", "string"),
+                condition("grade", "<=", "c", "string"),
+                condition("stars", "=", "***", "string"),
+                condition("strength", "=", "very strong", "string"),
+                condition("wild", "=", "a*b?", "string"));
 
         String query = properties.getElasticQueryString().get();
-        assertTrue(query.contains("NOT data_seed:abc"), query);
-        assertTrue(query.contains("data_seed:xyz"), query);
+        assertTrue(query.contains("(_exists_:data_seed.keyword AND NOT data_seed.keyword:\"abc\")"), query);
+        assertTrue(query.contains("data_seed.keyword:\"xyz\""), query);
+        assertTrue(query.contains("data_grade.keyword:[* TO \"c\"]"), query);
+        assertTrue(query.contains("data_stars.keyword:\"***\""), query);
+        assertTrue(query.contains("data_strength.keyword:\"very strong\""), query);
+        assertTrue(query.contains("data_wild.keyword:\"a*b?\""), query);
         assertTrue(properties.getRuntimeFields().isEmpty());
+    }
+
+    @Test
+    void valuesCannotBreakOutOfQuotedLiteral() {
+        ScheduledDatacheckTriggerProperties properties = properties(
+                condition("s", "=", "a\") OR (*", "string"),
+                condition("s", "=", "\\\" OR *", "string"),
+                condition("l", "=", "a\") OR (*", null),
+                condition("l", ">", "5) OR (*", null));
+
+        String query = properties.getElasticQueryString().get();
+        assertTrue(query.contains("data_s.keyword:\"a\\\") OR (*\""), query);
+        assertTrue(query.contains("data_s.keyword:\"\\\\\\\" OR *\""), query);
+        assertTrue(query.contains("data_l:\"a\\\") OR (*\""), query);
+        assertTrue(query.contains("data_l:>5\\)\\ OR\\ \\(\\*"), query);
+    }
+
+    @Test
+    void quoteEscapesBackslashBeforeQuote() {
+        assertEquals("\"***\"", DataPointQuery.quote("***"));
+        assertEquals("\"say \\\"hi\\\"\"", DataPointQuery.quote("say \"hi\""));
+        assertEquals("\"a\\\\\\\"b\"", DataPointQuery.quote("a\\\"b"));
     }
 
     @Test
@@ -123,7 +153,7 @@ class ScheduledDatacheckTriggerPropertiesTest {
 
         String query = properties.getElasticQueryString().get();
         assertTrue(query.contains("long_data_PRAQt1\\[PRAQ1t1\\]:{\"3\" TO *}"), query);
-        assertTrue(query.contains("data_PRAQt1\\[PRAQ2t1\\]:A1"), query);
+        assertTrue(query.contains("data_PRAQt1\\[PRAQ2t1\\].keyword:\"A1\""), query);
         assertEquals(List.of(new RuntimeFieldSpec("long_data_PRAQt1[PRAQ1t1]", "data_PRAQt1[PRAQ1t1]", RuntimeFieldKind.LONG)),
                 properties.getRuntimeFields());
     }
@@ -140,13 +170,13 @@ class ScheduledDatacheckTriggerPropertiesTest {
         assertEquals(ValidationIssue.NONE, validate(prop, condition("x", "<", 2, "double")));
         assertEquals(ValidationIssue.NONE, validate(prop, condition("submitted", "=", true, "boolean")));
         assertEquals(ValidationIssue.NONE, validate(prop, condition("seed", "!=", "abc", "string")));
+        assertEquals(ValidationIssue.NONE, validate(prop, condition("x", ">", "a", "string")));
 
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", ">=", "13.5", "long")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", ">=", "", "long")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", "=", "13.5", "double")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", "!=", "13.5", "double")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", ">=", "13,5", "double")).getType());
-        assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", ">", "a", "string")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", ">", "true", "boolean")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", "=", "yes", "boolean")).getType());
         assertEquals(ValidationIssue.Type.ERROR, validate(prop, condition("x", ">=", "13", "number")).getType());
