@@ -11,7 +11,6 @@ package io.redlink.more.studymanager.component.trigger.datacheck;
 import io.redlink.more.studymanager.core.io.RuntimeFieldKind;
 import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
@@ -148,7 +147,8 @@ public class DataPointQuery {
         String field = escape(runtimeField.target());
         Optional<String> parsed = switch (runtimeField.kind()) {
             case LONG -> parseLong().map(String::valueOf);
-            case DOUBLE -> parseDouble().map(BigDecimal::toPlainString);
+            // may yield scientific notation (e.g. 1.0E7), ES parses double values with Double.parseDouble, so this is fine
+            case DOUBLE -> parseDouble().map(String::valueOf);
             case BOOLEAN -> parseBoolean().map(String::valueOf);
         };
         String value = "\"" + parsed.orElseThrow(() -> new IllegalArgumentException(
@@ -165,13 +165,13 @@ public class DataPointQuery {
         };
     }
 
-    private Optional<BigDecimal> parseDouble() {
+    private Optional<Double> parseDouble() {
         if (propertyValue == null) {
             return Optional.empty();
         }
         try {
             double d = Double.parseDouble(String.valueOf(propertyValue).trim());
-            return Double.isFinite(d) ? Optional.of(BigDecimal.valueOf(d)) : Optional.empty();
+            return Double.isFinite(d) ? Optional.of(d) : Optional.empty();
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
