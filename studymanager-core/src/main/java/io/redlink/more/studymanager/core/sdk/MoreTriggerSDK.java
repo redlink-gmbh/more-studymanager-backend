@@ -8,10 +8,12 @@
  */
 package io.redlink.more.studymanager.core.sdk;
 
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.sdk.schedule.Schedule;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,7 +22,10 @@ public interface MoreTriggerSDK extends MorePlatformSDK {
 
     void removeSchedule(String id);
 
-    Set<Integer> participantIdsMatchingQuery(String query, TimeRange timeRange);
+    /**
+     * @param runtimeFields typed runtime fields used by the query; each source value is read as its kind at query time
+     */
+    Set<Integer> participantIdsMatchingQuery(String query, List<RuntimeFieldSpec> runtimeFields, TimeRange timeRange);
 
     /**
      * The date-time at which the given participant reached this trigger's configured milestone,

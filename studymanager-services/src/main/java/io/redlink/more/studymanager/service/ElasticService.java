@@ -14,6 +14,8 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch._types.mapping.RuntimeField;
+import co.elastic.clients.elasticsearch._types.mapping.RuntimeFieldType;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermsQueryField;
@@ -27,6 +29,7 @@ import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Iterables;
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.data.ElasticDataPoint;
@@ -67,11 +70,80 @@ public class ElasticService {
         this.client = client;
     }
 
-    public List<Integer> participantsThatMapQuery(Long studyId, Integer studyGroupId, String query, TimeRange timerange) {
+    /**
+     * Reads the raw value of a data field into {@code v}: the {@code .keyword} sub-field when the value was stored as
+     * string (e.g. LimeSurvey), otherwise {@code _source}. The keyword check must come first: doc values of a text field
+     * are not accessible. Non-string values are read from {@code _source} because the dynamic mapping is fixed by the
+     * first value: after a {@code 20} the field is {@code long} and the doc value of a later {@code 5.5} is {@code 5}.
+     */
+    private static final String READ_RUNTIME_FIELD_VALUE = """
+            String f = params.field;
+            String k = f + '.keyword';
+            def v = null;
+            if (doc.containsKey(k)) {
+              if (doc[k].size() > 0) { v = doc[k].value; }
+            } else {
+              v = params._source[f];
+            }
+            """;
+
+    /**
+     * Emits the value as double. Unparsable or missing values emit nothing.
+     */
+    static final String DOUBLE_RUNTIME_FIELD_SCRIPT = READ_RUNTIME_FIELD_VALUE + """
+            if (v instanceof String) {
+              try {
+                double d = Double.parseDouble(v.trim());
+                if (!Double.isNaN(d) && !Double.isInfinite(d)) { emit(d); }
+              } catch (NumberFormatException e) { }
+            } else if (v instanceof Number) {
+              emit(((Number) v).doubleValue());
+            }
+            """;
+
+    /**
+     * Emits the value as long, only if it is a whole number: {@code "23.0000000000"} (LimeSurvey) is 23, {@code 5.5}
+     * emits nothing instead of being truncated.
+     */
+    static final String LONG_RUNTIME_FIELD_SCRIPT = READ_RUNTIME_FIELD_VALUE + """
+            if (v instanceof Long || v instanceof Integer) {
+              emit(((Number) v).longValue());
+              return;
+            }
+            double d = Double.NaN;
+            if (v instanceof String) {
+              try { d = Double.parseDouble(v.trim()); } catch (NumberFormatException e) { }
+            } else if (v instanceof Number) {
+              d = ((Number) v).doubleValue();
+            }
+            if (!Double.isInfinite(d) && d == Math.rint(d)) { emit((long) d); }
+            """;
+
+    /**
+     * Emits the value as boolean: booleans as they are, numbers as {@code != 0}, the strings
+     * {@code true/1/yes/on} and {@code false/0/no/off} (case-insensitive). Anything else emits nothing.
+     */
+    static final String BOOLEAN_RUNTIME_FIELD_SCRIPT = READ_RUNTIME_FIELD_VALUE + """
+            if (v instanceof Boolean) {
+              emit((boolean) v);
+            } else if (v instanceof Number) {
+              emit(((Number) v).doubleValue() != 0.0);
+            } else if (v instanceof String) {
+              String s = v.trim().toLowerCase();
+              if (s == 'true' || s == '1' || s == 'yes' || s == 'on') {
+                emit(true);
+              } else if (s == 'false' || s == '0' || s == 'no' || s == 'off') {
+                emit(false);
+              }
+            }
+            """;
+
+    public List<Integer> participantsThatMapQuery(Long studyId, Integer studyGroupId, String query, List<RuntimeFieldSpec> runtimeFields, TimeRange timerange) {
         SearchRequest.Builder builder = new SearchRequest.Builder();
         builder
                 .index(getStudyIdString(studyId))
                 .size(0)
+                .runtimeMappings(getRuntimeFields(runtimeFields))
                 .query(q -> q.
                         bool(b -> b.
                                 must(m -> m.
@@ -101,6 +173,29 @@ public class ElasticService {
             LOG.error("Elastic Query failed", e);
             return List.of();
         }
+    }
+
+    static Map<String, RuntimeField> getRuntimeFields(List<RuntimeFieldSpec> runtimeFields) {
+        if (runtimeFields == null) {
+            return Map.of();
+        }
+        return runtimeFields.stream().collect(Collectors.toMap(
+                RuntimeFieldSpec::target,
+                spec -> RuntimeField.of(r -> r
+                        .type(switch (spec.kind()) {
+                            case BOOLEAN -> RuntimeFieldType.Boolean;
+                            case LONG -> RuntimeFieldType.Long;
+                            case DOUBLE -> RuntimeFieldType.Double;
+                        })
+                        .script(s -> s.inline(i -> i
+                                .source(switch (spec.kind()) {
+                                    case BOOLEAN -> BOOLEAN_RUNTIME_FIELD_SCRIPT;
+                                    case LONG -> LONG_RUNTIME_FIELD_SCRIPT;
+                                    case DOUBLE -> DOUBLE_RUNTIME_FIELD_SCRIPT;
+                                })
+                                .params("field", JsonData.of(spec.source()))))),
+                (a, b) -> a
+        ));
     }
 
     static List<Query> getFilters(Long studyId, Integer studyGroupId, TimeRange timerange) {

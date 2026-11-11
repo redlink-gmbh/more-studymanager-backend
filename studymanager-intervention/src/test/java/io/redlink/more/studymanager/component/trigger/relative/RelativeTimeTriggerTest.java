@@ -1,5 +1,6 @@
 package io.redlink.more.studymanager.component.trigger.relative;
 
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.io.SimpleParticipant;
 import io.redlink.more.studymanager.core.io.TimeRange;
 import io.redlink.more.studymanager.core.properties.TriggerProperties;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -90,7 +92,7 @@ class RelativeTimeTriggerTest {
             }
 
             @Override
-            public Set<Integer> participantIdsMatchingQuery(String query, TimeRange timeRange) {
+            public Set<Integer> participantIdsMatchingQuery(String query, List<RuntimeFieldSpec> runtimeFields, TimeRange timeRange) {
                 throw new UnsupportedOperationException();
             }
 

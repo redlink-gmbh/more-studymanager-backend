@@ -9,11 +9,14 @@
 package io.redlink.more.studymanager.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.Refresh;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.json.JsonData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.io.Resources;
 import io.redlink.more.studymanager.configuration.ElasticConfiguration;
+import io.redlink.more.studymanager.core.io.RuntimeFieldKind;
+import io.redlink.more.studymanager.core.io.RuntimeFieldSpec;
 import io.redlink.more.studymanager.core.io.Timeframe;
 import io.redlink.more.studymanager.model.Study;
 import io.redlink.more.studymanager.model.data.ElasticActionDataPoint;
@@ -39,6 +42,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -83,13 +87,153 @@ class ElasticSearchServiceTest {
         Thread.sleep(1000);
 
         List<Integer> ids = elasticService.participantsThatMapQuery(
-                study.getStudyId(), null, "data_z:[* TO *]",
+                study.getStudyId(), null, "data_z:[* TO *]", List.of(),
                 new Timeframe(Instant.parse("2022-10-24T10:00:00Z"), Instant.parse("2022-10-24T15:00:00Z"))
         );
         assertThat(ids).hasSize(1);
         assertThat(ids.get(0)).isEqualTo(10);
 
         elasticService.deleteIndex(study);
+    }
+
+    /**
+     * LimeSurvey stores every answer as string.
+     */
+    private void indexLimeSurveyAnswers(Study study) {
+        indexData(study, 1, Map.of("EPDSsumt1", "23", "submitted", "true"));
+        indexData(study, 2, Map.of("EPDSsumt1", "23.0000000000"));
+        indexData(study, 3, Map.of("EPDSsumt1", "5"));
+        indexData(study, 4, Map.of("EPDSsumt1", ""));
+        indexData(study, 5, Map.of("submitted", "false"));
+        indexData(study, 6, Map.of("EPDSsumt1", "abc"));
+        indexData(study, 7, Map.of("PRAQt1[PRAQ1t1]", "14"));
+        indexData(study, 8, Map.of("EPDSsumt1", "-3"));
+        indexData(study, 9, Map.of("EPDSsumt1", "5.5"));
+    }
+
+    @Test
+    void testParticipantsThatMapQueryWithLongRuntimeFieldOnStrings() {
+        Study study = new Study().setStudyId(40L);
+        indexLimeSurveyAnswers(study);
+
+        List<RuntimeFieldSpec> rf = List.of(
+                new RuntimeFieldSpec("long_data_EPDSsumt1", "data_EPDSsumt1", RuntimeFieldKind.LONG),
+                new RuntimeFieldSpec("long_data_PRAQt1[PRAQ1t1]", "data_PRAQt1[PRAQ1t1]", RuntimeFieldKind.LONG));
+
+        assertThat(query(study, "long_data_EPDSsumt1:[\"13\" TO *]", rf)).containsExactlyInAnyOrder(1, 2);
+        // alphabetically "23" < "3", numerically it must match
+        assertThat(query(study, "long_data_EPDSsumt1:[\"3\" TO *]", rf)).containsExactlyInAnyOrder(1, 2, 3);
+        assertThat(query(study, "long_data_EPDSsumt1:\"23\"", rf)).containsExactlyInAnyOrder(1, 2);
+        // "5.5" is no whole number, it must not be truncated to 5
+        assertThat(query(study, "long_data_EPDSsumt1:\"5\"", rf)).containsExactlyInAnyOrder(3);
+        assertThat(query(study, "long_data_EPDSsumt1:{* TO \"0\"}", rf)).containsExactlyInAnyOrder(8);
+        // empty, missing, unparsable and non-whole values must not match "!="
+        assertThat(query(study, "(_exists_:long_data_EPDSsumt1 AND NOT long_data_EPDSsumt1:\"23\")", rf))
+                .containsExactlyInAnyOrder(3, 8);
+        assertThat(query(study, "long_data_PRAQt1\\[PRAQ1t1\\]:[\"13\" TO *]", rf)).containsExactlyInAnyOrder(7);
+        // string comparison stays as it is
+        assertThat(query(study, "data_submitted:true", rf)).containsExactlyInAnyOrder(1);
+
+        elasticService.deleteIndex(study);
+    }
+
+    @Test
+    void testParticipantsThatMapQueryWithDoubleRuntimeFieldOnStrings() {
+        Study study = new Study().setStudyId(41L);
+        indexLimeSurveyAnswers(study);
+
+        List<RuntimeFieldSpec> rf = List.of(
+                new RuntimeFieldSpec("double_data_EPDSsumt1", "data_EPDSsumt1", RuntimeFieldKind.DOUBLE));
+
+        assertThat(query(study, "double_data_EPDSsumt1:[\"13.0\" TO *]", rf)).containsExactlyInAnyOrder(1, 2);
+        assertThat(query(study, "double_data_EPDSsumt1:[\"3.0\" TO *]", rf)).containsExactlyInAnyOrder(1, 2, 3, 9);
+        assertThat(query(study, "double_data_EPDSsumt1:{\"5.0\" TO \"6.0\"}", rf)).containsExactlyInAnyOrder(9);
+        assertThat(query(study, "double_data_EPDSsumt1:{* TO \"0.0\"}", rf)).containsExactlyInAnyOrder(8);
+
+        elasticService.deleteIndex(study);
+    }
+
+    @Test
+    void testParticipantsThatMapQueryWithRuntimeFieldsOnNumbers() {
+        Study study = new Study().setStudyId(42L);
+        // the first value maps the field as long, the doc value of 5.5 is then 5
+        indexData(study, 1, Map.of("score", 20));
+        indexData(study, 2, Map.of("score", 5.5));
+        indexData(study, 3, Map.of("score", 7));
+
+        List<RuntimeFieldSpec> rf = List.of(
+                new RuntimeFieldSpec("double_data_score", "data_score", RuntimeFieldKind.DOUBLE),
+                new RuntimeFieldSpec("long_data_score", "data_score", RuntimeFieldKind.LONG));
+
+        assertThat(query(study, "double_data_score:[\"5.3\" TO *]", rf)).containsExactlyInAnyOrder(1, 2, 3);
+        assertThat(query(study, "double_data_score:{* TO \"6.0\"}", rf)).containsExactlyInAnyOrder(2);
+        assertThat(query(study, "long_data_score:\"20\"", rf)).containsExactlyInAnyOrder(1);
+        assertThat(query(study, "long_data_score:[\"7\" TO *]", rf)).containsExactlyInAnyOrder(1, 3);
+        // 5.5 is no whole number, it must not be truncated to 5
+        assertThat(query(study, "long_data_score:\"5\"", rf)).isEmpty();
+        assertThat(query(study, "(_exists_:long_data_score AND NOT long_data_score:\"20\")", rf))
+                .containsExactlyInAnyOrder(3);
+
+        elasticService.deleteIndex(study);
+    }
+
+    @Test
+    void testParticipantsThatMapQueryWithBooleanRuntimeField() {
+        Study study = new Study().setStudyId(43L);
+        indexData(study, 1, Map.of("flag", "true"));
+        indexData(study, 2, Map.of("flag", "TRUE"));
+        indexData(study, 3, Map.of("flag", "yes"));
+        indexData(study, 4, Map.of("flag", "1"));
+        indexData(study, 5, Map.of("flag", " on "));
+        indexData(study, 6, Map.of("flag", "false"));
+        indexData(study, 7, Map.of("flag", "No"));
+        indexData(study, 8, Map.of("flag", "0"));
+        indexData(study, 9, Map.of("flag", ""));
+        indexData(study, 10, Map.of("flag", "abc"));
+        indexData(study, 11, Map.of("consent", true));
+        indexData(study, 12, Map.of("consent", false));
+        indexData(study, 13, Map.of("count", 2));
+        indexData(study, 14, Map.of("count", 0));
+
+        List<RuntimeFieldSpec> rf = List.of(
+                new RuntimeFieldSpec("boolean_data_flag", "data_flag", RuntimeFieldKind.BOOLEAN),
+                new RuntimeFieldSpec("boolean_data_consent", "data_consent", RuntimeFieldKind.BOOLEAN),
+                new RuntimeFieldSpec("boolean_data_count", "data_count", RuntimeFieldKind.BOOLEAN));
+
+        assertThat(query(study, "boolean_data_flag:\"true\"", rf)).containsExactlyInAnyOrder(1, 2, 3, 4, 5);
+        assertThat(query(study, "boolean_data_flag:\"false\"", rf)).containsExactlyInAnyOrder(6, 7, 8);
+        // empty and unknown values must not match "!="
+        assertThat(query(study, "(_exists_:boolean_data_flag AND NOT boolean_data_flag:\"true\")", rf))
+                .containsExactlyInAnyOrder(6, 7, 8);
+        assertThat(query(study, "boolean_data_consent:\"true\"", rf)).containsExactlyInAnyOrder(11);
+        assertThat(query(study, "boolean_data_consent:\"false\"", rf)).containsExactlyInAnyOrder(12);
+        assertThat(query(study, "boolean_data_count:\"true\"", rf)).containsExactlyInAnyOrder(13);
+        assertThat(query(study, "boolean_data_count:\"false\"", rf)).containsExactlyInAnyOrder(14);
+
+        elasticService.deleteIndex(study);
+    }
+
+    private List<Integer> query(Study study, String condition, List<RuntimeFieldSpec> runtimeFields) {
+        return elasticService.participantsThatMapQuery(study.getStudyId(), null,
+                "(observation_id.keyword:17 AND " + condition + ")", runtimeFields, null);
+    }
+
+    private void indexData(Study study, int participantId, Map<String, Object> data) {
+        Map<String, Object> doc = new HashMap<>();
+        doc.put("participant_id", "participant_" + participantId);
+        doc.put("study_id", ElasticService.getStudyIdString(study));
+        doc.put("observation_id", "17");
+        doc.put("observation_type", "lime-survey-observation");
+        data.forEach((k, v) -> doc.put("data_" + k, v));
+        try {
+            client.index(i -> i
+                    .index(ElasticService.getStudyIdString(study))
+                    .id(String.valueOf(participantId))
+                    .refresh(Refresh.True)
+                    .document(doc));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
