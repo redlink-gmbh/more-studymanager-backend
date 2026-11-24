@@ -92,6 +92,14 @@ class MilestoneRepositoryTest {
         assertThat(updated.getName()).isEqualTo("Mid-study");
         assertThat(updated.getOrderIndex()).isEqualTo(1);
 
+        // essential defaults to false and can be switched on and off again
+        assertThat(m1.getEssential()).isFalse();
+        Milestone essential = milestoneRepository.insert(new Milestone().setStudyId(studyId).setName("Required").setEssential(true));
+        assertThat(essential.getEssential()).isTrue();
+        milestoneRepository.update(new Milestone().setStudyId(studyId).setMilestoneId(essential.getMilestoneId()).setName("Required").setEssential(false));
+        assertThat(milestoneRepository.getByIds(studyId, essential.getMilestoneId()).getEssential()).isFalse();
+        milestoneRepository.deleteById(studyId, essential.getMilestoneId());
+
         // deleting the middle milestone and decrementing trailing order indices
         milestoneRepository.deleteById(studyId, 2);
         milestoneRepository.decrementOrderIndexAbove(studyId, 1);

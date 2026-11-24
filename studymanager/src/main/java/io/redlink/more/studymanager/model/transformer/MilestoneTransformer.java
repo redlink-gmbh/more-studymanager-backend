@@ -22,7 +22,8 @@ public final class MilestoneTransformer {
                 .studyId(milestone.getStudyId())
                 .createdAt(milestone.getCreated())
                 .name(milestone.getName())
-                .orderIndex(milestone.getOrderIndex());
+                .orderIndex(milestone.getOrderIndex())
+                .essential(Boolean.TRUE.equals(milestone.getEssential()));
     }
 
     public static Milestone fromMilestoneDTO_V1(MilestoneDTO dto) {
@@ -30,7 +31,8 @@ public final class MilestoneTransformer {
                 .setStudyId(dto.getStudyId())
                 .setMilestoneId(dto.getMilestoneId())
                 .setName(dto.getName())
-                .setOrderIndex(dto.getOrderIndex());
+                .setOrderIndex(dto.getOrderIndex())
+                .setEssential(dto.getEssential());
     }
 
 }

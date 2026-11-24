@@ -15,6 +15,7 @@ public class Milestone {
     private Integer milestoneId;
     private String name;
     private Integer orderIndex;
+    private Boolean essential;
     private Instant created;
 
     public Long getStudyId() {
@@ -50,6 +51,15 @@ public class Milestone {
 
     public Milestone setOrderIndex(Integer orderIndex) {
         this.orderIndex = orderIndex;
+        return this;
+    }
+
+    public Boolean getEssential() {
+        return essential;
+    }
+
+    public Milestone setEssential(Boolean essential) {
+        this.essential = essential;
         return this;
     }
 

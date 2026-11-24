@@ -57,7 +57,8 @@ public class MilestonesApiV1Controller implements MilestonesApi {
     public ResponseEntity<MilestoneDTO> createMilestone(Long studyId, CreateMilestoneRequestDTO createMilestoneRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 MilestoneTransformer.toMilestoneDTO_V1(
-                        milestoneService.addMilestone(studyId, createMilestoneRequestDTO.getName())
+                        milestoneService.addMilestone(studyId, createMilestoneRequestDTO.getName(),
+                                Boolean.TRUE.equals(createMilestoneRequestDTO.getEssential()))
                 )
         );
     }
@@ -79,7 +80,8 @@ public class MilestonesApiV1Controller implements MilestonesApi {
     public ResponseEntity<MilestoneDTO> updateMilestone(Long studyId, Integer milestoneId, MilestoneDTO milestoneDTO) {
         return ResponseEntity.ok(
                 MilestoneTransformer.toMilestoneDTO_V1(
-                        milestoneService.updateMilestone(studyId, milestoneId, milestoneDTO.getName(), milestoneDTO.getOrderIndex())
+                        milestoneService.updateMilestone(studyId, milestoneId, milestoneDTO.getName(),
+                                Boolean.TRUE.equals(milestoneDTO.getEssential()), milestoneDTO.getOrderIndex())
                 )
         );
     }

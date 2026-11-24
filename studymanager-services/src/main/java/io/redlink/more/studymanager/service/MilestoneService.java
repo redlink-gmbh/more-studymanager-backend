@@ -34,9 +34,9 @@ public class MilestoneService {
         return repository.listMilestonesOrderedByOrderIndexAsc(studyId);
     }
 
-    public Milestone addMilestone(long studyId, String name) {
+    public Milestone addMilestone(long studyId, String name, boolean essential) {
         studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
-        return repository.insert(new Milestone().setStudyId(studyId).setName(name));
+        return repository.insert(new Milestone().setStudyId(studyId).setName(name).setEssential(essential));
     }
 
     public Milestone importMilestone(Long studyId, Milestone milestone) {
@@ -49,10 +49,10 @@ public class MilestoneService {
     }
 
     @Transactional
-    public Milestone updateMilestone(long studyId, int milestoneId, String name, int orderIndex) {
+    public Milestone updateMilestone(long studyId, int milestoneId, String name, boolean essential, int orderIndex) {
         studyStateService.assertStudyNotInState(studyId, Study.Status.CLOSED);
         Milestone existing = getMilestone(studyId, milestoneId);
-        repository.update(new Milestone().setStudyId(studyId).setMilestoneId(milestoneId).setName(name));
+        repository.update(new Milestone().setStudyId(studyId).setMilestoneId(milestoneId).setName(name).setEssential(essential));
         if (orderIndex != existing.getOrderIndex()) {
             reorder(studyId, milestoneId, existing.getOrderIndex(), orderIndex);
         }

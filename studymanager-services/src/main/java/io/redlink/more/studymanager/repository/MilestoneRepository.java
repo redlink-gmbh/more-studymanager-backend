@@ -23,19 +23,20 @@ import java.util.List;
 @Component
 public class MilestoneRepository {
     private static final String INSERT_MILESTONE = """
-            INSERT INTO milestones (study_id, milestone_id, name, order_index)
+            INSERT INTO milestones (study_id, milestone_id, name, order_index, essential)
             VALUES (:study_id,
                     (SELECT COALESCE(MAX(milestone_id),0)+1 FROM milestones WHERE study_id = :study_id),
                     :name,
-                    (SELECT COALESCE(MAX(order_index)+1,0) FROM milestones WHERE study_id = :study_id))
+                    (SELECT COALESCE(MAX(order_index)+1,0) FROM milestones WHERE study_id = :study_id),
+                    :essential)
             RETURNING *""";
     private static final String IMPORT_MILESTONE = """
-            INSERT INTO milestones (study_id, milestone_id, name, order_index)
-            VALUES (:study_id, :milestone_id, :name, :order_index)
+            INSERT INTO milestones (study_id, milestone_id, name, order_index, essential)
+            VALUES (:study_id, :milestone_id, :name, :order_index, :essential)
             RETURNING *""";
     private static final String GET_MILESTONE_BY_IDS = "SELECT * FROM milestones WHERE study_id = ? AND milestone_id = ?";
     private static final String LIST_MILESTONES_ORDER_BY_ORDER_INDEX = "SELECT * FROM milestones WHERE study_id = ? ORDER BY order_index";
-    private static final String UPDATE_MILESTONE = "UPDATE milestones SET name = :name WHERE study_id = :study_id AND milestone_id = :milestone_id";
+    private static final String UPDATE_MILESTONE = "UPDATE milestones SET name = :name, essential = :essential WHERE study_id = :study_id AND milestone_id = :milestone_id";
     private static final String DELETE_MILESTONE_BY_ID = "DELETE FROM milestones WHERE study_id = ? AND milestone_id = ?";
     private static final String DECREMENT_ORDER_INDEX_ABOVE = """
             UPDATE milestones SET order_index = order_index - 1
@@ -111,6 +112,7 @@ public class MilestoneRepository {
                         .addValue("study_id", milestone.getStudyId())
                         .addValue("milestone_id", milestone.getMilestoneId())
                         .addValue("name", milestone.getName())
+                        .addValue("essential", Boolean.TRUE.equals(milestone.getEssential()))
         );
         return getByIds(milestone.getStudyId(), milestone.getMilestoneId());
     }
@@ -183,7 +185,8 @@ public class MilestoneRepository {
     private static MapSqlParameterSource toParams(Milestone milestone) {
         return new MapSqlParameterSource()
                 .addValue("study_id", milestone.getStudyId())
-                .addValue("name", milestone.getName());
+                .addValue("name", milestone.getName())
+                .addValue("essential", Boolean.TRUE.equals(milestone.getEssential()));
     }
 
     private static RowMapper<Milestone> getMilestoneRowMapper() {
@@ -192,6 +195,7 @@ public class MilestoneRepository {
                 .setMilestoneId(rs.getInt("milestone_id"))
                 .setName(rs.getString("name"))
                 .setOrderIndex(rs.getInt("order_index"))
+                .setEssential(rs.getBoolean("essential"))
                 .setCreated(RepositoryUtils.readInstant(rs, "created"));
     }
 

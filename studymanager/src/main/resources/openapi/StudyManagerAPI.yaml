@@ -3122,6 +3122,10 @@ components:
           type: string
         orderIndex:
           type: integer
+        essential:
+          type: boolean
+          default: false
+          description: Should be set for every participant for a correct study configuration (not enforced)
       required:
         - milestoneId
         - studyId
@@ -3615,6 +3619,10 @@ components:
             properties:
               name:
                 type: string
+              essential:
+                type: boolean
+                default: false
+                description: Should be set for every participant for a correct study configuration (not enforced)
     ParticipantMilestoneCreation:
       description: Create a single new participant milestone
       required: true
