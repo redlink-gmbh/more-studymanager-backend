@@ -3622,7 +3622,7 @@ components:
               essential:
                 type: boolean
                 default: false
-                description: Should be set for every participant for a correct study configuration (not enforced)
+                description: If TRUE the milestone is expected to be set at the start of the study by the study design. Informative, not enforced.
     ParticipantMilestoneCreation:
       description: Create a single new participant milestone
       required: true
