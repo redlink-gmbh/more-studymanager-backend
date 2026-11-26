@@ -110,7 +110,7 @@ class MilestoneServiceTest {
         when(repository.insert(any(Milestone.class)))
                 .thenAnswer(i -> ((Milestone) i.getArgument(0)).setMilestoneId(1).setOrderIndex(1));
 
-        Milestone created = milestoneService.addMilestone(1L, "Baseline");
+        Milestone created = milestoneService.addMilestone(1L, "Baseline", true);
 
         assertThat(created.getName()).isEqualTo("Baseline");
         assertThat(created.getMilestoneId()).isEqualTo(1);
@@ -119,6 +119,7 @@ class MilestoneServiceTest {
         verify(repository).insert(captor.capture());
         assertThat(captor.getValue().getStudyId()).isEqualTo(1L);
         assertThat(captor.getValue().getName()).isEqualTo("Baseline");
+        assertThat(captor.getValue().getEssential()).isTrue();
     }
 
     @Test
@@ -126,7 +127,7 @@ class MilestoneServiceTest {
         when(repository.getByIds(1L, 2))
                 .thenReturn(new Milestone().setStudyId(1L).setMilestoneId(2).setName("M2").setOrderIndex(2));
 
-        milestoneService.updateMilestone(1L, 2, "Renamed", 2);
+        milestoneService.updateMilestone(1L, 2, "Renamed", false, 2);
 
         ArgumentCaptor<Milestone> captor = ArgumentCaptor.forClass(Milestone.class);
         verify(repository).update(captor.capture());
@@ -141,7 +142,7 @@ class MilestoneServiceTest {
                 .thenReturn(new Milestone().setStudyId(1L).setMilestoneId(2).setName("M2").setOrderIndex(2));
         when(repository.countByStudyId(1L)).thenReturn(5);
 
-        milestoneService.updateMilestone(1L, 2, "M2", 4);
+        milestoneService.updateMilestone(1L, 2, "M2", false, 4);
 
         verify(repository).shiftOrderIndexRange(1L, 3, 4, -1);
         verify(repository).setOrderIndex(1L, 2, 4);
@@ -153,7 +154,7 @@ class MilestoneServiceTest {
                 .thenReturn(new Milestone().setStudyId(1L).setMilestoneId(2).setName("M2").setOrderIndex(4));
         when(repository.countByStudyId(1L)).thenReturn(5);
 
-        milestoneService.updateMilestone(1L, 2, "M2", 1);
+        milestoneService.updateMilestone(1L, 2, "M2", false, 1);
 
         verify(repository).shiftOrderIndexRange(1L, 1, 3, 1);
         verify(repository).setOrderIndex(1L, 2, 1);
@@ -165,7 +166,7 @@ class MilestoneServiceTest {
                 .thenReturn(new Milestone().setStudyId(1L).setMilestoneId(2).setName("M2").setOrderIndex(0));
         when(repository.countByStudyId(1L)).thenReturn(3);
 
-        milestoneService.updateMilestone(1L, 2, "M2", 99);
+        milestoneService.updateMilestone(1L, 2, "M2", false, 99);
 
         // orderIndex is 0-based, so with 3 milestones the highest valid index is 2
         verify(repository).shiftOrderIndexRange(1L, 1, 2, -1);

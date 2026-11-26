@@ -365,7 +365,7 @@
     "semantic_hash": ""
   },
   "studymanager-core/src/main/java/io/redlink/more/studymanager/core/sdk/MoreTriggerSDK.java": {
-    "mtime": 1794318757.7996485,
+    "mtime": 1794490679.529748,
     "ast_hash": "4828b0fb541d0291943bed8ea40bc1d5",
     "semantic_hash": ""
   },
@@ -570,7 +570,7 @@
     "semantic_hash": ""
   },
   "studymanager-intervention/src/main/java/io/redlink/more/studymanager/component/trigger/datacheck/DataPointQuery.java": {
-    "mtime": 1794403699.4610155,
+    "mtime": 1794490679.5301635,
     "ast_hash": "7770d145e860a3e3a642f5122b5428f2",
     "semantic_hash": ""
   },
@@ -585,17 +585,17 @@
     "semantic_hash": ""
   },
   "studymanager-intervention/src/main/java/io/redlink/more/studymanager/component/trigger/datacheck/ScheduledDatacheckTrigger.java": {
-    "mtime": 1794300877.733,
+    "mtime": 1794490679.5306933,
     "ast_hash": "816dbed9dd0bca996a4a1ef264f39a5f",
     "semantic_hash": ""
   },
   "studymanager-intervention/src/main/java/io/redlink/more/studymanager/component/trigger/datacheck/ScheduledDatacheckTriggerFactory.java": {
-    "mtime": 1794300877.841,
+    "mtime": 1794490679.531333,
     "ast_hash": "143cdfd3291c88eecde15d7e140bfd45",
     "semantic_hash": ""
   },
   "studymanager-intervention/src/main/java/io/redlink/more/studymanager/component/trigger/datacheck/ScheduledDatacheckTriggerProperties.java": {
-    "mtime": 1794319140.138741,
+    "mtime": 1794490679.5316715,
     "ast_hash": "dd552e4e3f61e988f688a62e8101ee49",
     "semantic_hash": ""
   },
@@ -610,12 +610,12 @@
     "semantic_hash": ""
   },
   "studymanager-intervention/src/test/java/io/redlink/more/studymanager/component/trigger/datacheck/ScheduledDatacheckTriggerPropertiesTest.java": {
-    "mtime": 1794403549.1268141,
+    "mtime": 1794490679.5321379,
     "ast_hash": "4101b4f509f2a141e7e9be25eb04da18",
     "semantic_hash": ""
   },
   "studymanager-intervention/src/test/java/io/redlink/more/studymanager/component/trigger/relative/RelativeTimeTriggerTest.java": {
-    "mtime": 1794319219.310838,
+    "mtime": 1794490679.532488,
     "ast_hash": "83cf1a52bdd7e3856fe0d28b55759716",
     "semantic_hash": ""
   },
@@ -1015,8 +1015,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/Milestone.java": {
-    "mtime": 1791363299.2729049,
-    "ast_hash": "90e4ecf6946fd5c2fbb202dc4a86c79a",
+    "mtime": 1795516863.7107394,
+    "ast_hash": "bd1cc373a973a69c7d418db6556c0dec",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/model/MoreUser.java": {
@@ -1300,8 +1300,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/MilestoneRepository.java": {
-    "mtime": 1791363299.2785037,
-    "ast_hash": "5be36bd67d053ccad95a76d7d1985561",
+    "mtime": 1795516896.8143044,
+    "ast_hash": "0d5eaf57ad87c59b57ea6e2f9fbfa824",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/repository/NameValuePairRepository.java": {
@@ -1410,7 +1410,7 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/sdk/MoreSDK.java": {
-    "mtime": 1794318781.767556,
+    "mtime": 1794490679.5328155,
     "ast_hash": "3f896ede83afcafe2aa8fa591d46c928",
     "semantic_hash": ""
   },
@@ -1440,7 +1440,7 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/sdk/scoped/MoreTriggerSDKImpl.java": {
-    "mtime": 1794318777.054399,
+    "mtime": 1794490679.5334263,
     "ast_hash": "8acb443c9dcb8dba1ad91032c9b0f1d3",
     "semantic_hash": ""
   },
@@ -1470,7 +1470,7 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/ElasticService.java": {
-    "mtime": 1794318905.7719176,
+    "mtime": 1794490679.5338686,
     "ast_hash": "3fb82e4e62e5d14a77ffd8814f4d3a6b",
     "semantic_hash": ""
   },
@@ -1495,8 +1495,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/MilestoneService.java": {
-    "mtime": 1791363299.2836883,
-    "ast_hash": "fa97e99a7e43c06a0d550de822f6f322",
+    "mtime": 1795516900.0453243,
+    "ast_hash": "0279a001122ebc02d361ead1831a173f",
     "semantic_hash": ""
   },
   "studymanager-services/src/main/java/io/redlink/more/studymanager/service/ObservationGroupService.java": {
@@ -1810,8 +1810,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/MilestoneRepositoryTest.java": {
-    "mtime": 1791363299.2873127,
-    "ast_hash": "26f3d623d035baff2dc53105f9d7ebc2",
+    "mtime": 1795516965.9739244,
+    "ast_hash": "b9c56ddcc8495e0d69853cb040e3b518",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/repository/NameValuePairRepositoryTest.java": {
@@ -1890,7 +1890,7 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/sdk/MoreSDKTest.java": {
-    "mtime": 1794319162.0640242,
+    "mtime": 1794490679.5342948,
     "ast_hash": "ac046b7ccf1779b1330eb9895d9a74cd",
     "semantic_hash": ""
   },
@@ -1915,7 +1915,7 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ElasticSearchServiceTest.java": {
-    "mtime": 1794319490.2533882,
+    "mtime": 1794490679.5346642,
     "ast_hash": "15e83465e528808c1c8811fa1dd1e905",
     "semantic_hash": ""
   },
@@ -1935,8 +1935,8 @@
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/MilestoneServiceTest.java": {
-    "mtime": 1791363299.290706,
-    "ast_hash": "c96ba87deeec3e74f9c4ab28ad46e644",
+    "mtime": 1795516963.9657755,
+    "ast_hash": "49280e638e38f9a6df01bea3726923d1",
     "semantic_hash": ""
   },
   "studymanager-services/src/test/java/io/redlink/more/studymanager/service/ObservationServiceTest.java": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/controller/studymanager/MilestonesApiV1Controller.java": {
-    "mtime": 1791363299.2948978,
-    "ast_hash": "47143db4c5a78930d561c0d596cd490d",
+    "mtime": 1795516907.7236166,
+    "ast_hash": "26401013f54111ddcd8b24358f7ecc1d",
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/controller/studymanager/ObservationGroupApiV1Controller.java": {
@@ -2215,8 +2215,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/model/transformer/MilestoneTransformer.java": {
-    "mtime": 1791363299.297208,
-    "ast_hash": "ecba783cdb9985c79091913a365169ad",
+    "mtime": 1795516903.8265224,
+    "ast_hash": "f018ed68a86e61e3fabfc0bf9dfafb97",
     "semantic_hash": ""
   },
   "studymanager/src/main/java/io/redlink/more/studymanager/model/transformer/ObservationGroupTransformer.java": {
@@ -2925,8 +2925,8 @@
     "semantic_hash": ""
   },
   "studymanager/src/main/resources/openapi/StudyManagerAPI.yaml": {
-    "mtime": 1792660019.256209,
-    "ast_hash": "0d7c31795f5f4979586de1ccf2fad79f",
+    "mtime": 1795516913.30782,
+    "ast_hash": "4888c009839e57eb7a504908c5e686aa",
     "semantic_hash": ""
   },
   "studymanager/src/test/resources/application-test-containers-flyway.yml": {
@@ -3175,18 +3175,23 @@
     "semantic_hash": ""
   },
   "studymanager-core/src/main/java/io/redlink/more/studymanager/core/io/RuntimeFieldKind.java": {
-    "mtime": 1794318746.1439986,
+    "mtime": 1794490679.5289912,
     "ast_hash": "2efa241326063916a6f5b90dc188dacd",
     "semantic_hash": ""
   },
   "studymanager-core/src/main/java/io/redlink/more/studymanager/core/io/RuntimeFieldSpec.java": {
-    "mtime": 1794318750.5347288,
+    "mtime": 1794490679.529294,
     "ast_hash": "a269d4d69a1166b247f21130f470e7b8",
     "semantic_hash": ""
   },
   "docs/roles-and-permissions.md": {
     "mtime": 1792743461.2170591,
     "ast_hash": "8c05f824c18d4cb6445d40b00609ece7",
+    "semantic_hash": ""
+  },
+  "studymanager-services/src/main/resources/db/migration/V1_31_0__milestone_essential.sql": {
+    "mtime": 1795516858.5816905,
+    "ast_hash": "8343a768eeaca181a6cc56175f89572e",
     "semantic_hash": ""
   }
 }

@@ -3122,6 +3122,10 @@ components:
           type: string
         orderIndex:
           type: integer
+        essential:
+          type: boolean
+          default: false
+          description: If TRUE the milestone is expected to be set at the start of the study by the study design. Informative, not enforced.
       required:
         - milestoneId
         - studyId
@@ -3615,6 +3619,10 @@ components:
             properties:
               name:
                 type: string
+              essential:
+                type: boolean
+                default: false
+                description: If TRUE the milestone is expected to be set at the start of the study by the study design. Informative, not enforced.
     ParticipantMilestoneCreation:
       description: Create a single new participant milestone
       required: true
